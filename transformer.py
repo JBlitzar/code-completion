@@ -19,7 +19,7 @@ class SelfAttention(nn.Module):
 
 
     def forward(self, x):
-        # do stuff
+
         q = self.query(x)
         k = self.key(x)
         v = self.value(x)
@@ -35,12 +35,33 @@ class SelfAttention(nn.Module):
         return z
 
 class EncoderDecoderAttention(nn.Module):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, embed_dim=512, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.embed_dim = embed_dim
+        
+        self.query = nn.Linear(embed_dim,embed_dim)
+        self.key = nn.Linear(embed_dim,embed_dim)
+        self.value = nn.Linear(embed_dim,embed_dim)
+
+        self.sqrt_dk = np.sqrt(self.embed_dim)
 
 
     def forward(self, x, encoded):
-        return x
+        # Literally the same thing except K and V are encoded
+        q = self.query(x)
+        k = self.key(encoded)
+        v = self.value(encoded)
+
+
+        z = F.softmax(
+            (
+            
+                q @ k.transpose(-2, -1)
+            ) / self.sqrt_dk
+        , dim=-1) @ v
+
+        return z
 
 class EncoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
