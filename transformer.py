@@ -25,7 +25,12 @@ class SelfAttention(nn.Module):
         v = self.value(x)
 
 
-        z = F.softmax((q @ k.transpose(-2, -1)) / self.sqrt_dk, dim=-1) @ v
+        z = F.softmax(
+            (
+                # transpose last 2 dimensions
+                q @ k.transpose(-2, -1)
+            ) / self.sqrt_dk
+        , dim=-1) @ v
 
         return z
 
