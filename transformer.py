@@ -3,21 +3,67 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-
-class EncoderBlock(nn.Module):
+class SelfAttention(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
     def forward(self, x):
+        # do stuff
+        q = None
+        k = None
+        v = None
+
+        dk = None
+
+        z = F.softmax((q @ k) / np.sqrt(dk)) @ v
+
+        return z
+
+class EncoderDecoderAttention(nn.Module):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+    def forward(self, x, encoded):
+        return x
+
+class EncoderBlock(nn.Module):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.sa = SelfAttention()
+
+        self.block = nn.Sequential()
+
+
+    def forward(self, x):
+
+        x = self.sa(x)
+
+        x = self.block(x)
+
         return x
     
 class DecoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.sa = SelfAttention()
+
+        self.eda = EncoderDecoderAttention()
+
+        self.block = nn.Sequential()
+
 
     def forward(self, x, encoded):
+
+        x = self.sa(x)
+
+        x = self.eda(x, encoded)
+
+        x = self.block(x)
+
         return x
 
 
