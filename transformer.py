@@ -108,12 +108,8 @@ class Transformer(nn.Module):
 
         self.num_blocks = num_blocks
 
-        self.encoders = []
-        self.decoders = []
-
-        for _ in range(num_blocks):
-            self.encoders.append(EncoderBlock())
-            self.decoders.append(DecoderBlock())
+        self.encoders = nn.ModuleList([EncoderBlock() for _ in range(num_blocks)])
+        self.decoders = nn.ModuleList([DecoderBlock() for _ in range(num_blocks)])
     
 
     def forward(self, x):
