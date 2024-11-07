@@ -62,15 +62,34 @@ class EncoderDecoderAttention(nn.Module):
         , dim=-1) @ v
 
         return z
+    
+class FeedForward(nn.Module):
+    def __init__(self, dim=512, hidden_dim = None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-#todo layernorm, mha
+        self.dim = dim
+        self.hidden_dim = hidden_dim if hidden_dim != None else dim
+        
+        self.block = nn.Sequential(
+            nn.Linear(self.dim,self.hidden_dim),
+            nn.ReLU(),
+            nn.Linear(self.hidden_dim,self.dim),
+            nn.ReLU(),
+
+        )
+
+    def forward(self, x):
+        return self.block(x)
+
+
+#todo layernorm, mha, fact-check
 class EncoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.sa = SelfAttention()
 
-        self.block = nn.Sequential()
+        self.block = FeedForward()
 
 
     def forward(self, x):
@@ -89,7 +108,7 @@ class DecoderBlock(nn.Module):
 
         self.eda = EncoderDecoderAttention()
 
-        self.block = nn.Sequential()
+        self.block = FeedForward()
 
 
     def forward(self, x, encoded):
