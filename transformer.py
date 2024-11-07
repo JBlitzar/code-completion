@@ -63,6 +63,7 @@ class EncoderDecoderAttention(nn.Module):
 
         return z
 
+#todo layernorm, mha
 class EncoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -101,7 +102,7 @@ class DecoderBlock(nn.Module):
 
         return x
 
-
+#todo positional encoding, embedding I think, and figure out how the training loop/inference loop actually works
 class Transformer(nn.Module):
     def __init__(self, num_blocks=6, *args, **kwargs):
         super().__init__(*args, **kwargs)
