@@ -5,6 +5,8 @@ import numpy as np
 
 
 # https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Transformers?tab=readme-ov-file#queries-keys-and-values
+
+#todo mha
 class SelfAttention(nn.Module):
     def __init__(self, embed_dim=512, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -82,7 +84,7 @@ class FeedForward(nn.Module):
         return self.block(x)
 
 
-#todo layernorm, mha, fact-check
+#todo layernorm, fact-check, residual apparently?
 class EncoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
