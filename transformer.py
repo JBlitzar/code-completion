@@ -201,7 +201,7 @@ class Transformer(nn.Module):
 
         self.dec_embedding = nn.Embedding(vocab_size,DIM)
 
-        self.ublock = nn.Sequential(
+        self.oblock = nn.Sequential(
             nn.Linear(DIM, DIM),
             nn.Softmax()
         )
@@ -238,7 +238,7 @@ class Transformer(nn.Module):
         
         x = self.d_lnorm(x)
 
-        x = self.ublock(x)
+        x = self.oblock(x)
 
         return x
 
