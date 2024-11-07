@@ -5,7 +5,8 @@ import numpy as np
 
 DIM = 512
 
-#todo check that all these things work how I think they will
+#TODO: check that all these things work how I think they will
+#TODO: masking I think
 
 
 # https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Transformers?tab=readme-ov-file#queries-keys-and-values

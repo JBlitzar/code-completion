@@ -17,3 +17,6 @@ Transformers: more granular
 Transformers implementation:
 
 - https://github.com/hyunwoongko/transformer
+
+
+Picture: https://miro.medium.com/v2/resize:fit:975/1*vrSX_Ku3EmGPyqF_E-2_Vg.png
