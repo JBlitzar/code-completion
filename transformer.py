@@ -5,10 +5,11 @@ import numpy as np
 
 DIM = 512
 
+#todo check that all these things work how I think they will
+
 
 # https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Transformers?tab=readme-ov-file#queries-keys-and-values
 
-#todo mha
 class SelfAttention(nn.Module):
     def __init__(self, embed_dim=DIM, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -67,6 +68,41 @@ class EncoderDecoderAttention(nn.Module):
 
         return z
     
+
+
+class MHA_SelfAttention(nn.Module):
+    def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mha = nn.MultiheadAttention(embed_dim, num_heads)
+
+    def forward(self, x):
+        x = x.transpose(0, 1)
+        
+        attn_output, _ = self.mha(x, x, x)
+        
+        attn_output = attn_output.transpose(0, 1)
+        
+        return attn_output
+
+class MHA_EncoderDecoderAttention(nn.Module):
+    def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mha = nn.MultiheadAttention(embed_dim, num_heads)
+
+    def forward(self, x, encoded):
+
+        x = x.transpose(0, 1)
+        encoded = encoded.transpose(0, 1)
+        
+
+        attn_output, _ = self.mha(x, encoded, encoded)
+        
+
+        attn_output = attn_output.transpose(0, 1)
+        
+        return attn_output
+
+    
 class FeedForward(nn.Module):
     def __init__(self, dim=DIM, hidden_dim = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -91,7 +127,7 @@ class EncoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.sa = SelfAttention()
+        self.sa = MHA_SelfAttention()
 
         self.block = FeedForward()
 
@@ -108,9 +144,9 @@ class DecoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.sa = SelfAttention()
+        self.sa = MHA_SelfAttention()
 
-        self.eda = EncoderDecoderAttention()
+        self.eda = MHA_EncoderDecoderAttention()
 
         self.block = FeedForward()
 
@@ -125,7 +161,7 @@ class DecoderBlock(nn.Module):
 
         return x
 
-#todo positional encoding, embedding I think, and figure out how the training loop/inference loop actually works
+#todo figure out how the training loop/inference loop actually works
 class Transformer(nn.Module):
     def __init__(self, num_blocks=6, vocab_size=100,seq_len=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
