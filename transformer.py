@@ -3,12 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
+DIM = 512
+
 
 # https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Transformers?tab=readme-ov-file#queries-keys-and-values
 
 #todo mha
 class SelfAttention(nn.Module):
-    def __init__(self, embed_dim=512, *args, **kwargs):
+    def __init__(self, embed_dim=DIM, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.embed_dim = embed_dim
@@ -37,7 +39,7 @@ class SelfAttention(nn.Module):
         return z
 
 class EncoderDecoderAttention(nn.Module):
-    def __init__(self, embed_dim=512, *args, **kwargs):
+    def __init__(self, embed_dim=DIM, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.embed_dim = embed_dim
@@ -66,7 +68,7 @@ class EncoderDecoderAttention(nn.Module):
         return z
     
 class FeedForward(nn.Module):
-    def __init__(self, dim=512, hidden_dim = None, *args, **kwargs):
+    def __init__(self, dim=DIM, hidden_dim = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.dim = dim
@@ -76,7 +78,7 @@ class FeedForward(nn.Module):
             nn.Linear(self.dim,self.hidden_dim),
             nn.GELU(),
             nn.Linear(self.hidden_dim,self.dim),
-            nn.GELU(),
+            nn.GELU()
 
         )
 
@@ -133,6 +135,9 @@ class Transformer(nn.Module):
         self.encoders = nn.ModuleList([EncoderBlock() for _ in range(num_blocks)])
         self.decoders = nn.ModuleList([DecoderBlock() for _ in range(num_blocks)])
 
+        self.e_lnorm = nn.LayerNorm(DIM)
+        self.d_lnorm = nn.LayerNorm(DIM)
+
     # yoinked from JBlitzar/Diffusion
     def pos_encoding(self, t, channels):
         inv_freq = 1.0 / (
@@ -148,10 +153,12 @@ class Transformer(nn.Module):
         for eidx, eblock in enumerate(self.encoders):
             x = eblock(x)
 
+        x = self.e_lnorm(x)
         encoded = x
 
         for didx, dblock in enumerate(self.decoders):
             x = dblock(x, encoded)
         
+        x = self.d_lnorm(x)
         return x
 
