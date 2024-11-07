@@ -127,7 +127,7 @@ class DecoderBlock(nn.Module):
 
 #todo positional encoding, embedding I think, and figure out how the training loop/inference loop actually works
 class Transformer(nn.Module):
-    def __init__(self, num_blocks=6, *args, **kwargs):
+    def __init__(self, num_blocks=6, vocab_size=100,seq_len=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.num_blocks = num_blocks
@@ -138,8 +138,15 @@ class Transformer(nn.Module):
         self.e_lnorm = nn.LayerNorm(DIM)
         self.d_lnorm = nn.LayerNorm(DIM)
 
+        self.pos_encoding = self.get_pos_encoding(torch.range(seq_len),DIM)
+
+        self.enc_embedding = nn.Embedding(vocab_size,DIM)
+
+        self.dec_embedding = nn.Embedding(vocab_size,DIM)
+
+
     # yoinked from JBlitzar/Diffusion
-    def pos_encoding(self, t, channels):
+    def get_pos_encoding(self, t, channels):
         inv_freq = 1.0 / (
         10000 ** (torch.arange(0, channels, 2, device=self.device).float() / channels)
         )
@@ -150,15 +157,26 @@ class Transformer(nn.Module):
     
 
     def forward(self, x):
+        
+        x = self.enc_embedding(x) + self.pos_encoding
+
+
         for eidx, eblock in enumerate(self.encoders):
             x = eblock(x)
 
         x = self.e_lnorm(x)
-        encoded = x
+
+
+        encoded = x.clone()
+
+        x = self.dec_embedding(x) + self.pos_encoding
 
         for didx, dblock in enumerate(self.decoders):
             x = dblock(x, encoded)
         
         x = self.d_lnorm(x)
+
+        x = nn.Softmax(x)
+
         return x
 
