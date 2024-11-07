@@ -74,9 +74,9 @@ class FeedForward(nn.Module):
         
         self.block = nn.Sequential(
             nn.Linear(self.dim,self.hidden_dim),
-            nn.ReLU(),
+            nn.GELU(),
             nn.Linear(self.hidden_dim,self.dim),
-            nn.ReLU(),
+            nn.GELU(),
 
         )
 
