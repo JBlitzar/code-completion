@@ -134,9 +134,17 @@ class EncoderBlock(nn.Module):
 
     def forward(self, x):
 
+        res_x = x.clone()
+
         x = self.sa(x)
 
+        x = x + res_x
+
+        res_x_2 = x.clone()
+
         x = self.block(x)
+
+        x = x + res_x_2
 
         return x
     
@@ -153,11 +161,24 @@ class DecoderBlock(nn.Module):
 
     def forward(self, x, encoded):
 
+        res_x = x.clone()
+
+        # Allegedly needs to be masked?
         x = self.sa(x)
+
+        x = x + res_x
+
+        res_x_2 = x.clone()
 
         x = self.eda(x, encoded)
 
+        x = x + res_x_2
+
+        res_x_3 = x.clone()
+
         x = self.block(x)
+
+        x = x + res_x_3
 
         return x
 
@@ -179,6 +200,11 @@ class Transformer(nn.Module):
         self.enc_embedding = nn.Embedding(vocab_size,DIM)
 
         self.dec_embedding = nn.Embedding(vocab_size,DIM)
+
+        self.ublock = nn.Sequential(
+            nn.Linear(DIM, DIM),
+            nn.Softmax()
+        )
 
 
     # yoinked from JBlitzar/Diffusion
@@ -212,7 +238,7 @@ class Transformer(nn.Module):
         
         x = self.d_lnorm(x)
 
-        x = nn.Softmax(x)
+        x = self.ublock(x)
 
         return x
 
