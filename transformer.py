@@ -5,6 +5,8 @@ import numpy as np
 
 DIM = 512
 
+DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
+
 #TODO: check that all these things work how I think they will
 #TODO: masking I think
 
@@ -196,7 +198,7 @@ class Transformer(nn.Module):
         self.e_lnorm = nn.LayerNorm(DIM)
         self.d_lnorm = nn.LayerNorm(DIM)
 
-        self.pos_encoding = self.get_pos_encoding(torch.range(seq_len),DIM)
+        self.pos_encoding = self.get_pos_encoding(torch.arange(seq_len),DIM)
 
         self.enc_embedding = nn.Embedding(vocab_size,DIM)
 
@@ -211,7 +213,7 @@ class Transformer(nn.Module):
     # yoinked from JBlitzar/Diffusion
     def get_pos_encoding(self, t, channels):
         inv_freq = 1.0 / (
-        10000 ** (torch.arange(0, channels, 2, device=self.device).float() / channels)
+        10000 ** (torch.arange(0, channels, 2, device=DEVICE).float() / channels)
         )
         pos_enc_a = torch.sin(t.repeat(1, channels // 2) * inv_freq)
         pos_enc_b = torch.cos(t.repeat(1, channels // 2) * inv_freq)
