@@ -14,10 +14,18 @@ params = {
 }
 headers = {"Authorization":"token "+os.environ["GITHUB_PAT"]}
 
+def get_existing_line_count(filename="repositories.txt"):
+    if not os.path.exists(filename):
+        return 0
+    with open(filename, "r") as file:
+        return sum(1 for _ in file)
+
 def fetch_all_repositories():
-    page = 1
-    with open("repositories.txt", "w") as file:
-        with tqdm(desc="Processing") as pbar:
+    existing_lines = get_existing_line_count()
+    page = (existing_lines // params["per_page"]) + 1  # Calculate the starting page
+
+    with open("repositories.txt", "a") as file:  # Append mode to resume
+        with tqdm(desc="Processing", initial=existing_lines // params["per_page"]) as pbar:
             while True:
                 params["page"] = page
                 response = requests.get(url, headers=headers, params=params)
@@ -25,11 +33,14 @@ def fetch_all_repositories():
                 if response.status_code == 200:
                     data = response.json()
                     repositories = data.get("items", [])
+                    
                     for repo in repositories:
                         file.write(f"{repo['html_url']}\n")
                     
+                    # Break if fewer results were returned, meaning we're done
                     if len(repositories) < params["per_page"]:
                         break
+
                     page += 1
                     pbar.update(1)
                     time.sleep(5)
