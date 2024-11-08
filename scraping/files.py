@@ -3,6 +3,8 @@ import time
 from tqdm import tqdm
 from dotenv import load_dotenv
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 load_dotenv()
 
@@ -12,6 +14,9 @@ timeout_duration = 10  # Timeout for requests in seconds
 output_file = "python_files.txt"
 sha_file = "seen_shas.txt"
 line_number_file = "line_number.txt"
+
+# Lock for file writes
+file_lock = threading.Lock()
 
 def fetch_python_files_from_repo(repo_url, seen_shas):
     # Get the repository name from the URL (e.g., "owner/repo" from "https://github.com/owner/repo")
@@ -35,12 +40,12 @@ def fetch_python_files_from_repo(repo_url, seen_shas):
 
                     # Skip if SHA has been seen before
                     if file_sha not in seen_shas:
-                        with open(output_file, "a") as file:
-                            file.write(f"{file_data['download_url']}\n")
+                        with file_lock:
+                            with open(output_file, "a") as file:
+                                file.write(f"{file_data['download_url']}\n")
+                            with open(sha_file, "a") as sha_log:
+                                sha_log.write(f"{file_sha}\n")
                         seen_shas.add(file_sha)
-                        # Also write the SHA to sha_file
-                        with open(sha_file, "a") as sha_log:
-                            sha_log.write(f"{file_sha}\n")
                     else:
                         print(f"Skipping file {file_data['name']} (SHA {file_sha} already seen)")
     else:
@@ -75,15 +80,23 @@ seen_shas = read_seen_shas(sha_file)
 # Read the last line number from line_number.txt to resume
 last_line_number = get_last_line_number(line_number_file)
 
+# Number of threads for concurrency
+num_threads = 5
+
 # Process repositories from the last saved line number
 with tqdm(total=len(repositories) - last_line_number, desc="Processing Repositories") as pbar:
-    for i in range(last_line_number, len(repositories)):
-        repo_url = repositories[i].strip()
-        if repo_url:  # Skip empty lines
-            print(f"Fetching Python files from repository: {repo_url}")
-            fetch_python_files_from_repo(repo_url, seen_shas)
-            save_last_line_number(line_number_file, i + 1)  # Save the current line number for resume
-        pbar.update(1)
-        #time.sleep(0.1)  # Delay to prevent rate limiting
+    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+        futures = []
+        for i in range(last_line_number, len(repositories)):
+            repo_url = repositories[i].strip()
+            if repo_url:  # Skip empty lines
+                futures.append(executor.submit(fetch_python_files_from_repo, repo_url, seen_shas))
+                pbar.update(1)
+                # Save progress in line_number.txt
+                save_last_line_number(line_number_file, i + 1)
+
+        # Wait for all futures to complete
+        for future in as_completed(futures):
+            future.result()
 
 print(f"Python files saved to {output_file}")
