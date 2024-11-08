@@ -2,6 +2,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 import os
+import random
 
 # Path to the file containing URLs
 file_path = 'python_files.txt'
@@ -27,11 +28,14 @@ def calculate_total_size(file_path):
     with open(file_path, 'r') as file:
         urls = [line.strip() for line in file if line.strip()]
 
+    random.shuffle(urls)
+    urls = urls[:5000]
+
     # Use threading to perform requests concurrently with a progress bar
     total_size = 0
     with ThreadPoolExecutor() as executor:
         # Wrap the map in tqdm for a progress bar
-        file_sizes = list(tqdm(executor.map(get_file_size, urls), total=len(urls), desc=f"Processing URLs. Total so far: {sum(file_sizes)}"))
+        file_sizes = list(tqdm(executor.map(get_file_size, urls), total=len(urls), desc=f"Processing URLs."))
 
     # Calculate the total size
     total_size = sum(file_sizes)
