@@ -9,7 +9,7 @@ import threading
 load_dotenv()
 
 # GitHub API setup
-headers = {"Authorization": "token " + os.environ["GITHUB_PAT_v2"]}
+headers = {"Authorization": "token " + os.environ["GITHUB_PAT"]}
 timeout_duration = 10  # Timeout for requests in seconds
 output_file = "python_files.txt"
 sha_file = "seen_shas.txt"
