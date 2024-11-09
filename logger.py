@@ -26,5 +26,5 @@ def init_logger(net, data=None, dir="runs"):
         writer.add_graph(net, data)
     writer.close()
     net.train()
-    os.system("tensorboard --logdir runs &")
+    os.system("tensorboard --logdir runs > /dev/null 2>&1 &")
     os.system("sleep 5; open http://localhost:6006 &")

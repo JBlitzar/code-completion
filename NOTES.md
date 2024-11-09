@@ -24,3 +24,8 @@
   - We have the dataset, now I'm fixing up architecture, making training etc files
   - Using BERT for tokenizing.
   - This project is really starting to come along!
+  - Made eval.py and I am testing on a shakespeare dataset because its smaller for now
+  - Fixed bugs with it always predicting `[PAD]`
+  - I think I will have to train it for a bit on shakespeare and see what I get
+  - Integrated tensorboard is bugging, so I open it on web now
+  - Nans in stuff, which I had to fix

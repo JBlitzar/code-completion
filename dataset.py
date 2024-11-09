@@ -34,6 +34,8 @@ class GithubDataset(Dataset):
         input_ids = encoding['input_ids'].squeeze(0)
         attention_mask = encoding['attention_mask'].squeeze(0)
 
+        #print(encoding.keys)
+
         return input_ids, attention_mask
     
         
@@ -59,3 +61,9 @@ def get_dataloader(dataset, batch_size=64):
 if __name__ == "__main__":
     d = get_train_dataset()
     print('Number of samples: ', len(d))
+
+    a,b = d[4]
+    t = AutoTokenizer.from_pretrained('bert-base-uncased')
+    for i in a:
+        print(t.decode(i.item()), end=" ")
+    print()

@@ -136,7 +136,7 @@ class PositionalEncoding(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, num_blocks=6, vocab_size=100, seq_len=100, *args, **kwargs):
+    def __init__(self, num_blocks=6, vocab_size=30522, seq_len=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.num_blocks = num_blocks
         self.encoders = nn.ModuleList([EncoderBlock() for _ in range(num_blocks)])
@@ -145,8 +145,8 @@ class Transformer(nn.Module):
         self.enc_embedding = nn.Embedding(vocab_size, DIM)
 
         self.oblock = nn.Sequential(
-            nn.Linear(DIM, DIM),
-            nn.Softmax(dim=-1)
+            nn.Linear(DIM, vocab_size),
+            #nn.Softmax(dim=-1)
         )
 
     def forward(self, x, padding_mask=None):
