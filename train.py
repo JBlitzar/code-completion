@@ -9,12 +9,14 @@ import os
 os.system(f"caffeinate -is -w {os.getpid()} &")
 
 
-
 EXPERIMENT_DIRECTORY = "runs/tester"
 
-os.mkdir(EXPERIMENT_DIRECTORY)
+if os.path.exists(EXPERIMENT_DIRECTORY) and any(os.path.isfile(os.path.join(EXPERIMENT_DIRECTORY, item)) for item in os.listdir(EXPERIMENT_DIRECTORY)):
+    raise ValueError(f"The directory '{EXPERIMENT_DIRECTORY}' contains files, not just subfolders!")
 
-os.mkdir(EXPERIMENT_DIRECTORY+"/ckpt")
+os.makedirs(EXPERIMENT_DIRECTORY, exist_ok=True)
+os.makedirs(os.path.join(EXPERIMENT_DIRECTORY, "ckpt"), exist_ok=True)
+
 
 
 
@@ -35,8 +37,9 @@ criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
 
 
-
-init_logger(net, next(iter(dataloader))[0].to(device), dir=EXPERIMENT_DIRECTORY+"/tensorboard")
+for batch, attn_mask in dataloader:
+    init_logger(net, (batch.to(device), attn_mask.to(device)), dir=EXPERIMENT_DIRECTORY+"/tensorboard")
+    break
 for epoch in trange(EPOCHS):
     last_batch = None
     last_generated = None

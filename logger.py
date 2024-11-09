@@ -14,11 +14,12 @@ def log_img(img, name):
 
 
 
-def init_logger(net, imgs, dir="runs"):
+def init_logger(net, data=None, dir="runs"):
     net.eval()
     global writer
     if not writer:
         writer = SummaryWriter(dir)
-    writer.add_graph(net, imgs)
+    if data is not None:
+        writer.add_graph(net, data)
     writer.close()
     net.train()

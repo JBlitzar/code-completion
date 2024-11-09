@@ -247,6 +247,10 @@ class Transformer(nn.Module):
 
 
     def forward(self, x, padding_mask=None):
+
+        if isinstance(x, tuple):
+            x, padding_mask = x
+
         
         if(padding_mask is not None):
             padding_mask = padding_mask == 0
