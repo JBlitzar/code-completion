@@ -49,7 +49,7 @@ for epoch in trange(EPOCHS):
 
 
     #TODO: Check training loop
-    for batch, attn_mask in tqdm(dataloader):
+    for batch, attn_mask in tqdm(dataloader,dynamic_ncols=True):
         optimizer.zero_grad()
 
         batch = batch.to(device)
