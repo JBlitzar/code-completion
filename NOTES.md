@@ -29,3 +29,4 @@
   - I think I will have to train it for a bit on shakespeare and see what I get
   - Integrated tensorboard is bugging, so I open it on web now
   - Nans in stuff, which I had to fix
+  - BRUH ok so the reason why it was generating a bunch of unused tokens was because I forgot to set vocab size
