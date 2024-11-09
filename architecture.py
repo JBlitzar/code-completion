@@ -78,11 +78,16 @@ class MHA_SelfAttention(nn.Module):
         super().__init__(*args, **kwargs)
         self.mha = nn.MultiheadAttention(embed_dim, num_heads)
 
-    def forward(self, x, mask=False):
+    def forward(self, x, mask=None, triangle_mask=False):
 
         attn_mask = None
-        if mask:
-            attn_mask = torch.triu(torch.ones(x.size(1), x.size(1)), diagonal=1) == 0
+        if triangle_mask:
+            attn_mask = torch.triu(torch.ones(x.size(1), x.size(1)), diagonal=1).to(DEVICE) == 0
+        if mask is not None and triangle_mask:
+            attn_mask = mask.unsqueeze(1) & attn_mask
+        elif mask is not None and not triangle_mask:
+            attn_mask = mask.unsqueeze(1)
+
 
         
         x = x.transpose(0, 1)
@@ -99,15 +104,16 @@ class MHA_EncoderDecoderAttention(nn.Module):
         super().__init__(*args, **kwargs)
         self.mha = nn.MultiheadAttention(embed_dim, num_heads)
 
-    def forward(self, x, encoded):
+    def forward(self, x, encoded, mask=None):
+        attn_mask = None
+        if mask is not None:
+            attn_mask = mask.unsqueeze(1)
 
         x = x.transpose(0, 1)
         encoded = encoded.transpose(0, 1)
-        
 
-        attn_output, _ = self.mha(x, encoded, encoded)
+        attn_output, _ = self.mha(x, encoded, encoded, attn_mask=attn_mask)
         
-
         attn_output = attn_output.transpose(0, 1)
         
         return attn_output
@@ -144,11 +150,11 @@ class EncoderBlock(nn.Module):
         self.block = FeedForward()
 
 
-    def forward(self, x):
+    def forward(self, x, padding_mask=None):
 
         res_x = x.clone()
 
-        x = self.sa(x)
+        x = self.sa(x, padding_mask)
 
         x = x + res_x
 
@@ -171,18 +177,18 @@ class DecoderBlock(nn.Module):
         self.block = FeedForward()
 
 
-    def forward(self, x, encoded):
+    def forward(self, x, encoded, padding_mask=None):
 
         res_x = x.clone()
 
         # Allegedly needs to be masked?
-        x = self.sa(x, mask=True)
+        x = self.sa(x, mask=padding_mask, triangle_mask=True)
 
         x = x + res_x
 
         res_x_2 = x.clone()
 
-        x = self.eda(x, encoded)
+        x = self.eda(x, encoded, mask=padding_mask)
 
         x = x + res_x_2
 
@@ -230,13 +236,16 @@ class Transformer(nn.Module):
 
 
 
-    def forward(self, x):
+    def forward(self, x, padding_mask=None):
+        
+        if(padding_mask is not None):
+            padding_mask = padding_mask == 0
         
         x = self.pos_encoding(self.enc_embedding(x))
 
 
         for eidx, eblock in enumerate(self.encoders):
-            x = eblock(x)
+            x = eblock(x, padding_mask=padding_mask)
 
 
 
@@ -246,7 +255,7 @@ class Transformer(nn.Module):
         x = self.pos_encoding(self.dec_embedding(x))
 
         for didx, dblock in enumerate(self.decoders):
-            x = dblock(x, encoded)
+            x = dblock(x, encoded, padding_mask=padding_mask)
         
 
 
