@@ -14,7 +14,7 @@ tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
 
 
 
-EXPERIMENT_DIRECTORY = "runs/shakespeare-test"
+EXPERIMENT_DIRECTORY = "runs/run1-python"
 
 if os.path.exists(EXPERIMENT_DIRECTORY) and any(os.path.isfile(os.path.join(EXPERIMENT_DIRECTORY, item)) for item in os.listdir(EXPERIMENT_DIRECTORY)):
     raise ValueError(f"The directory '{EXPERIMENT_DIRECTORY}' contains files, not just subfolders!")
@@ -35,7 +35,7 @@ testloader = get_dataloader(get_test_dataset())
 net = Transformer()
 net.to(device)
 #TODO: Configure hyperparameters
-EPOCHS = 500
+EPOCHS = 100
 learning_rate = 0.001
 
 criterion = torch.nn.CrossEntropyLoss()

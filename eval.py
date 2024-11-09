@@ -2,8 +2,10 @@ import torch
 from transformers import AutoTokenizer
 from architecture import Transformer
 import os
+import sys
+import time
 
-EXPERIMENT_DIRECTORY = "runs/shakespeare-test"
+EXPERIMENT_DIRECTORY = "runs/run1-python"
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -52,7 +54,7 @@ for _ in range(max_length):
         
         next_token_logits = logits[:, -1, :]  # Get logits for the last token in the sequence
         
-        probs = torch.softmax(logits[:, -1, :], dim=-1)  # Apply softmax over the last dimension
+        probs = torch.softmax(next_token_logits, dim=-1)  # Apply softmax over the last dimension
         
         # Mask out PAD and SEP tokens by setting their probability to 0
         if pad_token_id is not None:
@@ -61,8 +63,8 @@ for _ in range(max_length):
         if sep_token_id is not None:
             probs[:, sep_token_id] = 0.0
 
-        # Get the token with the highest probability (sampling can be applied here as well)
-        next_token_id = torch.argmax(probs, dim=-1)
+        # Sample from the probability distribution instead of using argmax
+        next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
 
         # Append the predicted token to the input sequence
         input_ids = torch.cat((input_ids, next_token_id.unsqueeze(-1)), dim=1)
@@ -72,8 +74,16 @@ for _ in range(max_length):
 
         # Decode the token ID to text
         predicted_token = tokenizer.decode(next_token_id.item())
-        generated_text += predicted_token
-        print(predicted_token, end="")
-        print("", end="")
 
-print("\nGenerated Text:", generated_text)
+        # Properly handle spaces when adding tokens
+        if not predicted_token.startswith("##") and not predicted_token.startswith(" "):
+            predicted_token += " "
+        generated_text += predicted_token.replace("##", "")
+        
+        # Print the token as it's generated, simulating typing
+        sys.stdout.write(predicted_token.replace("##", ""))
+        sys.stdout.flush()
+
+print()
+print()
+print(generated_text)
