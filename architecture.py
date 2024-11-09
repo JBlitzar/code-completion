@@ -72,29 +72,32 @@ class EncoderDecoderAttention(nn.Module):
         return z
     
 
-
 class MHA_SelfAttention(nn.Module):
     def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.mha = nn.MultiheadAttention(embed_dim, num_heads)
+        self.num_heads = num_heads
 
     def forward(self, x, mask=None, triangle_mask=False):
-
         attn_mask = None
+        seq_len = x.size(1)
+        
         if triangle_mask:
-            attn_mask = torch.triu(torch.ones(x.size(1), x.size(1)), diagonal=1).to(DEVICE) == 0
-        if mask is not None and triangle_mask:
-            attn_mask = mask.unsqueeze(1) & attn_mask
-        elif mask is not None and not triangle_mask:
-            attn_mask = mask.unsqueeze(1)
 
+            attn_mask = torch.triu(torch.ones(seq_len, seq_len), diagonal=1) == 0
+            attn_mask = attn_mask.to(x.device)
+        if mask is not None:
+            if attn_mask is not None:
+                attn_mask = mask.unsqueeze(1) & attn_mask.unsqueeze(0)
+            else:
+                attn_mask = mask.unsqueeze(1).expand(-1, seq_len, -1)
+        
 
+        if attn_mask is not None:
+            attn_mask = attn_mask.repeat(self.num_heads, 1, 1)
         
         x = x.transpose(0, 1)
-        
-        
         attn_output, _ = self.mha(x, x, x, attn_mask=attn_mask)
-        
         attn_output = attn_output.transpose(0, 1)
         
         return attn_output
@@ -103,11 +106,18 @@ class MHA_EncoderDecoderAttention(nn.Module):
     def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.mha = nn.MultiheadAttention(embed_dim, num_heads)
+        self.num_heads = num_heads
 
     def forward(self, x, encoded, mask=None):
         attn_mask = None
+        seq_len_x = x.size(1)
+        seq_len_encoded = encoded.size(1)
+
+
         if mask is not None:
-            attn_mask = mask.unsqueeze(1)
+            attn_mask = mask.unsqueeze(1).expand(-1, seq_len_x, seq_len_encoded)
+
+            attn_mask = attn_mask.repeat(self.num_heads, 1, 1)
 
         x = x.transpose(0, 1)
         encoded = encoded.transpose(0, 1)
@@ -117,6 +127,7 @@ class MHA_EncoderDecoderAttention(nn.Module):
         attn_output = attn_output.transpose(0, 1)
         
         return attn_output
+
 
     
 class FeedForward(nn.Module):
@@ -208,10 +219,12 @@ class PositionalEncoding(nn.Module):
         pe = torch.zeros(max_len, DIM)
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
-        self.pe = pe.unsqueeze(0)
+        self.register_buffer('pe', pe.unsqueeze(0))
 
     def forward(self, x):
-        return x + self.pe[:, :x.size(1), :].to(x.device)
+        seq_len = x.size(1)
+        print(f"x shape: {x.shape}, pe shape: {self.pe[:, :seq_len, :].shape}")
+        return x + self.pe[:, :seq_len, :].to(x.device)
     
 #todo figure out how the training loop/inference loop actually works
 class Transformer(nn.Module):
@@ -227,7 +240,7 @@ class Transformer(nn.Module):
 
         self.enc_embedding = nn.Embedding(vocab_size,DIM)
 
-        self.dec_embedding = nn.Embedding(vocab_size,DIM)
+        #self.dec_embedding = nn.Embedding(vocab_size,DIM)
 
         self.oblock = nn.Sequential(
             nn.Linear(DIM, DIM),
@@ -243,16 +256,24 @@ class Transformer(nn.Module):
         
         x = self.pos_encoding(self.enc_embedding(x))
 
+        print(f"After embedding and pos encoding, x shape: {x.shape}")
+
 
         for eidx, eblock in enumerate(self.encoders):
             x = eblock(x, padding_mask=padding_mask)
 
 
+        print(f"After encoder, x shape: {x.shape}")
 
 
         encoded = x.clone()
 
-        x = self.pos_encoding(self.dec_embedding(x))
+        #x = self.dec_embedding(x.long())
+        #print(f"After 2nd embedding, x shape: {x.shape}")
+
+        x = self.pos_encoding(x)
+
+        print(f"After 2nd pos encoding, x shape: {x.shape}")
 
         for didx, dblock in enumerate(self.decoders):
             x = dblock(x, encoded, padding_mask=padding_mask)
