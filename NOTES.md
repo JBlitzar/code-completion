@@ -8,14 +8,19 @@
     - Small files: >100 bytes but <100 kb maybe? Paper did 100mb
   - Yes
 - 7 nov
-- more stuff
-- https://github.com/search?q=language%3APython+size%3A5..5000+stars%3A%3E%3D100+license%3AMIT+template%3Afalse&type=repositories
-- https://github.com/search?q=language%3APython+size%3A5..5000+stars%3A%3E%3D100+template%3Afalse&type=repositories
+  - more stuff
+  - https://github.com/search?q=language%3APython+size%3A5..5000+stars%3A%3E%3D100+license%3AMIT+template%3Afalse&type=repositories
+  - https://github.com/search?q=language%3APython+size%3A5..5000+stars%3A%3E%3D100+template%3Afalse&type=repositories
 - 8 nov
-- Take a break from transformers, do some scraping!
-- See `scraping/`
-- Github api requests, switch out PATs for higher ratelimits
-- Scrape repos with the following criterion: >100 stars, python.
-- Do in sections of months to get around the max 1000 results constraint
-- So we have 30k of all python repositories since 2015
-- Then scrape files, just .py files between 1 and 100 kb, using SHA to avoid reuse
+  - Take a break from transformers, do some scraping!
+  - See `scraping/`
+  - Github api requests, switch out PATs for higher ratelimits
+  - Scrape repos with the following criterion: >100 stars, python.
+  - Do in sections of months to get around the max 1000 results constraint
+  - So we have 30k of all python repositories since 2015
+  - Then scrape files, just .py files between 1 and 100 kb, using SHA to avoid reuse
+- 9 nov
+  - Okay, actually working really hard on transformers now.
+  - We have the dataset, now I'm fixing up architecture, making training etc files
+  - Using BERT for tokenizing.
+  - This project is really starting to come along!
