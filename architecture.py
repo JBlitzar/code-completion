@@ -8,7 +8,6 @@ DIM = 512
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 
 #TODO: check that all these things work how I think they will
-#TODO: masking I think
 
 
 # https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Transformers?tab=readme-ov-file#queries-keys-and-values
@@ -151,7 +150,6 @@ class FeedForward(nn.Module):
         return self.block(x)
 
 
-#todo layernorm, fact-check, residual apparently?
 class EncoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -192,7 +190,7 @@ class DecoderBlock(nn.Module):
 
         res_x = x.clone()
 
-        # Allegedly needs to be masked?
+
         x = self.sa(x, mask=padding_mask, triangle_mask=True)
 
         x = x + res_x
@@ -240,7 +238,6 @@ class Transformer(nn.Module):
 
         self.enc_embedding = nn.Embedding(vocab_size,DIM)
 
-        #self.dec_embedding = nn.Embedding(vocab_size,DIM)
 
         self.oblock = nn.Sequential(
             nn.Linear(DIM, DIM),
@@ -268,8 +265,6 @@ class Transformer(nn.Module):
 
         encoded = x.clone()
 
-        #x = self.dec_embedding(x.long())
-        #print(f"After 2nd embedding, x shape: {x.shape}")
 
         x = self.pos_encoding(x)
 
