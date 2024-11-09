@@ -221,7 +221,7 @@ class PositionalEncoding(nn.Module):
 
     def forward(self, x):
         seq_len = x.size(1)
-        print(f"x shape: {x.shape}, pe shape: {self.pe[:, :seq_len, :].shape}")
+        #print(f"x shape: {x.shape}, pe shape: {self.pe[:, :seq_len, :].shape}")
         return x + self.pe[:, :seq_len, :].to(x.device)
     
 #todo figure out how the training loop/inference loop actually works
@@ -253,14 +253,14 @@ class Transformer(nn.Module):
         
         x = self.pos_encoding(self.enc_embedding(x))
 
-        print(f"After embedding and pos encoding, x shape: {x.shape}")
+        #print(f"After embedding and pos encoding, x shape: {x.shape}")
 
 
         for eidx, eblock in enumerate(self.encoders):
             x = eblock(x, padding_mask=padding_mask)
 
 
-        print(f"After encoder, x shape: {x.shape}")
+        #print(f"After encoder, x shape: {x.shape}")
 
 
         encoded = x.clone()
@@ -268,7 +268,7 @@ class Transformer(nn.Module):
 
         x = self.pos_encoding(x)
 
-        print(f"After 2nd pos encoding, x shape: {x.shape}")
+        #print(f"After 2nd pos encoding, x shape: {x.shape}")
 
         for didx, dblock in enumerate(self.decoders):
             x = dblock(x, encoded, padding_mask=padding_mask)
