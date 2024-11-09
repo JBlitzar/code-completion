@@ -14,7 +14,7 @@ from torch.utils.data import Dataset, DataLoader, random_split
 class GithubDataset(Dataset):
     def __init__(self, root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), train=False, max_length=512):
         self.root = root_dir
-        self.file_list = glob.glob(os.path.join(root_dir, '*.py'))
+        self.file_list = glob.glob(os.path.join(root_dir, '*.*'))
         self.tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
         self.max_length = max_length
 
@@ -35,8 +35,9 @@ class GithubDataset(Dataset):
         attention_mask = encoding['attention_mask'].squeeze(0)
 
         return input_ids, attention_mask
+    
         
-dataset = GithubDataset()
+dataset = GithubDataset(root_dir="./test-data/")
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 

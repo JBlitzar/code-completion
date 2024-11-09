@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 from architecture import Transformer
 import os
 
-EXPERIMENT_DIRECTORY = "runs/tester"
+EXPERIMENT_DIRECTORY = "runs/shakespeare-test"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -13,7 +13,7 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 net = Transformer()
 net.to(device)
-net.load_state_dict(torch.load(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt")))
+net.load_state_dict(torch.load(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True))
 
 tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
 
@@ -28,12 +28,16 @@ for _ in range(max_length):
     with torch.no_grad():
 
         outputs = net(input_ids)
-        logits = outputs.logits  
-        next_token_id = torch.argmax(logits[:, -1, :], dim=-1)  
-
+        #logits = outputs.logit()
+        print(outputs.shape)
+        next_token_id = torch.argmax(outputs[:, -1, :], dim=-1)  
+        print(next_token_id)
 
         input_ids = torch.cat((input_ids, next_token_id.unsqueeze(-1)), dim=1)
 
 
         predicted_token = tokenizer.decode(next_token_id.item())
         generated_text += predicted_token
+        print(predicted_token, end="")
+
+print(generated_text)
