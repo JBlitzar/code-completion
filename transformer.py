@@ -78,10 +78,17 @@ class MHA_SelfAttention(nn.Module):
         super().__init__(*args, **kwargs)
         self.mha = nn.MultiheadAttention(embed_dim, num_heads)
 
-    def forward(self, x):
+    def forward(self, x, mask=False):
+
+        attn_mask = None
+        if mask:
+            attn_mask = torch.triu(torch.ones(x.size(1), x.size(1)), diagonal=1) == 0
+
+        
         x = x.transpose(0, 1)
         
-        attn_output, _ = self.mha(x, x, x)
+        
+        attn_output, _ = self.mha(x, x, x, attn_mask=attn_mask)
         
         attn_output = attn_output.transpose(0, 1)
         
@@ -114,10 +121,12 @@ class FeedForward(nn.Module):
         self.hidden_dim = hidden_dim if hidden_dim != None else dim
         
         self.block = nn.Sequential(
+            nn.LayerNorm(self.dim),
             nn.Linear(self.dim,self.hidden_dim),
             nn.GELU(),
             nn.Linear(self.hidden_dim,self.dim),
-            nn.GELU()
+            nn.GELU(),
+           
 
         )
 
@@ -167,7 +176,7 @@ class DecoderBlock(nn.Module):
         res_x = x.clone()
 
         # Allegedly needs to be masked?
-        x = self.sa(x)
+        x = self.sa(x, mask=True)
 
         x = x + res_x
 
@@ -184,7 +193,20 @@ class DecoderBlock(nn.Module):
         x = x + res_x_3
 
         return x
+    
+class PositionalEncoding(nn.Module):
+    def __init__(self, max_len=5000):
+        super().__init__()
+        position = torch.arange(0, max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, DIM, 2) * -(np.log(10000.0) / DIM))
+        pe = torch.zeros(max_len, DIM)
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        self.pe = pe.unsqueeze(0)
 
+    def forward(self, x):
+        return x + self.pe[:, :x.size(1), :].to(x.device)
+    
 #todo figure out how the training loop/inference loop actually works
 class Transformer(nn.Module):
     def __init__(self, num_blocks=6, vocab_size=100,seq_len=100, *args, **kwargs):
@@ -195,10 +217,7 @@ class Transformer(nn.Module):
         self.encoders = nn.ModuleList([EncoderBlock() for _ in range(num_blocks)])
         self.decoders = nn.ModuleList([DecoderBlock() for _ in range(num_blocks)])
 
-        self.e_lnorm = nn.LayerNorm(DIM)
-        self.d_lnorm = nn.LayerNorm(DIM)
-
-        self.pos_encoding = self.get_pos_encoding(torch.arange(seq_len),DIM)
+        self.pos_encoding = PositionalEncoding()
 
         self.enc_embedding = nn.Embedding(vocab_size,DIM)
 
@@ -206,40 +225,30 @@ class Transformer(nn.Module):
 
         self.oblock = nn.Sequential(
             nn.Linear(DIM, DIM),
-            nn.Softmax()
+            nn.Softmax(dim=-1)
         )
 
 
-    # yoinked from JBlitzar/Diffusion
-    def get_pos_encoding(self, t, channels):
-        inv_freq = 1.0 / (
-        10000 ** (torch.arange(0, channels, 2, device=DEVICE).float() / channels)
-        )
-        pos_enc_a = torch.sin(t.repeat(1, channels // 2) * inv_freq)
-        pos_enc_b = torch.cos(t.repeat(1, channels // 2) * inv_freq)
-        pos_enc = torch.cat([pos_enc_a, pos_enc_b], dim=-1)
-        return pos_enc
-    
 
     def forward(self, x):
         
-        x = self.enc_embedding(x) + self.pos_encoding
+        x = self.pos_encoding(self.enc_embedding(x))
 
 
         for eidx, eblock in enumerate(self.encoders):
             x = eblock(x)
 
-        x = self.e_lnorm(x)
+
 
 
         encoded = x.clone()
 
-        x = self.dec_embedding(x) + self.pos_encoding
+        x = self.pos_encoding(self.dec_embedding(x))
 
         for didx, dblock in enumerate(self.decoders):
             x = dblock(x, encoded)
         
-        x = self.d_lnorm(x)
+
 
         x = self.oblock(x)
 
