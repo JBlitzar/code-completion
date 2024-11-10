@@ -30,3 +30,7 @@
   - Integrated tensorboard is bugging, so I open it on web now
   - Nans in stuff, which I had to fix
   - BRUH ok so the reason why it was generating a bunch of unused tokens was because I forgot to set vocab size
+  - But now that I've done it, it's working great! Here's some example generated shakespeare: `It is it mumle asch my farewell as together with dec within specialising hannibal glittering plea northern hale withindes iv more transit villains exeunt jaws men fearful trunk wo fertile togetheryr assignent moons . fellowyr hez rivers together translationstton neither most hearts nephew it rests virtuepl patterns make manson elves advocacy old firstous un same pole let ex pleasure monument presumably tis en is sparkle minds faithful polonius phil is fiery exeter germany give bed high high itbit most peace demonstration rescued thoughts why lords exeu`
+  - And that was after 12 minutes of training!
+  - I'm going to train it on code, but I think we should be in a good spot and we might be able to train it on wikipedia and have something of a chatgpt. That would be quite something.
+  -
