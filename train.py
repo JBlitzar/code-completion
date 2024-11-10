@@ -1,3 +1,6 @@
+import os
+os.system(f"caffeinate -is -w {os.getpid()} &")
+
 from architecture import Transformer
 from dataset import get_train_dataset, get_test_dataset, get_dataloader
 import torch
@@ -6,8 +9,12 @@ from logger import log_data, init_logger, log_img
 import torchvision
 from transformers import AutoTokenizer
 
-import os
-os.system(f"caffeinate -is -w {os.getpid()} &")
+
+RESUME = 3
+
+
+
+
 
 tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
 
@@ -15,12 +22,13 @@ tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
 
 
 EXPERIMENT_DIRECTORY = "runs/run1-python"
+if RESUME == 0:
+    if os.path.exists(EXPERIMENT_DIRECTORY) and any(os.path.isfile(os.path.join(EXPERIMENT_DIRECTORY, item)) for item in os.listdir(EXPERIMENT_DIRECTORY)):
+        raise ValueError(f"The directory '{EXPERIMENT_DIRECTORY}' contains files, not just subfolders!")
 
-if os.path.exists(EXPERIMENT_DIRECTORY) and any(os.path.isfile(os.path.join(EXPERIMENT_DIRECTORY, item)) for item in os.listdir(EXPERIMENT_DIRECTORY)):
-    raise ValueError(f"The directory '{EXPERIMENT_DIRECTORY}' contains files, not just subfolders!")
+    os.makedirs(EXPERIMENT_DIRECTORY, exist_ok=True)
+    os.makedirs(os.path.join(EXPERIMENT_DIRECTORY, "ckpt"), exist_ok=True)
 
-os.makedirs(EXPERIMENT_DIRECTORY, exist_ok=True)
-os.makedirs(os.path.join(EXPERIMENT_DIRECTORY, "ckpt"), exist_ok=True)
 
 
 
@@ -34,6 +42,8 @@ testloader = get_dataloader(get_test_dataset())
 
 net = Transformer()
 net.to(device)
+if RESUME != 0:
+    net.load_state_dict(torch.load(os.path.join(EXPERIMENT_DIRECTORY, "ckpt/latest.pt"), weights_only=True))
 #TODO: Configure hyperparameters
 EPOCHS = 100
 learning_rate = 0.001
@@ -46,6 +56,11 @@ for batch, attn_mask in dataloader:
     init_logger(net, (batch.to(device), attn_mask.to(device)), dir=EXPERIMENT_DIRECTORY+"/tensorboard")
     break
 for epoch in trange(EPOCHS):
+    if epoch < RESUME:
+        continue
+
+    print(f"Beginning epoch {epoch}")
+
     last_batch = None
     last_generated = None
     running_total = 0
