@@ -5,7 +5,7 @@ import os
 import sys
 import time
 
-EXPERIMENT_DIRECTORY = "runs/run1-python" #shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/shakespeare-test" #shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 

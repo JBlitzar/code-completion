@@ -39,7 +39,7 @@ class GithubDataset(Dataset):
         return input_ids, attention_mask
     
         
-dataset = GithubDataset()#root_dir="./test-data/")
+dataset = GithubDataset(root_dir="./test-data/")
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 

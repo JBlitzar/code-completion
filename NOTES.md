@@ -37,3 +37,16 @@
   - Ok, so I trained it overnight on code, and we've got NaN's in the loss!
   - Quite unfortunate, but I think I will pivot and make a TrainingManager class becuase train.py is becoming too big. Also, I will deNaN in there.
   - The current plan is just to train on shakespeare as a test. Why? Because it's small and highly specific. We can use shakespeare to test if the model can really learn and "overfit" to Shakespeare's style. Wish me luck!
+  - Even on the shakespeare, these things do take a while to train. Epoch 13 in 2 hr 30 min. Loss curve is looking kind of funny: epoch zero is super high, then it went down to 1 and stayed there, and then suddenly jumped down to like 0.02. Picture: <img src="readme-imgs/shakespeare-test-v2-loss-curve-preliminary.png" width="200">
+  - it goes a lot faster when I close all the other apps and turn off the screen, understandably. (Up to epoch 18 just 45 minutes later)
+  - I'm considering using wandb, but tensorboard does all I need in terms of making little graphs of loss curves.
+  - Inference is still trash: (shakespeare) `Prompt: I am - Completion: faith tern- ndhelen thee more first serious gi and instances cleopatra taffhere`
+  - Feels pretty much the same as the sample up above
+  - Epoch 20 and loss is at 0.001
+  - Beginning to kind of learn sentence structures: `This is king this discovers hall for readiness dansister service old all chamber william usually ab promising soi linen ousostrather hall olivia monument most nmarcus robert applebeauty bride all caesar ' s ex eusort cha because ' usher doolivia old camouflage`
+  - Loss is going down, sentences are incoherent, but its picking up on shakespearean words: `Forsooth for silvia weep is sour though xiii exeter crack fee dread with ackthere lstaffforward wears suit safety de count gods spa but lai clarence exeter up remain intex utterly un messengers madam old wo messengers wo old painter additions here several join but music edthe apartments watch dold ex bi youth most old`
+  - There might be some Richard III overfitting: "exeter", "clarence", "messengers"
+  - Still, that's what we are aiming for
+  - While it hasn't really picked up on sentence structure, shakespeare itself as somewhat confusing structure as well.
+  - Current loss is 0.0015, we are 28 epochs and 5.5 hours in.
+  -
