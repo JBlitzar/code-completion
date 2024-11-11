@@ -10,9 +10,6 @@ import torchvision
 from transformers import AutoTokenizer
 from trainingmanager import TrainingManager
 
-RESUME = 3
-
-
 
 
 
@@ -21,14 +18,7 @@ tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
 
 
 
-EXPERIMENT_DIRECTORY = "runs/run1-python"
-
-if RESUME == 0:
-    if os.path.exists(EXPERIMENT_DIRECTORY) and any(os.path.isfile(os.path.join(EXPERIMENT_DIRECTORY, item)) for item in os.listdir(EXPERIMENT_DIRECTORY)):
-        raise ValueError(f"The directory '{EXPERIMENT_DIRECTORY}' contains files, not just subfolders!")
-
-    os.makedirs(EXPERIMENT_DIRECTORY, exist_ok=True)
-    os.makedirs(os.path.join(EXPERIMENT_DIRECTORY, "ckpt"), exist_ok=True)
+EXPERIMENT_DIRECTORY = "runs/shakespeare-test-v2"
 
 
 
@@ -54,8 +44,7 @@ trainer = TrainingManager(
     epochs=100
 )
 
-if RESUME != 0:
-    trainer.resume()
+
 
 
 for batch, attn_mask in dataloader:

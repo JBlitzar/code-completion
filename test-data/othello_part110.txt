@@ -1,0 +1,20 @@
+CASSIO	Dost thou hear, my honest friend?
+
+Clown	No, I hear not your honest friend; I hear you.
+
+CASSIO	Prithee, keep up thy quillets. There's a poor piece
+	of gold for thee: if the gentlewoman that attends
+	the general's wife be stirring, tell her there's
+	one Cassio entreats her a little favour of speech:
+	wilt thou do this?
+
+Clown	She is stirring, sir: if she will stir hither, I
+	shall seem to notify unto her.
+
+CASSIO	Do, good my friend.
+
+	[Exit Clown]
+
+	[Enter IAGO]
+
+	In happy time, Iago.

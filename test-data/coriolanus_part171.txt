@@ -1,0 +1,20 @@
+	I' the way of flattery further.
+
+VOLUMNIA	Do your will.
+
+	[Exit]
+
+COMINIUS	Away! the tribunes do attend you: arm yourself
+	To answer mildly; for they are prepared
+	With accusations, as I hear, more strong
+	Than are upon you yet.
+
+CORIOLANUS	The word is 'mildly.' Pray you, let us go:
+	Let them accuse me by invention, I
+	Will answer in mine honour.
+
+MENENIUS	Ay, but mildly.
+
+CORIOLANUS	Well, mildly be it then. Mildly!
+
+	[Exeunt]

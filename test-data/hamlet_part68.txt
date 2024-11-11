@@ -1,0 +1,20 @@
+
+HAMLET	Upon my sword.
+
+MARCELLUS	                  We have sworn, my lord, already.
+
+HAMLET	Indeed, upon my sword, indeed.
+
+Ghost	[Beneath]  Swear.
+
+HAMLET	Ah, ha, boy! say'st thou so? art thou there,
+	truepenny?
+	Come on--you hear this fellow in the cellarage--
+	Consent to swear.
+
+HORATIO	                  Propose the oath, my lord.
+
+HAMLET	Never to speak of this that you have seen,
+	Swear by my sword.
+
+Ghost	[Beneath]  Swear.

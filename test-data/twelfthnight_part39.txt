@@ -1,0 +1,20 @@
+OLIVIA	What manner of man?
+
+MALVOLIO	Of very ill manner; he'll speak with you, will you or no.
+
+OLIVIA	Of what personage and years is he?
+
+MALVOLIO	Not yet old enough for a man, nor young enough for
+	a boy; as a squash is before 'tis a peascod, or a
+	cooling when 'tis almost an apple: 'tis with him
+	in standing water, between boy and man. He is very
+	well-favoured and he speaks very shrewishly; one
+	would think his mother's milk were scarce out of him.
+
+OLIVIA	Let him approach: call in my gentlewoman.
+
+MALVOLIO	Gentlewoman, my lady calls.
+
+	[Exit]
+
+	[Re-enter MARIA]

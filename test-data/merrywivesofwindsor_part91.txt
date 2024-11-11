@@ -1,0 +1,20 @@
+PAGE	'Tis true, Master Shallow.
+
+SHALLOW	It will be found so, Master Page. Master Doctor
+	Caius, I am come to fetch you home. I am sworn of
+	the peace: you have showed yourself a wise
+	physician, and Sir Hugh hath shown himself a wise
+	and patient churchman. You must go with me, master doctor.
+
+Host	Pardon, guest-justice. A word, Mounseur Mockwater.
+
+DOCTOR CAIUS	Mock-vater! vat is dat?
+
+Host	Mock-water, in our English tongue, is valour, bully.
+
+DOCTOR CAIUS	By gar, den, I have as mush mock-vater as de
+	Englishman. Scurvy jack-dog priest! by gar, me
+	vill cut his ears.
+
+Host	He will clapper-claw thee tightly, bully.
+

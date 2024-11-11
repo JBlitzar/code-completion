@@ -1,0 +1,20 @@
+PISTOL	Good.
+
+FLUELLEN	Ay, leeks is good: hold you, there is a groat to
+	heal your pate.
+
+PISTOL	Me a groat!
+
+FLUELLEN	Yes, verily and in truth, you shall take it; or I
+	have another leek in my pocket, which you shall eat.
+
+PISTOL	I take thy groat in earnest of revenge.
+
+FLUELLEN	If I owe you any thing, I will pay you in cudgels:
+	you shall be a woodmonger, and buy nothing of me but
+	cudgels. God b' wi' you, and keep you, and heal your pate.
+
+	[Exit]
+
+PISTOL	All hell shall stir for this.
+

@@ -1,0 +1,20 @@
+
+French Soldier	Sur mes genoux je vous donne mille remercimens; et
+	je m'estime heureux que je suis tombe entre les
+	mains d'un chevalier, je pense, le plus brave,
+	vaillant, et tres distingue seigneur d'Angleterre.
+
+PISTOL	Expound unto me, boy.
+
+Boy	He gives you, upon his knees, a thousand thanks; and
+	he esteems himself happy that he hath fallen into
+	the hands of one, as he thinks, the most brave,
+	valorous, and thrice-worthy signieur of England.
+
+PISTOL	As I suck blood, I will some mercy show.
+	Follow me!
+
+Boy	Suivez-vous le grand capitaine.
+
+	[Exeunt PISTOL, and French Soldier]
+

@@ -1,0 +1,20 @@
+	[Enter CINNA the poet]
+
+CINNA THE POET	I dreamt to-night that I did feast with Caesar,
+	And things unlucky charge my fantasy:
+	I have no will to wander forth of doors,
+	Yet something leads me forth.
+
+	[Enter Citizens]
+
+First Citizen	What is your name?
+
+Second Citizen	Whither are you going?
+
+Third Citizen	Where do you dwell?
+
+Fourth Citizen	Are you a married man or a bachelor?
+
+Second Citizen	Answer every man directly.
+
+First Citizen	Ay, and briefly.

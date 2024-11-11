@@ -1,0 +1,20 @@
+	The day is broke; be wary, look about.
+
+	[Exit]
+
+JULIET	Then, window, let day in, and let life out.
+
+ROMEO	Farewell, farewell! one kiss, and I'll descend.
+
+	[He goeth down]
+
+JULIET	Art thou gone so? love, lord, ay, husband, friend!
+	I must hear from thee every day in the hour,
+	For in a minute there are many days:
+	O, by this count I shall be much in years
+	Ere I again behold my Romeo!
+
+ROMEO	Farewell!
+	I will omit no opportunity
+	That may convey my greetings, love, to thee.
+

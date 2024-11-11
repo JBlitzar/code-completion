@@ -1,0 +1,20 @@
+	For, good King Henry, thy decay I fear.
+
+	[Exit, guarded]
+
+KING HENRY VI	My lords, what to your wisdoms seemeth best,
+	Do or undo, as if ourself were here.
+
+QUEEN MARGARET	What, will your highness leave the parliament?
+
+KING HENRY VI	Ay, Margaret; my heart is drown'd with grief,
+	Whose flood begins to flow within mine eyes,
+	My body round engirt with misery,
+	For what's more miserable than discontent?
+	Ah, uncle Humphrey! in thy face I see
+	The map of honour, truth and loyalty:
+	And yet, good Humphrey, is the hour to come
+	That e'er I proved thee false or fear'd thy faith.
+	What louring star now envies thy estate,
+	That these great lords and Margaret our queen
+	Do seek subversion of thy harmless life?

@@ -1,0 +1,20 @@
+BOYET	The heir of Alencon, Katharine her name.
+
+DUMAIN	A gallant lady. Monsieur, fare you well.
+
+	[Exit]
+
+LONGAVILLE	I beseech you a word: what is she in the white?
+
+BOYET	A woman sometimes, an you saw her in the light.
+
+LONGAVILLE	Perchance light in the light. I desire her name.
+
+BOYET	She hath but one for herself; to desire that were a shame.
+
+LONGAVILLE	Pray you, sir, whose daughter?
+
+BOYET	Her mother's, I have heard.
+
+LONGAVILLE	God's blessing on your beard!
+

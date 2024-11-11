@@ -1,0 +1,20 @@
+
+CAESAR	Mark Antony shall say I am not well,
+	And, for thy humour, I will stay at home.
+
+	[Enter DECIUS BRUTUS]
+
+	Here's Decius Brutus, he shall tell them so.
+
+DECIUS BRUTUS	Caesar, all hail! good morrow, worthy Caesar:
+	I come to fetch you to the senate-house.
+
+CAESAR	And you are come in very happy time,
+	To bear my greeting to the senators
+	And tell them that I will not come to-day:
+	Cannot, is false, and that I dare not, falser:
+	I will not come to-day: tell them so, Decius.
+
+CALPURNIA	Say he is sick.
+
+CAESAR	                  Shall Caesar send a lie?

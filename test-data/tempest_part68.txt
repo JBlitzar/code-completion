@@ -1,0 +1,20 @@
+	Will guard your person while you take your rest,
+	And watch your safety.
+
+ALONSO	Thank you. Wondrous heavy.
+
+	[ALONSO sleeps. Exit ARIEL]
+
+SEBASTIAN	What a strange drowsiness possesses them!
+
+ANTONIO	It is the quality o' the climate.
+
+SEBASTIAN	Why
+	Doth it not then our eyelids sink? I find not
+	Myself disposed to sleep.
+
+ANTONIO	Nor I; my spirits are nimble.
+	They fell together all, as by consent;
+	They dropp'd, as by a thunder-stroke. What might,
+	Worthy Sebastian? O, what might?--No more:--
+	And yet me thinks I see it in thy face,

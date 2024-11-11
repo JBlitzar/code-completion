@@ -1,0 +1,20 @@
+
+	[Enter FORTINBRAS, a Captain, and Soldiers, marching]
+
+PRINCE FORTINBRAS	Go, captain, from me greet the Danish king;
+	Tell him that, by his licence, Fortinbras
+	Craves the conveyance of a promised march
+	Over his kingdom. You know the rendezvous.
+	If that his majesty would aught with us,
+	We shall express our duty in his eye;
+	And let him know so.
+
+Captain	I will do't, my lord.
+
+PRINCE FORTINBRAS	Go softly on.
+
+	[Exeunt FORTINBRAS and Soldiers]
+
+	[Enter HAMLET, ROSENCRANTZ, GUILDENSTERN, and others]
+
+HAMLET	Good sir, whose powers are these?

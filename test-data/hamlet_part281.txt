@@ -1,0 +1,20 @@
+HAMLET	Of him, sir.
+
+OSRIC	I know you are not ignorant--
+
+HAMLET	I would you did, sir; yet, in faith, if you did,
+	it would not much approve me. Well, sir?
+
+OSRIC	You are not ignorant of what excellence Laertes is--
+
+HAMLET	I dare not confess that, lest I should compare with
+	him in excellence; but, to know a man well, were to
+	know himself.
+
+OSRIC	I mean, sir, for his weapon; but in the imputation
+	laid on him by them, in his meed he's unfellowed.
+
+HAMLET	What's his weapon?
+
+OSRIC	Rapier and dagger.
+

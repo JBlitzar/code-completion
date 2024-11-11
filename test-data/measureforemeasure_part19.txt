@@ -1,0 +1,20 @@
+	clients: though you change your place, you need not
+	change your trade; I'll be your tapster still.
+	Courage! there will be pity taken on you: you that
+	have worn your eyes almost out in the service, you
+	will be considered.
+
+MISTRESS OVERDONE	What's to do here, Thomas tapster? let's withdraw.
+
+POMPEY	Here comes Signior Claudio, led by the provost to
+	prison; and there's Madam Juliet.
+
+	[Exeunt]
+
+	[Enter Provost, CLAUDIO, JULIET, and Officers]
+
+CLAUDIO	Fellow, why dost thou show me thus to the world?
+	Bear me to prison, where I am committed.
+
+Provost	I do it not in evil disposition,
+	But from Lord Angelo by special charge.

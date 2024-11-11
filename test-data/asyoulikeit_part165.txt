@@ -1,0 +1,20 @@
+
+ROSALIND	I am: what must we understand by this?
+
+OLIVER	Some of my shame; if you will know of me
+	What man I am, and how, and why, and where
+	This handkercher was stain'd.
+
+CELIA	I pray you, tell it.
+
+OLIVER	When last the young Orlando parted from you
+	He left a promise to return again
+	Within an hour, and pacing through the forest,
+	Chewing the food of sweet and bitter fancy,
+	Lo, what befell! he threw his eye aside,
+	And mark what object did present itself:
+	Under an oak, whose boughs were moss'd with age
+	And high top bald with dry antiquity,
+	A wretched ragged man, o'ergrown with hair,
+	Lay sleeping on his back: about his neck
+	A green and gilded snake had wreathed itself,

@@ -1,0 +1,20 @@
+
+	[Exit with the child]
+
+LEONTES	No, I'll not rear
+	Another's issue.
+
+	[Enter a Servant]
+
+Servant	                  Please your highness, posts
+	From those you sent to the oracle are come
+	An hour since: Cleomenes and Dion,
+	Being well arrived from Delphos, are both landed,
+	Hasting to the court.
+
+First Lord	So please you, sir, their speed
+	Hath been beyond account.
+
+LEONTES	Twenty-three days
+	They have been absent: 'tis good speed; foretells
+	The great Apollo suddenly will have

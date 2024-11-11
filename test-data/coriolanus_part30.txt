@@ -1,0 +1,20 @@
+AUFIDIUS	And keep your honours safe!
+
+First Senator	Farewell.
+
+Second Senator	Farewell.
+
+All	Farewell.
+
+	[Exeunt]
+
+
+
+
+	CORIOLANUS
+
+
+ACT I
+
+
+

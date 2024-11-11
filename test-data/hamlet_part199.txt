@@ -1,0 +1,20 @@
+ROSENCRANTZ	I understand you not, my lord.
+
+HAMLET	I am glad of it: a knavish speech sleeps in a
+	foolish ear.
+
+ROSENCRANTZ	My lord, you must tell us where the body is, and go
+	with us to the king.
+
+HAMLET	The body is with the king, but the king is not with
+	the body. The king is a thing--
+
+GUILDENSTERN	A thing, my lord!
+
+HAMLET	Of nothing: bring me to him. Hide fox, and all after.
+
+	[Exeunt]
+
+
+
+

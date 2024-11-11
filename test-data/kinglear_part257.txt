@@ -1,0 +1,20 @@
+
+REGAN	My sickness grows upon me.
+
+ALBANY	She is not well; convey her to my tent.
+
+	[Exit Regan, led]
+
+	[Enter a Herald]
+
+	Come hither, herald,--Let the trumpet sound,
+	And read out this.
+
+Captain	Sound, trumpet!
+
+	[A trumpet sounds]
+
+Herald	[Reads]  'If any man of quality or degree within
+	the lists of the army will maintain upon Edmund,
+	supposed Earl of Gloucester, that he is a manifold
+	traitor, let him appear by the third sound of the

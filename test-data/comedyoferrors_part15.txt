@@ -1,0 +1,20 @@
+	When I am dull with care and melancholy,
+	Lightens my humour with his merry jests.
+	What, will you walk with me about the town,
+	And then go to my inn and dine with me?
+
+First Merchant	I am invited, sir, to certain merchants,
+	Of whom I hope to make much benefit;
+	I crave your pardon. Soon at five o'clock,
+	Please you, I'll meet with you upon the mart
+	And afterward consort you till bed-time:
+	My present business calls me from you now.
+
+ANTIPHOLUS
+OF SYRACUSE	Farewell till then: I will go lose myself
+	And wander up and down to view the city.
+
+First Merchant	Sir, I commend you to your own content.
+
+	[Exit]
+

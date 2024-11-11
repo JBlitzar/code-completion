@@ -1,0 +1,20 @@
+First Officer	Here is more news.
+
+	[Enter a Messenger]
+
+Messenger	The Ottomites, reverend and gracious,
+	Steering with due course towards the isle of Rhodes,
+	Have there injointed them with an after fleet.
+
+First Senator	Ay, so I thought. How many, as you guess?
+
+Messenger	Of thirty sail: and now they do restem
+	Their backward course, bearing with frank appearance
+	Their purposes toward Cyprus. Signior Montano,
+	Your trusty and most valiant servitor,
+	With his free duty recommends you thus,
+	And prays you to believe him.
+
+DUKE OF VENICE	'Tis certain, then, for Cyprus.
+	Marcus Luccicos, is not he in town?
+

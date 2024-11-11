@@ -1,0 +1,20 @@
+	And I have play'd the sheep in losing him.
+
+PROTEUS	Indeed, a sheep doth very often stray,
+	An if the shepherd be a while away.
+
+SPEED	You conclude that my master is a shepherd, then,
+	and I a sheep?
+
+PROTEUS	I do.
+
+SPEED	Why then, my horns are his horns, whether I wake or sleep.
+
+PROTEUS	A silly answer and fitting well a sheep.
+
+SPEED	This proves me still a sheep.
+
+PROTEUS	True; and thy master a shepherd.
+
+SPEED	Nay, that I can deny by a circumstance.
+

@@ -1,0 +1,20 @@
+
+HAMLET	Why, then the Polack never will defend it.
+
+Captain	Yes, it is already garrison'd.
+
+HAMLET	Two thousand souls and twenty thousand ducats
+	Will not debate the question of this straw:
+	This is the imposthume of much wealth and peace,
+	That inward breaks, and shows no cause without
+	Why the man dies. I humbly thank you, sir.
+
+Captain	God be wi' you, sir.
+
+	[Exit]
+
+ROSENCRANTZ	Wilt please you go, my lord?
+
+HAMLET	I'll be with you straight go a little before.
+
+	[Exeunt all except HAMLET]

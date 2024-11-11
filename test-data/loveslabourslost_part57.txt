@@ -1,0 +1,20 @@
+BOYET	Good sir, be not offended.
+	She is an heir of Falconbridge.
+
+LONGAVILLE	Nay, my choler is ended.
+	She is a most sweet lady.
+
+BOYET	Not unlike, sir, that may be.
+
+	[Exit LONGAVILLE]
+
+BIRON	What's her name in the cap?
+
+BOYET	Rosaline, by good hap.
+
+BIRON	Is she wedded or no?
+
+BOYET	To her will, sir, or so.
+
+BIRON	You are welcome, sir: adieu.
+

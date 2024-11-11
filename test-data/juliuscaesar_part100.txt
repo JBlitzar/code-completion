@@ -1,0 +1,20 @@
+	The fortunes and affairs of noble Brutus
+	Thorough the hazards of this untrod state
+	With all true faith. So says my master Antony.
+
+BRUTUS	Thy master is a wise and valiant Roman;
+	I never thought him worse.
+	Tell him, so please him come unto this place,
+	He shall be satisfied; and, by my honour,
+	Depart untouch'd.
+
+Servant	                  I'll fetch him presently.
+
+	[Exit]
+
+BRUTUS	I know that we shall have him well to friend.
+
+CASSIUS	I wish we may: but yet have I a mind
+	That fears him much; and my misgiving still
+	Falls shrewdly to the purpose.
+

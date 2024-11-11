@@ -72,6 +72,12 @@ class TrainingManager:
         self.resume_amt = self.get_resume()
         if self.resume_amt != 0:
             self.resume()
+        else:
+            if os.path.exists(self.dir) and any(os.path.isfile(os.path.join(self.dir, item)) for item in os.listdir(self.dir)):
+                raise ValueError(f"The directory '{self.dir}' contains files!")
+
+            os.makedirs(self.dir, exist_ok=True)
+            os.makedirs(os.path.join(self.dir, "ckpt"), exist_ok=True)
 
 
     def hasnan(self):
@@ -136,7 +142,7 @@ class TrainingManager:
 
         self.tracker.reset("Loss/epoch")
 
-        self.write_resume()
+        self.write_resume(epoch)
 
     def trainstep(self, data):
         
@@ -165,7 +171,7 @@ class TrainingManager:
 
 
     def epoch(self, epoch: int, dataloader):
-        for step, data in tqdm(enumerate(dataloader), leave=False, dynamic_ncols=True):
+        for step, data in enumerate(tqdm(dataloader, leave=False, dynamic_ncols=True)):
             self.trainstep(data)
 
             

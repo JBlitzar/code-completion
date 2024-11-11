@@ -1,0 +1,20 @@
+	Two Lords of Cymbeline's court.
+	(First Lord:)
+	(Second Lord:)
+
+	Two Gentlemen of the same.
+	(First Gentleman:)
+	(Second Gentleman:)
+
+	Two Gaolers.
+	(First Gaoler:)
+	(Second Gaoler:)
+
+QUEEN	wife to Cymbeline.
+
+IMOGEN	daughter to Cymbeline by a former queen.
+
+HELEN	a lady attending on Imogen.
+
+	Lords, Ladies, Roman Senators, Tribunes,
+	a Soothsayer, a Dutchman, a Spaniard, Musicians,

@@ -1,0 +1,20 @@
+
+	[Enter YOUNG SIWARD]
+
+YOUNG SIWARD	What is thy name?
+
+MACBETH	                  Thou'lt be afraid to hear it.
+
+YOUNG SIWARD	No; though thou call'st thyself a hotter name
+	Than any is in hell.
+
+MACBETH	My name's Macbeth.
+
+YOUNG SIWARD	The devil himself could not pronounce a title
+	More hateful to mine ear.
+
+MACBETH	No, nor more fearful.
+
+YOUNG SIWARD	Thou liest, abhorred tyrant; with my sword
+	I'll prove the lie thou speak'st.
+

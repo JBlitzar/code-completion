@@ -1,0 +1,20 @@
+
+	[Exit, guarded]
+
+KING	I am wrapp'd in dismal thinkings.
+
+	[Enter a Gentleman]
+
+Gentleman	Gracious sovereign,
+	Whether I have been to blame or no, I know not:
+	Here's a petition from a Florentine,
+	Who hath for four or five removes come short
+	To tender it herself. I undertook it,
+	Vanquish'd thereto by the fair grace and speech
+	Of the poor suppliant, who by this I know
+	Is here attending: her business looks in her
+	With an importing visage; and she told me,
+	In a sweet verbal brief, it did concern
+	Your highness with herself.
+
+KING	[Reads]  Upon his many protestations to marry me

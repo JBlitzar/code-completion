@@ -1,0 +1,20 @@
+
+MARIANA	I am always bound to you.
+
+	[Exit]
+
+DUKE VINCENTIO	Very well met, and well come.
+	What is the news from this good deputy?
+
+ISABELLA	He hath a garden circummured with brick,
+	Whose western side is with a vineyard back'd;
+	And to that vineyard is a planched gate,
+	That makes his opening with this bigger key:
+	This other doth command a little door
+	Which from the vineyard to the garden leads;
+	There have I made my promise
+	Upon the heavy middle of the night
+	To call upon him.
+
+DUKE VINCENTIO	But shall you on your knowledge find this way?
+

@@ -1,0 +1,20 @@
+
+	[Exit]
+
+	[Enter a Messenger]
+
+Messenger	My gracious sovereign, now in Devonshire,
+	As I by friends am well advertised,
+	Sir Edward Courtney, and the haughty prelate
+	Bishop of Exeter, his brother there,
+	With many more confederates, are in arms.
+
+	[Enter another Messenger]
+
+Second Messenger	My liege, in Kent the Guildfords are in arms;
+	And every hour more competitors
+	Flock to their aid, and still their power increaseth.
+
+	[Enter another Messenger]
+
+Third Messenger	My lord, the army of the Duke of Buckingham--

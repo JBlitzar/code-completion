@@ -1,0 +1,20 @@
+	(First Witch:)
+	(Second Witch:)
+	(Third Witch:)
+
+	Apparitions.
+	(First Apparition:)
+	(Second Apparition:)
+	(Third Apparition:)
+
+	Lords, Gentlemen, Officers, Soldiers, Murderers,
+	Attendants, and Messengers. (Lord:)
+	(Sergeant:)
+	(Servant:)
+	(First Murderer:)
+	(Second Murderer:)
+	(Third Murderer:)
+	(Messenger:)
+
+SCENE	Scotland: England.
+

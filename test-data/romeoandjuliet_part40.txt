@@ -1,0 +1,20 @@
+JULIET	I'll look to like, if looking liking move:
+	But no more deep will I endart mine eye
+	Than your consent gives strength to make it fly.
+
+	[Enter a Servant]
+
+Servant	Madam, the guests are come, supper served up, you
+	called, my young lady asked for, the nurse cursed in
+	the pantry, and every thing in extremity. I must
+	hence to wait; I beseech you, follow straight.
+
+LADY CAPULET	We follow thee.
+
+	[Exit Servant]
+
+	Juliet, the county stays.
+
+Nurse	Go, girl, seek happy nights to happy days.
+
+	[Exeunt]

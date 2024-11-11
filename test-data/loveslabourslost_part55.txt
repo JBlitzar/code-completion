@@ -1,0 +1,20 @@
+ROSALINE	Alack, let it blood.
+
+BIRON	Would that do it good?
+
+ROSALINE	My physic says 'ay.'
+
+BIRON	Will you prick't with your eye?
+
+ROSALINE	No point, with my knife.
+
+BIRON	Now, God save thy life!
+
+ROSALINE	And yours from long living!
+
+BIRON	I cannot stay thanksgiving.
+
+	[Retiring]
+
+DUMAIN	Sir, I pray you, a word: what lady is that same?
+
