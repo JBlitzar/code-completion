@@ -96,12 +96,7 @@ for epoch in trange(EPOCHS):
         last_batch = batch[0].detach().cpu()
         last_generated = results[0].detach().cpu()
 
-        for name, param in net.named_parameters():
-            if torch.isnan(param).any():
-                print(f"NaN found in {name}")
-        for name, param in net.named_parameters():
-            if param.grad is not None and torch.isnan(param.grad).any():
-                print(f"NaN found in gradients of {name}")
+        
     
     num_test_runs = 1
     running_total_test = 0
