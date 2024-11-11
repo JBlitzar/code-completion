@@ -69,6 +69,11 @@ class TrainingManager:
 
         self.tracker = ValueTracker()
 
+        self.resume_amt = self.get_resume()
+        if self.resume_amt != 0:
+            self.resume()
+
+
     def hasnan(self):
         for _, param in self.net.named_parameters():
             if torch.isnan(param).any():
@@ -85,6 +90,17 @@ class TrainingManager:
 
     def _load(self, name="latest.pt"):
         self.net.load_state_dict(torch.load(os.path.join(self.dir, "ckpt", name), weights_only=True))
+
+    def write_resume(self, epoch):
+        with open(os.path.join(self.dir, "ckpt", "resume.txt"), "w+") as f:
+            f.write(str(epoch))
+
+    def get_resume(self):
+        try:
+            with open(os.path.join(self.dir, "ckpt", "resume.txt"), "r") as f:
+                return int(f.read())
+        except (FileNotFoundError, ValueError):
+            return 0
 
     def resume(self):
         self.load("latest.pt")
@@ -120,6 +136,8 @@ class TrainingManager:
 
         self.tracker.reset("Loss/epoch")
 
+        self.write_resume()
+
     def trainstep(self, data):
         
 
@@ -147,7 +165,7 @@ class TrainingManager:
 
 
     def epoch(self, epoch: int, dataloader):
-        for step, data in tqdm(enumerate(dataloader), leave=False):
+        for step, data in tqdm(enumerate(dataloader), leave=False, dynamic_ncols=True):
             self.trainstep(data)
 
             
@@ -165,7 +183,11 @@ class TrainingManager:
         if dataloader is not None:
             self.dataloader = dataloader
 
-        for e in trange(self.epochs):
+        for e in trange(self.epochs,dynamic_ncols=True):
+
+            if e <= self.resume_amt:
+                continue
+
             self.epoch(e,self.dataloader)
     
     
