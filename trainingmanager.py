@@ -109,7 +109,7 @@ class TrainingManager:
             return 0
 
     def resume(self):
-        self.load("latest.pt")
+        self._load("latest.pt")
 
     def save(self, step, prefix="epoch"):
         self._save(f"{prefix}_{step}.pt")
