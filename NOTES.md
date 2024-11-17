@@ -77,7 +77,13 @@
     - We're looking at 13h epochs. Only 24gb ram used, I'll turn that up and crank overnight. _This is why tqdm is useful. We can look at how long things like this take and react._
     - Added caffeinate
     - Something is weird. Actmon says 81 gb used, 8gb real and 478gb virtual. Shared and private are either small or negative. <img src="readme-imgs/weird_mem_usage.png" width="200">
-    - MPS backend got OOM. Rather than debug this, I'm going to pivot and try to get https://github.com/tunz/transformer-pytorch working. Repo is clean and consice. Author seems like they know the paper inside and out, given they wrote https://tunz.kr/post/4.
+    - What do you know, MPS backend got OOM. Rather than debug this, I'm going to pivot and try to get https://github.com/tunz/transformer-pytorch working. Repo is clean and consice. Author seems like they know the paper inside and out, given they wrote https://tunz.kr/post/4.
 
-- Side-quest 2: Getting https://github.com/tunz/transformer-pytorch to work
-  -
+  - Side-quest 2: Getting https://github.com/tunz/transformer-pytorch to work
+    - Idiosyncratic #1: Bro uses his own library for custom pytorch operations _implemented in c++_
+    - Cool, kind of a pain for the rest of us for one function. https://github.com/tunz/tcop-pytorch/tree/master
+    - So only uses tcop in fast_transformer.py, that's also the only difference. https://tunz.kr/post/5 says that it was only 2% faster, so whatever. Kind of sad he went on this whole quest to rewrite a torch op in c++ and it only got 2% faster.
+    - It's also designed for autoregression.
+    - Dataloading is a bit convoluted, but for now I will trust the process.
+    - Quickfixes of recasting to bool bc mps, did weights_only for security
+    - Looking up! 20 min epochs, and I will analyze via tensorboard.
