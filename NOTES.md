@@ -120,4 +120,15 @@
     - `[Welcome to] be the first person to win a gold medal at the beijing olympics . <eos>`
     - `[This is the only] person who has been charged in the case . <eos>` so much legal/arrest stuff
     - `[There is hope that] this will be the end of the year . <eos>`
+    - `[h] & r block , which owns the company , said it had agreed to pay $ <unk> million to settle the lawsuit . <eos>`. Google searches reveal that there was a lawsuit in nov 2024, but also a bunch previously.
+    - At least `[war] is not the answer . <eos>`
+    - `[I'm wondering if] it 's a good thing . <eos>`
+    - `[The question is] , what do you think ? <eos>`
+    - `[google] , the world 's largest internet search engine , said it was looking at ways to make it easier for people to access the internet . <eos>` Actually good, prob overfit, but google search result for that exact sentence doesnt show anything.
+    - `[He was] the first person to be killed in the attack . <eos>` Always violence. Same with [She was]
+    - `[The trees in the rainforest are] also being planted . <eos>`
+    - `[I am sure that] this will be the case . <eos>`
+    - Loss is 3.9. Now its 3.5, 3.9 on val.
+  - According to chatgpt: "Your findings are fascinating and provide a clear picture of how the lm1b dataset has influenced your model's behavior. The outputs show a distinct news-style bias with a strong leaning toward legal, corporate, and environmental themes, as well as frequent reliance on `<unk>` tokens when specificity fails."
   - To be added to. Might consider top-p sampling or increasing temeperature or something from the current method of beam search, whatever that is. Somehow get rid of `<unk>`. Keep training for now.
+  - So what are the things we might change? Perhaps different sampling method, or continue generating past one sentence. Use `youtokentome` for tokenizing: The data preprocessing took suspiciously long, and `torchtext` is really jank.
