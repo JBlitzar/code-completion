@@ -18,6 +18,9 @@ Transformers implementation:
 
 - https://github.com/hyunwoongko/transformer
 
+- https://github.com/tunz/transformer-pytorch
 
- - Picture: https://miro.medium.com/v2/resize:fit:975/1*vrSX_Ku3EmGPyqF_E-2_Vg.png
- - Also: https://cdn.prod.website-files.com/62528d398a42420e66390ef9/65cd0d82d6983755c129822a_Untitled.png
+  - This one is good because code is short and readable. Files are split up but not over-compartmentalized.
+
+- Picture: https://miro.medium.com/v2/resize:fit:975/1*vrSX_Ku3EmGPyqF_E-2_Vg.png
+- Also: https://cdn.prod.website-files.com/62528d398a42420e66390ef9/65cd0d82d6983755c129822a_Untitled.png

@@ -52,4 +52,32 @@
   - Ok, well the Nan check flagged but bug caused it to just error and exit. My tensorboard is being weird too. Sample: `I am crantmore ultultbelong tis honest loved above though bitter gone hat sir was love old tutor er s en marcel more assurance destroy old aex euntpalaces fast old death ex euntas chase t des old friend tis spells death old ( lfla corner most sunshine mates barren lo aththgreat plotted wounds besides ] beside s messengers roast fairly gone uearth said horse quo good nceold breast la`
   - Loss is going up also so that's a sign I stop. This also looks worse than the epoch 20 checkin. Well, that wasn't exactly reassuring.
 - 16 nov
+
   - Took a few-day break from this, no clear quickfix. As a sanity check, I will train with the trainer from https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Transformers, and then see if it works and go from there. Should have probably done this sooner, but oh well.
+  - Alright. I've cloned it over, but I will keep notes here. Fork is @ https://github.com/JBlitzar/a-PyTorch-Tutorial-to-Transformers
+
+    - Within the subquest of getting this to work, here's what I've done so far:
+    - Rename directories to work with my naming scheme
+    - reset model checkpoint
+    - Add a gitignore
+    - Get data.
+    - I'm about to train. Idea is to see if this works, then get it to work on autoregression, then modify if wanted!
+    - Quickly added tqdm to see progress.
+    - This person really comments _every single line_. Case in point:
+
+    ```python
+    model.eval() # eval mode disables dropout
+    # Prohibit gradient computation explicitly
+
+    with torch.no_grad():
+
+    ```
+
+    - Oh my goodness this guy made his own "sequenceloader" which _doesn't inherit from dataloader_ and forgot utility methods like `__len__`. I guess I'll add them so tqdm actually works!
+    - We're looking at 13h epochs. Only 24gb ram used, I'll turn that up and crank overnight. _This is why tqdm is useful. We can look at how long things like this take and react._
+    - Added caffeinate
+    - Something is weird. Actmon says 81 gb used, 8gb real and 478gb virtual. Shared and private are either small or negative. <img src="readme-imgs/weird_mem_usage.png" width="200">
+    - MPS backend got OOM. Rather than debug this, I'm going to pivot and try to get https://github.com/tunz/transformer-pytorch working. Repo is clean and consice. Author seems like they know the paper inside and out, given they wrote https://tunz.kr/post/4.
+
+- Side-quest 2: Getting https://github.com/tunz/transformer-pytorch to work
+  -
