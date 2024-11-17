@@ -108,5 +108,16 @@
     - `[A person is] not the only person who has been arrested . <eos>` The arrested one again.
     - `[An animal is] one of the world 's most endangered species . <eos>` Makes sense, quite vague
     - `[He is not] the only one of the most popular <unk> in the world . <eos>` It was going for the company one, wasnt it.
+  - I generated some more after a bit, and it's interesting.
     - `[illegal] immigration is a major problem in the united states . <eos>` The news is showing :\
-  - To be added to. Might consider top-p sampling or increasing temeperature or something from the current method of beam search, whatever that is.
+    - `[aawoipehaweio apiouhguivcnxn] , a spokesman for <unk> , said the company had not yet been notified . <eos>`. Does this for all unknown tokens I'm pretty sure. See `[Interesting] <unk> , a spokesman for <unk> , said : " we are pleased to announce that we have reached a new agreement with <unk> . <eos>`. `[Example] <unk> , a spokesman for <unk> , said : " we are pleased to announce that we have reached a new agreement with <unk> . <eos>`
+    - `[Climate change is] a good thing . <eos>` Extremely worrying
+    - `[The internet is] one of the world 's largest internet companies . <eos> <eos>` ok.
+    - `[What is the] leading provider of <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , and <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk> , <unk>` The unknown tokens.
+    - `[The economy] , which has been hit hard by the credit crunch , has been hit hard by the recession . <eos>` Very news-related.
+    - What's with the violence: `[This man] , who has been in custody for more than a year , was arrested on suspicion of causing grievous bodily harm . <eos>`
+    - `[You are] not the only ones that have been affected . <eos> <eos>`
+    - `[Welcome to] be the first person to win a gold medal at the beijing olympics . <eos>`
+    - `[This is the only] person who has been charged in the case . <eos>` so much legal/arrest stuff
+    - `[There is hope that] this will be the end of the year . <eos>`
+  - To be added to. Might consider top-p sampling or increasing temeperature or something from the current method of beam search, whatever that is. Somehow get rid of `<unk>`. Keep training for now.
