@@ -82,8 +82,31 @@
   - Side-quest 2: Getting https://github.com/tunz/transformer-pytorch to work
     - Idiosyncratic #1: Bro uses his own library for custom pytorch operations _implemented in c++_
     - Cool, kind of a pain for the rest of us for one function. https://github.com/tunz/tcop-pytorch/tree/master
-    - So only uses tcop in fast_transformer.py, that's also the only difference. https://tunz.kr/post/5 says that it was only 2% faster, so whatever. Kind of sad he went on this whole quest to rewrite a torch op in c++ and it only got 2% faster.
+    - So only uses tcop in fast_transformer.py, that's also the only difference. https://tunz.kr/post/5 says that it was only 2% faster, so whatever. Kind of sad he went on this whole quest to rewrite a torch op in c++ and it only got 2% faster. Why? He analyzed one area: MHA. I'm absolutely sure that the main time crunch is backprop and Linear. Also when rewriting a couple operators into one vs using pytorch's very optimized ones in succession, you will get similar results
     - It's also designed for autoregression.
     - Dataloading is a bit convoluted, but for now I will trust the process.
     - Quickfixes of recasting to bool bc mps, did weights_only for security
     - Looking up! 20 min epochs, and I will analyze via tensorboard.
+    - Did a few fixes with deserialization, and started training. Tensorboard is very fun. Mem usage is actually perfect. TBH, this is how I would've structured the project. Good job tunz 5 years ago! You've earned yourself a star.
+
+- 17 nov
+  - We are still working on our fork at https://github.com/jblitzar/transformer-pytorch to work.
+  - Loss is around 3.5
+  - After training overnight and doing some decoding, we get for the result `[This is] one of the world 's most successful companies . <eos>` (prompt in brackets).
+  - Pretty great!
+  - Says some interesting things.
+    - `[I am not] the only person who has been arrested . <eos>`
+    - `[The trees] have been destroyed in a blaze at a house in <unk> . <eos>` (Does this on anything related to trees)
+    - `[He is] one of the world 's most successful companies . <eos>` Indicates overfitting on that phrase
+    - `[I am trying to] find a solution to the problem . <eos>`
+    - `[She is a person who] has a lot to learn from . <eos>` Finally not a company completion. Using "she" might lead the model away from overfitting male-gendered pronouns to stereotypical business-related completions. Compare with `[He is a person who] has a lot of experience and experience . <eos> . . <eos>`
+    - `[It is an example of] the <unk> of <unk> . <eos>` Lots of unk
+    - `[The idea is to] create a " <unk> " system that allows people to use the internet to communicate with friends . <eos>` Interesting. News articles seem very company and social-media focused.
+    - `[The meaning of life is] not the same . <eos>`
+    - `[The secret is] one of the world 's most popular <unk> . <eos>`
+    - `[Success is] one of the world 's most successful companies . <eos>` Broke the streak!
+    - `[A person is] not the only person who has been arrested . <eos>` The arrested one again.
+    - `[An animal is] one of the world 's most endangered species . <eos>` Makes sense, quite vague
+    - `[He is not] the only one of the most popular <unk> in the world . <eos>` It was going for the company one, wasnt it.
+    - `[illegal] immigration is a major problem in the united states . <eos>` The news is showing :\
+  - To be added to. Might consider top-p sampling or increasing temeperature or something from the current method of beam search, whatever that is.
