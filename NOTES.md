@@ -132,3 +132,4 @@
   - According to chatgpt: "Your findings are fascinating and provide a clear picture of how the lm1b dataset has influenced your model's behavior. The outputs show a distinct news-style bias with a strong leaning toward legal, corporate, and environmental themes, as well as frequent reliance on `<unk>` tokens when specificity fails."
   - To be added to. Might consider top-p sampling or increasing temeperature or something from the current method of beam search, whatever that is. Somehow get rid of `<unk>`. Keep training for now.
   - So what are the things we might change? Perhaps different sampling method, or continue generating past one sentence. Use `youtokentome` for tokenizing: The data preprocessing took suspiciously long, and `torchtext` is really jank.
+  - I ended the run at epoch 100, as val loss tipped up and no change in train loss.
