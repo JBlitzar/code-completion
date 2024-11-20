@@ -144,4 +144,9 @@
     - Mini autoencoder in feedforward.
     - Look through https://github.com/hyunwoongko/transformer
     - Preprocess code dataset by formatting or something.
-  - Next steps: Research decoder stack, get proper tokenization, port tunz code over here, decide what to run it on
+      - Prob black. Tokenization might be interesting
+  - Next steps: Research decoder stack, get proper tokenization, port tunz code over here, decide what to run it on (code completion probably)
+    - Decoder only transformers are just a stack of decoders (no XA ofc)
+    - https://datascience.stackexchange.com/questions/104179/is-the-transformer-decoder-an-autoregressive-model
+      - Teacher forcing at training, just use actual token not predicted token, duh.
+    - Decoder-only architecture opens it up as a classifier. Just knowing that it can be used for non-sequence stuff.
