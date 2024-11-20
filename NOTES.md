@@ -90,6 +90,7 @@
     - Did a few fixes with deserialization, and started training. Tensorboard is very fun. Mem usage is actually perfect. TBH, this is how I would've structured the project. Good job tunz 5 years ago! You've earned yourself a star.
 
 - 17 nov
+
   - We are still working on our fork at https://github.com/jblitzar/transformer-pytorch to work.
   - Loss is around 3.5
   - After training overnight and doing some decoding, we get for the result `[This is] one of the world 's most successful companies . <eos>` (prompt in brackets).
@@ -133,3 +134,14 @@
   - To be added to. Might consider top-p sampling or increasing temeperature or something from the current method of beam search, whatever that is. Somehow get rid of `<unk>`. Keep training for now.
   - So what are the things we might change? Perhaps different sampling method, or continue generating past one sentence. Use `youtokentome` for tokenizing: The data preprocessing took suspiciously long, and `torchtext` is really jank.
   - I ended the run at epoch 100, as val loss tipped up and no change in train loss.
+
+  - All right, so first of all we can see that they are tokenizing at the word level.
+  - I'm going to try to get wikitext working. It's small, factual, and neutral. https://huggingface.co/datasets/Salesforce/wikitext.
+
+- Nov 19
+  - Nick thoughts:
+    - Sometimes just a stack of decoders, no XA just SA. Look into it.
+    - Mini autoencoder in feedforward.
+    - Look through https://github.com/hyunwoongko/transformer
+    - Preprocess code dataset by formatting or something.
+  - Next steps: Research decoder stack, get proper tokenization, port tunz code over here, decide what to run it on
