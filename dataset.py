@@ -4,10 +4,32 @@ import torch
 from torch.utils.data import DataLoader
 import glob
 import os
-from transformers import AutoTokenizer
 from torch.utils.data import Dataset, DataLoader, random_split
+from shutil import copyfile
+
+import youtokentome as yttm
 
 
+
+class BPEModelManager:
+    def __init__(self, root_dir, vocab_size=5000):
+        model_path = os.path.join(root_dir, "bpe_model.model")
+        try:
+            bpe = yttm.BPE(model=model_path)
+            if bpe.vocab_size != 5000:
+                print("Vocab size didn't match, assuming bad model.")
+                copyfile(model_path, os.path.join(root_dir, "bpe_model.model.old"))
+                
+                raise ValueError
+        except ValueError:
+            yttm.BPE.train(data=os.path.join(root_dir, "/data/corpus.txt"), vocab_size=vocab_size, model=model_path)
+            bpe = yttm.BPE(model=model_path)
+        self.bpe = bpe
+    def encode(self, text: str):
+        return self.bpe.encode([text], output_type=yttm.OutputType.ID)
+
+    def decode(self, ids):
+        return self.bpe.decode(ids)
 
 
 

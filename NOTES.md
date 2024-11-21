@@ -150,3 +150,6 @@
     - https://datascience.stackexchange.com/questions/104179/is-the-transformer-decoder-an-autoregressive-model
       - Teacher forcing at training, just use actual token not predicted token, duh.
     - Decoder-only architecture opens it up as a classifier. Just knowing that it can be used for non-sequence stuff.
+- Nov 21
+  - Just got decoder-only xformer implemented.
+  - 
