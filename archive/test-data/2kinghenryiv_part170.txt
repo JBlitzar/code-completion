@@ -1,0 +1,20 @@
+	desert mount.
+
+LANCASTER	Thine's too heavy to mount.
+
+FALSTAFF	Let it shine, then.
+
+LANCASTER	Thine's too thick to shine.
+
+FALSTAFF	Let it do something, my good lord, that may do me
+	good, and call it what you will.
+
+LANCASTER	Is thy name Colevile?
+
+COLEVILE	It is, my lord.
+
+LANCASTER	A famous rebel art thou, Colevile.
+
+FALSTAFF	And a famous true subject took him.
+
+COLEVILE	I am, my lord, but as my betters are

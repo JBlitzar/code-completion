@@ -1,0 +1,20 @@
+	[Enter DUKE]
+
+DUKE	Now, daughter Silvia, you are hard beset.
+	Sir Valentine, your father's in good health:
+	What say you to a letter from your friends
+	Of much good news?
+
+VALENTINE	                  My lord, I will be thankful.
+	To any happy messenger from thence.
+
+DUKE	Know ye Don Antonio, your countryman?
+
+VALENTINE	Ay, my good lord, I know the gentleman
+	To be of worth and worthy estimation
+	And not without desert so well reputed.
+
+DUKE	Hath he not a son?
+
+VALENTINE	Ay, my good lord; a son that well deserves
+	The honour and regard of such a father.

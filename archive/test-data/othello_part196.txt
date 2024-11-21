@@ -1,0 +1,20 @@
+
+
+	[Enter OTHELLO and EMILIA]
+
+OTHELLO	You have seen nothing then?
+
+EMILIA	Nor ever heard, nor ever did suspect.
+
+OTHELLO	Yes, you have seen Cassio and she together.
+
+EMILIA	But then I saw no harm, and then I heard
+	Each syllable that breath made up between them.
+
+OTHELLO	What, did they never whisper?
+
+EMILIA	Never, my lord.
+
+OTHELLO	Nor send you out o' the way?
+
+EMILIA	Never.

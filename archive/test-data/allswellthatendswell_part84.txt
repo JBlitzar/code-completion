@@ -1,0 +1,20 @@
+LAFEU	Go to, sir; you were beaten in Italy for picking a
+	kernel out of a pomegranate; you are a vagabond and
+	no true traveller: you are more saucy with lords
+	and honourable personages than the commission of your
+	birth and virtue gives you heraldry. You are not
+	worth another word, else I'ld call you knave. I leave you.
+
+	[Exit]
+
+PAROLLES	Good, very good; it is so then: good, very good;
+	let it be concealed awhile.
+
+	[Re-enter BERTRAM]
+
+BERTRAM	Undone, and forfeited to cares for ever!
+
+PAROLLES	What's the matter, sweet-heart?
+
+BERTRAM	Although before the solemn priest I have sworn,
+	I will not bed her.

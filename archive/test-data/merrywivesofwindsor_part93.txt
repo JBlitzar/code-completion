@@ -1,0 +1,20 @@
+	bring the doctor about by the fields. Will it do well?
+
+SHALLOW	We will do it.
+
+
+PAGE	|
+	|
+SHALLOW	|  Adieu, good master doctor.
+	|
+SLENDER	|
+
+
+	[Exeunt PAGE, SHALLOW, and SLENDER]
+
+DOCTOR CAIUS	By gar, me vill kill de priest; for he speak for a
+	jack-an-ape to Anne Page.
+
+Host	Let him die: sheathe thy impatience, throw cold
+	water on thy choler: go about the fields with me
+	through Frogmore: I will bring thee where Mistress

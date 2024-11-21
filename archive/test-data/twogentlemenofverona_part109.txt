@@ -1,0 +1,20 @@
+
+SPEED	'Item: She can spin.'
+
+LAUNCE	Then may I set the world on wheels, when she can
+	spin for her living.
+
+SPEED	'Item: She hath many nameless virtues.'
+
+LAUNCE	That's as much as to say, bastard virtues; that,
+	indeed, know not their fathers and therefore have no names.
+
+SPEED	'Here follow her vices.'
+
+LAUNCE	Close at the heels of her virtues.
+
+SPEED	'Item: She is not to be kissed fasting in respect
+	of her breath.'
+
+LAUNCE	Well, that fault may be mended with a breakfast. Read on.
+

@@ -1,0 +1,20 @@
+POLIXENES	King of Bohemia.
+
+FLORIZEL	Prince of Bohemia.
+
+ARCHIDAMUS	a Lord of Bohemia.
+
+Old Shepherd	reputed father of Perdita. (Shepherd:)
+
+Clown	his son.
+
+AUTOLYCUS	a rogue.
+
+	A Mariner. (Mariner:)
+
+	A Gaoler.  (Gaoler:)
+
+HERMIONE	queen to Leontes.
+
+PERDITA	daughter to Leontes and Hermione.
+

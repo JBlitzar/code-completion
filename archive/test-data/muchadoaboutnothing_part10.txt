@@ -1,0 +1,20 @@
+BEATRICE	Do, good friend.
+
+LEONATO	You will never run mad, niece.
+
+BEATRICE	No, not till a hot January.
+
+Messenger	Don Pedro is approached.
+
+	[Enter DON PEDRO, DON JOHN, CLAUDIO, BENEDICK,
+	and BALTHASAR]
+
+DON PEDRO	Good Signior Leonato, you are come to meet your
+	trouble: the fashion of the world is to avoid
+	cost, and you encounter it.
+
+LEONATO	Never came trouble to my house in the likeness of
+	your grace: for trouble being gone, comfort should
+	remain; but when you depart from me, sorrow abides
+	and happiness takes his leave.
+

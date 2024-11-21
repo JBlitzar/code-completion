@@ -1,0 +1,20 @@
+	[Enter DUKE ORSINO, VIOLA, CURIO, and others]
+
+DUKE ORSINO	Give me some music. Now, good morrow, friends.
+	Now, good Cesario, but that piece of song,
+	That old and antique song we heard last night:
+	Methought it did relieve my passion much,
+	More than light airs and recollected terms
+	Of these most brisk and giddy-paced times:
+	Come, but one verse.
+
+CURIO	He is not here, so please your lordship that should sing it.
+
+DUKE ORSINO	Who was it?
+
+CURIO	Feste, the jester, my lord; a fool that the lady
+	Olivia's father took much delight in. He is about the house.
+
+DUKE ORSINO	Seek him out, and play the tune the while.
+
+	[Exit CURIO. Music plays]

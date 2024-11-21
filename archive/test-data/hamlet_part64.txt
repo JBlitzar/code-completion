@@ -1,0 +1,20 @@
+MARCELLUS	[Within]	Lord Hamlet,--
+
+HORATIO	[Within]	Heaven secure him!
+
+HAMLET	So be it!
+
+HORATIO	[Within]  Hillo, ho, ho, my lord!
+
+HAMLET	Hillo, ho, ho, boy! come, bird, come.
+
+	[Enter HORATIO and MARCELLUS]
+
+MARCELLUS	How is't, my noble lord?
+
+HORATIO	What news, my lord?
+
+HAMLET	O, wonderful!
+
+HORATIO	                  Good my lord, tell it.
+

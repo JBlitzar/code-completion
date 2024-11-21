@@ -1,0 +1,20 @@
+
+GLOUCESTER	Yes, if it please your majesty, my liege.
+
+KING HENRY VI	Welcome, brave captain and victorious lord!
+	When I was young, as yet I am not old,
+	I do remember how my father said
+	A stouter champion never handled sword.
+	Long since we were resolved of your truth,
+	Your faithful service and your toil in war;
+	Yet never have you tasted our reward,
+	Or been reguerdon'd with so much as thanks,
+	Because till now we never saw your face:
+	Therefore, stand up; and, for these good deserts,
+	We here create you Earl of Shrewsbury;
+	And in our coronation take your place.
+
+	[Sennet. Flourish. Exeunt all but VERNON and BASSET]
+
+VERNON	Now, sir, to you, that were so hot at sea,
+	Disgracing of these colours that I wear

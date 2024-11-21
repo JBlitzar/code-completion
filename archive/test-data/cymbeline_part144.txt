@@ -1,0 +1,20 @@
+
+	[Exit]
+
+QUEEN	Son, I say, follow the king.
+
+CLOTEN	That man of hers, Pisanio, her old servant,
+	have not seen these two days.
+
+QUEEN	Go, look after.
+
+	[Exit CLOTEN]
+
+	Pisanio, thou that stand'st so for Posthumus!
+	He hath a drug of mine; I pray his absence
+	Proceed by swallowing that, for he believes
+	It is a thing most precious. But for her,
+	Where is she gone? Haply, despair hath seized her,
+	Or, wing'd with fervor of her love, she's flown
+	To her desired Posthumus: gone she is
+	To death or to dishonour; and my end

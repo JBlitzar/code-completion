@@ -1,0 +1,20 @@
+Clown	Then fare thee well: I must go buy spices for our
+	sheep-shearing.
+
+AUTOLYCUS	Prosper you, sweet sir!
+
+	[Exit Clown]
+
+	Your purse is not hot enough to purchase your spice.
+	I'll be with you at your sheep-shearing too: if I
+	make not this cheat bring out another and the
+	shearers prove sheep, let me be unrolled and my name
+	put in the book of virtue!
+
+	[Sings]
+
+	Jog on, jog on, the foot-path way,
+	And merrily hent the stile-a:
+	A merry heart goes all the day,
+	Your sad tires in a mile-a.
+

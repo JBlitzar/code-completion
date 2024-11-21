@@ -1,0 +1,20 @@
+
+		Lucius, who's that knocks?
+
+	[Re-enter LUCIUS with LIGARIUS]
+
+LUCIUS	He is a sick man that would speak with you.
+
+BRUTUS	Caius Ligarius, that Metellus spake of.
+	Boy, stand aside. Caius Ligarius! how?
+
+LIGARIUS	Vouchsafe good morrow from a feeble tongue.
+
+BRUTUS	O, what a time have you chose out, brave Caius,
+	To wear a kerchief! Would you were not sick!
+
+LIGARIUS	I am not sick, if Brutus have in hand
+	Any exploit worthy the name of honour.
+
+BRUTUS	Such an exploit have I in hand, Ligarius,
+	Had you a healthful ear to hear of it.

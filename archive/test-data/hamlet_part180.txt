@@ -1,0 +1,20 @@
+
+HAMLET	                  Ay, lady, 'twas my word.
+
+	[Lifts up the array and discovers POLONIUS]
+
+	Thou wretched, rash, intruding fool, farewell!
+	I took thee for thy better: take thy fortune;
+	Thou find'st to be too busy is some danger.
+	Leave wringing of your hands: peace! sit you down,
+	And let me wring your heart; for so I shall,
+	If it be made of penetrable stuff,
+	If damned custom have not brass'd it so
+	That it is proof and bulwark against sense.
+
+QUEEN GERTRUDE	What have I done, that thou darest wag thy tongue
+	In noise so rude against me?
+
+HAMLET	Such an act
+	That blurs the grace and blush of modesty,
+	Calls virtue hypocrite, takes off the rose

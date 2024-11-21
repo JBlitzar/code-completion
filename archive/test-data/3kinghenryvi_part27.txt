@@ -1,0 +1,20 @@
+
+QUEEN MARGARET	Thou hast spoke too much already: get thee gone.
+
+KING HENRY VI	Gentle son Edward, thou wilt stay with me?
+
+QUEEN MARGARET	Ay, to be murder'd by his enemies.
+
+PRINCE EDWARD	When I return with victory from the field
+	I'll see your grace: till then I'll follow her.
+
+QUEEN MARGARET	Come, son, away; we may not linger thus.
+
+	[Exeunt QUEEN MARGARET and PRINCE EDWARD]
+
+KING HENRY VI	Poor queen! how love to me and to her son
+	Hath made her break out into terms of rage!
+	Revenged may she be on that hateful duke,
+	Whose haughty spirit, winged with desire,
+	Will cost my crown, and like an empty eagle
+	Tire on the flesh of me and of my son!

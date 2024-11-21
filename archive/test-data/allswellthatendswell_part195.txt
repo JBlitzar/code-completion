@@ -1,0 +1,20 @@
+	[Enter Clown, and PAROLLES, following]
+
+PAROLLES	Good Monsieur Lavache, give my Lord Lafeu this
+	letter: I have ere now, sir, been better known to
+	you, when I have held familiarity with fresher
+	clothes; but I am now, sir, muddied in fortune's
+	mood, and smell somewhat strong of her strong
+	displeasure.
+
+Clown	Truly, fortune's displeasure is but sluttish, if it
+	smell so strongly as thou speakest of: I will
+	henceforth eat no fish of fortune's buttering.
+	Prithee, allow the wind.
+
+PAROLLES	Nay, you need not to stop your nose, sir; I spake
+	but by a metaphor.
+
+Clown	Indeed, sir, if your metaphor stink, I will stop my
+	nose; or against any man's metaphor. Prithee, get
+	thee further.

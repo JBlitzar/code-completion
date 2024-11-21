@@ -1,0 +1,20 @@
+OTHELLO	[Reads]  'This fail you not to do, as you will--'
+
+LODOVICO	He did not call; he's busy in the paper.
+	Is there division 'twixt my lord and Cassio?
+
+DESDEMONA	A most unhappy one: I would do much
+	To atone them, for the love I bear to Cassio.
+
+OTHELLO	Fire and brimstone!
+
+DESDEMONA	My lord?
+
+OTHELLO	       Are you wise?
+
+DESDEMONA	What, is he angry?
+
+LODOVICO	                  May be the letter moved him;
+	For, as I think, they do command him home,
+	Deputing Cassio in his government.
+

@@ -1,0 +1,20 @@
+
+OSRIC	Sweet lord, if your lordship were at leisure, I
+	should impart a thing to you from his majesty.
+
+HAMLET	I will receive it, sir, with all diligence of
+	spirit. Put your bonnet to his right use; 'tis for the head.
+
+OSRIC	I thank your lordship, it is very hot.
+
+HAMLET	No, believe me, 'tis very cold; the wind is
+	northerly.
+
+OSRIC	It is indifferent cold, my lord, indeed.
+
+HAMLET	But yet methinks it is very sultry and hot for my
+	complexion.
+
+OSRIC	Exceedingly, my lord; it is very sultry,--as
+	'twere,--I cannot tell how. But, my lord, his
+	majesty bade me signify to you that he has laid a

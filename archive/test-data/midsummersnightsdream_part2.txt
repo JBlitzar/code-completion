@@ -1,0 +1,20 @@
+SNUG	a joiner.
+
+BOTTOM	a weaver.
+
+FLUTE	a bellows-mender.
+
+SNOUT	a tinker.
+
+STARVELING	a tailor.
+
+HIPPOLYTA	queen of the Amazons, betrothed to Theseus.
+
+HERMIA	daughter to Egeus, in love with Lysander.
+
+HELENA	in love with Demetrius.
+
+OBERON	king of the fairies.
+
+TITANIA	queen of the fairies.
+

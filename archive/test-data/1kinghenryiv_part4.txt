@@ -1,0 +1,20 @@
+	(Vintner:)
+	(Chamberlain:)
+	(First Carrier:)
+	(Second Carrier:)
+	(First Traveller:)
+	(Servant:)
+	(Messenger:)
+	(Ostler:)
+
+
+
+SCENE	England.
+
+
+
+
+	1 KING HENRY IV
+
+
+ACT I

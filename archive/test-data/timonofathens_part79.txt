@@ -1,0 +1,20 @@
+
+	[Re-enter Servant, with wine]
+
+Servant	Please your lordship, here is the wine.
+
+LUCULLUS	Flaminius, I have noted thee always wise. Here's to thee.
+
+FLAMINIUS	Your lordship speaks your pleasure.
+
+LUCULLUS	I have observed thee always for a towardly prompt
+	spirit--give thee thy due--and one that knows what
+	belongs to reason; and canst use the time well, if
+	the time use thee well: good parts in thee.
+
+	[To Servant]
+
+	Get you gone, sirrah.
+
+	[Exit Servant]
+

@@ -1,0 +1,20 @@
+	with the gallows and what with poverty, I am
+	custom-shrunk.
+
+	[Enter POMPEY]
+
+	How now! what's the news with you?
+
+POMPEY	Yonder man is carried to prison.
+
+MISTRESS OVERDONE	Well; what has he done?
+
+POMPEY	A woman.
+
+MISTRESS OVERDONE	But what's his offence?
+
+POMPEY	Groping for trouts in a peculiar river.
+
+MISTRESS OVERDONE	What, is there a maid with child by him?
+
+POMPEY	No, but there's a woman with maid by him. You have

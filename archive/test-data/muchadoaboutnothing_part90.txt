@@ -1,0 +1,20 @@
+
+HERO	Indeed, he hath an excellent good name.
+
+URSULA	His excellence did earn it, ere he had it.
+	When are you married, madam?
+
+HERO	Why, every day, to-morrow. Come, go in:
+	I'll show thee some attires, and have thy counsel
+	Which is the best to furnish me to-morrow.
+
+URSULA	She's limed, I warrant you: we have caught her, madam.
+
+HERO	If it proves so, then loving goes by haps:
+	Some Cupid kills with arrows, some with traps.
+
+	[Exeunt HERO and URSULA]
+
+BEATRICE	[Coming forward]
+	What fire is in mine ears? Can this be true?
+	Stand I condemn'd for pride and scorn so much?

@@ -1,0 +1,20 @@
+KING LEAR	A pestilent gall to me!
+
+Fool	Sirrah, I'll teach thee a speech.
+
+KING LEAR	Do.
+
+Fool	Mark it, nuncle:
+	Have more than thou showest,
+	Speak less than thou knowest,
+	Lend less than thou owest,
+	Ride more than thou goest,
+	Learn more than thou trowest,
+	Set less than thou throwest;
+	Leave thy drink and thy whore,
+	And keep in-a-door,
+	And thou shalt have more
+	Than two tens to a score.
+
+KENT	This is nothing, fool.
+

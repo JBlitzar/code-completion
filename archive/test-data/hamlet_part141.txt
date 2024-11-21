@@ -1,0 +1,20 @@
+
+	[Exeunt Players]
+
+	[Enter POLONIUS, ROSENCRANTZ, and GUILDENSTERN]
+
+	How now, my lord! I will the king hear this piece of work?
+
+LORD POLONIUS	And the queen too, and that presently.
+
+HAMLET	Bid the players make haste.
+
+	[Exit POLONIUS]
+
+	Will you two help to hasten them?
+
+
+ROSENCRANTZ	|
+	|  We will, my lord.
+GUILDENSTERN	|
+

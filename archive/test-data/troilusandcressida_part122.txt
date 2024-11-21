@@ -1,0 +1,20 @@
+	How now, how now!
+
+TROILUS	Sirrah, walk off.
+
+	[Exit Boy]
+
+PANDARUS	Have you seen my cousin?
+
+TROILUS	No, Pandarus: I stalk about her door,
+	Like a strange soul upon the Stygian banks
+	Staying for waftage. O, be thou my Charon,
+	And give me swift transportance to those fields
+	Where I may wallow in the lily-beds
+	Proposed for the deserver! O gentle Pandarus,
+	From Cupid's shoulder pluck his painted wings
+	And fly with me to Cressid!
+
+PANDARUS	Walk here i' the orchard, I'll bring her straight.
+
+	[Exit]

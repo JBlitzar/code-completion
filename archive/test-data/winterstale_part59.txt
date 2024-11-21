@@ -1,0 +1,20 @@
+	[Exit Gentleman]
+
+		               Good lady,
+	No court in Europe is too good for thee;
+	What dost thou then in prison?
+
+	[Re-enter Gentleman, with the Gaoler]
+
+		         Now, good sir,
+	You know me, do you not?
+
+Gaoler	For a worthy lady
+	And one whom much I honour.
+
+PAULINA	Pray you then,
+	Conduct me to the queen.
+
+Gaoler	I may not, madam:
+	To the contrary I have express commandment.
+

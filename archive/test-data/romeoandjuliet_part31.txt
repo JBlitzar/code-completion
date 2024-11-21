@@ -1,0 +1,20 @@
+
+Servant	My master's.
+
+ROMEO	Indeed, I should have ask'd you that before.
+
+Servant	Now I'll tell you without asking: my master is the
+	great rich Capulet; and if you be not of the house
+	of Montagues, I pray, come and crush a cup of wine.
+	Rest you merry!
+
+	[Exit]
+
+BENVOLIO	At this same ancient feast of Capulet's
+	Sups the fair Rosaline whom thou so lovest,
+	With all the admired beauties of Verona:
+	Go thither; and, with unattainted eye,
+	Compare her face with some that I shall show,
+	And I will make thee think thy swan a crow.
+
+ROMEO	When the devout religion of mine eye

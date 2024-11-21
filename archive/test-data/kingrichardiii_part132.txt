@@ -1,0 +1,20 @@
+BUCKINGHAM	Good Catesby, go, effect this business soundly.
+
+CATESBY	My good lords both, with all the heed I may.
+
+GLOUCESTER	Shall we hear from you, Catesby, ere we sleep?
+
+CATESBY	You shall, my lord.
+
+GLOUCESTER	At Crosby Place, there shall you find us both.
+
+	[Exit CATESBY]
+
+BUCKINGHAM	Now, my lord, what shall we do, if we perceive
+	Lord Hastings will not yield to our complots?
+
+GLOUCESTER	Chop off his head, man; somewhat we will do:
+	And, look, when I am king, claim thou of me
+	The earldom of Hereford, and the moveables
+	Whereof the king my brother stood possess'd.
+

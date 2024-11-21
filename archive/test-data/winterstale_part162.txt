@@ -1,0 +1,20 @@
+	If I might die within this hour, I have lived
+	To die when I desire.
+
+	[Exit]
+
+FLORIZEL	Why look you so upon me?
+	I am but sorry, not afeard; delay'd,
+	But nothing alter'd: what I was, I am;
+	More straining on for plucking back, not following
+	My leash unwillingly.
+
+CAMILLO	Gracious my lord,
+	You know your father's temper: at this time
+	He will allow no speech, which I do guess
+	You do not purpose to him; and as hardly
+	Will he endure your sight as yet, I fear:
+	Then, till the fury of his highness settle,
+	Come not before him.
+
+FLORIZEL	I not purpose it.

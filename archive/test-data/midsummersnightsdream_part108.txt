@@ -1,0 +1,20 @@
+BOTTOM	Give me your neaf, Mounsieur Mustardseed. Pray you,
+	leave your courtesy, good mounsieur.
+
+MUSTARDSEED	What's your Will?
+
+BOTTOM	Nothing, good mounsieur, but to help Cavalery Cobweb
+	to scratch. I must to the barber's, monsieur; for
+	methinks I am marvellous hairy about the face; and I
+	am such a tender ass, if my hair do but tickle me,
+	I must scratch.
+
+TITANIA	What, wilt thou hear some music,
+	my sweet love?
+
+BOTTOM	I have a reasonable good ear in music. Let's have
+	the tongs and the bones.
+
+TITANIA	Or say, sweet love, what thou desirest to eat.
+
+BOTTOM	Truly, a peck of provender: I could munch your good

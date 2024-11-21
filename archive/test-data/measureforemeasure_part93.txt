@@ -1,0 +1,20 @@
+SCENE I	A room in the prison.
+
+
+	[Enter DUKE VINCENTIO disguised as before, CLAUDIO,
+	and Provost]
+
+DUKE VINCENTIO	So then you hope of pardon from Lord Angelo?
+
+CLAUDIO	The miserable have no other medicine
+	But only hope:
+	I've hope to live, and am prepared to die.
+
+DUKE VINCENTIO	Be absolute for death; either death or life
+	Shall thereby be the sweeter. Reason thus with life:
+	If I do lose thee, I do lose a thing
+	That none but fools would keep: a breath thou art,
+	Servile to all the skyey influences,
+	That dost this habitation, where thou keep'st,
+	Hourly afflict: merely, thou art death's fool;
+	For him thou labour'st by thy flight to shun

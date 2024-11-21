@@ -1,0 +1,20 @@
+First Guard	Approach, ho! All's not well: Caesar's beguiled.
+
+Second Guard	There's Dolabella sent from Caesar; call him.
+
+First Guard	What work is here! Charmian, is this well done?
+
+CHARMIAN	It is well done, and fitting for a princess
+	Descended of so many royal kings.
+	Ah, soldier!
+
+	[Dies]
+
+	[Re-enter DOLABELLA]
+
+DOLABELLA	How goes it here?
+
+Second Guard	                  All dead.
+
+DOLABELLA	Caesar, thy thoughts
+	Touch their effects in this: thyself art coming

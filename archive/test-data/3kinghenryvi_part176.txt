@@ -1,0 +1,20 @@
+
+	[Enter a Post]
+
+WARWICK	What news, my friend?
+
+Post	That Edward is escaped from your brother,
+	And fled, as he hears since, to Burgundy.
+
+WARWICK	Unsavoury news! but how made he escape?
+
+Post	He was convey'd by Richard Duke of Gloucester
+	And the Lord Hastings, who attended him
+	In secret ambush on the forest side
+	And from the bishop's huntsmen rescued him;
+	For hunting was his daily exercise.
+
+WARWICK	My brother was too careless of his charge.
+	But let us hence, my sovereign, to provide
+	A salve for any sore that may betide.
+

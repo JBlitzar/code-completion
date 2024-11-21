@@ -1,0 +1,20 @@
+	[Exit]
+
+	[Enter APEMANTUS and Fool]
+
+CAPHIS	Stay, stay, here comes the fool with Apemantus:
+	let's ha' some sport with 'em.
+
+Varro's Servant	Hang him, he'll abuse us.
+
+Isidore's Servant	A plague upon him, dog!
+
+Varro's Servant	How dost, fool?
+
+APEMANTUS	Dost dialogue with thy shadow?
+
+Varro's Servant	I speak not to thee.
+
+APEMANTUS	No,'tis to thyself.
+
+	[To the Fool]

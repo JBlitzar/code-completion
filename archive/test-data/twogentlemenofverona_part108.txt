@@ -1,0 +1,20 @@
+LAUNCE	Ay, that she can.
+
+SPEED	'Item: She brews good ale.'
+
+LAUNCE	And thereof comes the proverb: 'Blessing of your
+	heart, you brew good ale.'
+
+SPEED	'Item: She can sew.'
+
+LAUNCE	That's as much as to say, Can she so?
+
+SPEED	'Item: She can knit.'
+
+LAUNCE	What need a man care for a stock with a wench, when
+	she can knit him a stock?
+
+SPEED	'Item: She can wash and scour.'
+
+LAUNCE	A special virtue: for then she need not be washed
+	and scoured.

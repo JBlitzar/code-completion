@@ -1,0 +1,20 @@
+
+FLUTE	Here, Peter Quince.
+
+QUINCE	Flute, you must take Thisby on you.
+
+FLUTE	What is Thisby? a wandering knight?
+
+QUINCE	It is the lady that Pyramus must love.
+
+FLUTE	Nay, faith, let me not play a woman; I have a beard coming.
+
+QUINCE	That's all one: you shall play it in a mask, and
+	you may speak as small as you will.
+
+BOTTOM	An I may hide my face, let me play Thisby too, I'll
+	speak in a monstrous little voice. 'Thisne,
+	Thisne;' 'Ah, Pyramus, lover dear! thy Thisby dear,
+	and lady dear!'
+
+QUINCE	No, no; you must play Pyramus: and, Flute, you Thisby.
