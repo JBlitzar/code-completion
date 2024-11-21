@@ -41,35 +41,34 @@ class BPEModelManager:
         print(manager.encode("This is a test"))
         print(manager.decode(manager.encode("This is a test")))
 
-class GithubDataset(Dataset):
-    def __init__(self, root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), train=False, max_length=512):
+    @staticmethod
+    def attention_mask(encoded_sequence, mask_token_ids=[0,1,2,3]):
+        return [1 if token not in mask_token_ids else 0 for token in encoded_sequence]
+
+class TextCorpusDataset(Dataset):
+    def __init__(self, root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), train=False, max_length=512, vocab_size=10000):
         self.root = root_dir
-        self.file_list = glob.glob(os.path.join(root_dir, '*.*'))
-        self.tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
+        self.manager = BPEModelManager(root_dir=root_dir,vocab_size=vocab_size)
         self.max_length = max_length
 
+        with open(os.path.join(root_dir, "data/corpus.txt"), "w") as file:
+            text = file.read()
+            self.chunks = [text[i:i+self.max_length] for i in range(0, len(text), self.max_length)]
+
+
+
+
     def __len__(self):
-        return len(self.file_list)
+        return len(self.chunks)
 
     def __getitem__(self, idx):
+        seq = self.manager.encode(self.chunks[idx])
+
+        return seq, self.manager.attention_mask(seq) #todo: convert to tensor.
+
+
         
-        path = self.file_list[idx]
-
-        with open(path, 'r', encoding='utf-8', errors='ignore') as file:
-            code = file.read()
-
-
-        encoding = self.tokenizer(code, padding='max_length', truncation=True, max_length=self.max_length, return_tensors="pt")
-
-        input_ids = encoding['input_ids'].squeeze(0)
-        attention_mask = encoding['attention_mask'].squeeze(0)
-
-        #print(encoding.keys)
-
-        return input_ids, attention_mask
-    
-        
-dataset = GithubDataset(root_dir="./test-data/")
+dataset = TextCorpusDataset(root_dir="./test-data/")
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 
