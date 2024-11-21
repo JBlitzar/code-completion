@@ -36,30 +36,6 @@ class MHA_SelfAttention(nn.Module):
         
         return attn_output
 
-class MHA_EncoderDecoderAttention(nn.Module):
-    def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.mha = nn.MultiheadAttention(embed_dim, num_heads)
-        self.num_heads = num_heads
-
-    def forward(self, x, encoded, mask=None):
-        attn_mask = None
-        seq_len_x = x.size(1)
-        seq_len_encoded = encoded.size(1)
-
-        if mask is not None:
-            attn_mask = mask.unsqueeze(1).expand(-1, seq_len_x, seq_len_encoded)
-            attn_mask = attn_mask.repeat(self.num_heads, 1, 1)
-
-        x = x.transpose(0, 1)
-        encoded = encoded.transpose(0, 1)
-
-        attn_output, _ = self.mha(x, encoded, encoded, attn_mask=attn_mask)
-        
-        attn_output = attn_output.transpose(0, 1)
-        
-        return attn_output
-
 
 class FeedForward(nn.Module):
     def __init__(self, dim=DIM, hidden_dim=None, *args, **kwargs):
@@ -68,7 +44,7 @@ class FeedForward(nn.Module):
         self.hidden_dim = hidden_dim if hidden_dim is not None else dim
         
         self.block = nn.Sequential(
-            nn.LayerNorm(self.dim),
+            nn.LayerNorm(self.dim), #nobody knows what this does 
             nn.Linear(self.dim, self.hidden_dim),
             nn.GELU(),
             nn.Linear(self.hidden_dim, self.dim),
@@ -79,7 +55,8 @@ class FeedForward(nn.Module):
         return self.block(x)
 
 
-class EncoderBlock(nn.Module):
+
+class DecoderBlock(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.sa = MHA_SelfAttention()
@@ -87,35 +64,12 @@ class EncoderBlock(nn.Module):
 
     def forward(self, x, padding_mask=None):
         res_x = x
-        x = self.sa(x, padding_mask)
-        x = x + res_x
-
-        res_x_2 = x
-        x = self.block(x)
-        x = x + res_x_2
-
-        return x
-
-
-class DecoderBlock(nn.Module):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.sa = MHA_SelfAttention()
-        self.eda = MHA_EncoderDecoderAttention()
-        self.block = FeedForward()
-
-    def forward(self, x, encoded, padding_mask=None):
-        res_x = x
         x = self.sa(x, mask=padding_mask, triangle_mask=True)
         x = x + res_x
 
         res_x_2 = x
-        x = self.eda(x, encoded, mask=padding_mask)
-        x = x + res_x_2
-
-        res_x_3 = x
         x = self.block(x)
-        x = x + res_x_3
+        x = x + res_x_2
 
         return x
 
@@ -135,11 +89,10 @@ class PositionalEncoding(nn.Module):
         return x + self.pe[:, :seq_len, :].to(x.device)
 
 
-class Transformer(nn.Module):
-    def __init__(self, num_blocks=6, vocab_size=30522, seq_len=100, *args, **kwargs):
+class DecoderTransformer(nn.Module):
+    def __init__(self, num_blocks=6, vocab_size=100, seq_len=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.num_blocks = num_blocks
-        self.encoders = nn.ModuleList([EncoderBlock() for _ in range(num_blocks)])
         self.decoders = nn.ModuleList([DecoderBlock() for _ in range(num_blocks)])
         self.pos_encoding = PositionalEncoding()
         self.enc_embedding = nn.Embedding(vocab_size, DIM)
@@ -158,15 +111,9 @@ class Transformer(nn.Module):
 
         x = self.pos_encoding(self.enc_embedding(x))
 
-        for eidx, eblock in enumerate(self.encoders):
-            x = eblock(x, padding_mask=padding_mask)
-
-        encoded = x  # No need to clone
-
-        x = self.pos_encoding(x)
 
         for didx, dblock in enumerate(self.decoders):
-            x = dblock(x, encoded, padding_mask=padding_mask)
+            x = dblock(x, padding_mask=padding_mask)
 
         x = self.oblock(x)
 
