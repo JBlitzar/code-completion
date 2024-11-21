@@ -1,0 +1,20 @@
+	Guard her till Caesar come.
+
+	[Exit]
+
+IRAS	Royal queen!
+
+CHARMIAN	O Cleopatra! thou art taken, queen:
+
+CLEOPATRA	Quick, quick, good hands.
+
+	[Drawing a dagger]
+
+PROCULEIUS	Hold, worthy lady, hold:
+
+	[Seizes and disarms her]
+
+	Do not yourself such wrong, who are in this
+	Relieved, but not betray'd.
+
+CLEOPATRA	What, of death too,

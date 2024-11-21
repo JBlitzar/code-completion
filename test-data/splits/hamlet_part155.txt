@@ -1,0 +1,20 @@
+HAMLET	If she should break it now!
+
+Player King	'Tis deeply sworn. Sweet, leave me here awhile;
+	My spirits grow dull, and fain I would beguile
+	The tedious day with sleep.
+
+	[Sleeps]
+
+Player Queen	Sleep rock thy brain,
+	And never come mischance between us twain!
+
+	[Exit]
+
+HAMLET	Madam, how like you this play?
+
+QUEEN GERTRUDE	The lady protests too much, methinks.
+
+HAMLET	O, but she'll keep her word.
+
+KING CLAUDIUS	Have you heard the argument? Is there no offence in 't?

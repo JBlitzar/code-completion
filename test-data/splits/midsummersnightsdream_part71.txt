@@ -1,0 +1,20 @@
+BOTTOM	I shall desire you of more acquaintance, good Master
+	Cobweb: if I cut my finger, I shall make bold with
+	you. Your name, honest gentleman?
+
+PEASEBLOSSOM	Peaseblossom.
+
+BOTTOM	I pray you, commend me to Mistress Squash, your
+	mother, and to Master Peascod, your father. Good
+	Master Peaseblossom, I shall desire you of more
+	acquaintance too. Your name, I beseech you, sir?
+
+MUSTARDSEED	Mustardseed.
+
+BOTTOM	Good Master Mustardseed, I know your patience well:
+	that same cowardly, giant-like ox-beef hath
+	devoured many a gentleman of your house: I promise
+	you your kindred had made my eyes water ere now. I
+	desire your more acquaintance, good Master
+	Mustardseed.
+

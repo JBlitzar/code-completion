@@ -1,0 +1,20 @@
+DUKE OF YORK	Make way, unruly woman!
+
+	[Exit]
+
+DUCHESS OF YORK	After, Aumerle! mount thee upon his horse;
+	Spur post, and get before him to the king,
+	And beg thy pardon ere he do accuse thee.
+	I'll not be long behind; though I be old,
+	I doubt not but to ride as fast as York:
+	And never will I rise up from the ground
+	Till Bolingbroke have pardon'd thee. Away, be gone!
+
+	[Exeunt]
+
+
+
+
+	KING RICHARD II
+
+

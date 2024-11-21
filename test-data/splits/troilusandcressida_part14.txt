@@ -1,0 +1,20 @@
+	[Alarum. Enter AENEAS]
+
+AENEAS	How now, Prince Troilus! wherefore not afield?
+
+TROILUS	Because not there: this woman's answer sorts,
+	For womanish it is to be from thence.
+	What news, AEneas, from the field to-day?
+
+AENEAS	That Paris is returned home and hurt.
+
+TROILUS	By whom, AEneas?
+
+AENEAS	                  Troilus, by Menelaus.
+
+TROILUS	Let Paris bleed; 'tis but a scar to scorn;
+	Paris is gored with Menelaus' horn.
+
+	[Alarum]
+
+AENEAS	Hark, what good sport is out of town to-day!

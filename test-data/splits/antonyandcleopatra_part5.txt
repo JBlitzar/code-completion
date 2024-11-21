@@ -1,0 +1,20 @@
+CHARMIAN	|
+	|  attendants on Cleopatra.
+IRAS	|
+
+
+	Officers, Soldiers, Messengers, and other Attendants.
+	(First Officer:)
+	(Second Officer:)
+	(Third Officer:)
+	(Messenger:)
+	(Second Messenger:)
+	(First Servant:)
+	(Second Servant:)
+	(Egyptian:)
+	(Guard:)
+	(First Guard:)
+	(Second Guard:)
+	(Attendant:)
+	(First Attendant:)
+	(Second Attendant:)

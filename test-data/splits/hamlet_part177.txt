@@ -1,0 +1,20 @@
+
+HAMLET	[Within]  Mother, mother, mother!
+
+QUEEN GERTRUDE	I'll warrant you,
+	Fear me not: withdraw, I hear him coming.
+
+	[POLONIUS hides behind the arras]
+
+	[Enter HAMLET]
+
+HAMLET	Now, mother, what's the matter?
+
+QUEEN GERTRUDE	Hamlet, thou hast thy father much offended.
+
+HAMLET	Mother, you have my father much offended.
+
+QUEEN GERTRUDE	Come, come, you answer with an idle tongue.
+
+HAMLET	Go, go, you question with a wicked tongue.
+

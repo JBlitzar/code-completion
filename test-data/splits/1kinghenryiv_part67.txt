@@ -1,0 +1,20 @@
+HOTSPUR	What, ho!
+
+	[Enter Servant]
+
+	Is Gilliams with the packet gone?
+
+Servant	He is, my lord, an hour ago.
+
+
+HOTSPUR	Hath Butler brought those horses from the sheriff?
+
+Servant	One horse, my lord, he brought even now.
+
+HOTSPUR	What horse? a roan, a crop-ear, is it not?
+
+Servant	It is, my lord.
+
+HOTSPUR	                  That roan shall by my throne.
+	Well, I will back him straight: O esperance!
+	Bid Butler lead him forth into the park.

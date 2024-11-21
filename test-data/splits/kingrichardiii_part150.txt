@@ -1,0 +1,20 @@
+GLOUCESTER	My lord of Ely!
+
+BISHOP OF ELY	My lord?
+
+GLOUCESTER	When I was last in Holborn,
+	I saw good strawberries in your garden there
+	I do beseech you send for some of them.
+
+BISHOP OF ELY	Marry, and will, my lord, with all my heart.
+
+	[Exit]
+
+GLOUCESTER	Cousin of Buckingham, a word with you.
+
+	[Drawing him aside]
+
+	Catesby hath sounded Hastings in our business,
+	And finds the testy gentleman so hot,
+	As he will lose his head ere give consent
+	His master's son, as worshipful as he terms it,

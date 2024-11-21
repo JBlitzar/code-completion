@@ -1,0 +1,20 @@
+YORK	Will you we show our title to the crown?
+	If not, our swords shall plead it in the field.
+
+KING HENRY VI	What title hast thou, traitor, to the crown?
+	Thy father was, as thou art, Duke of York;
+	Thy grandfather, Roger Mortimer, Earl of March:
+	I am the son of Henry the Fifth,
+	Who made the Dauphin and the French to stoop
+	And seized upon their towns and provinces.
+
+WARWICK	Talk not of France, sith thou hast lost it all.
+
+KING HENRY VI	The lord protector lost it, and not I:
+	When I was crown'd I was but nine months old.
+
+RICHARD	You are old enough now, and yet, methinks, you lose.
+	Father, tear the crown from the usurper's head.
+
+EDWARD	Sweet father, do so; set it on your head.
+

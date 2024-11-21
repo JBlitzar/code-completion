@@ -1,0 +1,20 @@
+	[Enter DROMIO of Ephesus]
+
+ADRIANA	Say, is your tardy master now at hand?
+
+DROMIO OF EPHESUS	Nay, he's at two hands with me, and that my two ears
+	can witness.
+
+ADRIANA	Say, didst thou speak with him? know'st thou his mind?
+
+DROMIO OF EPHESUS	Ay, ay, he told his mind upon mine ear:
+	Beshrew his hand, I scarce could understand it.
+
+LUCIANA	Spake he so doubtfully, thou couldst not feel his meaning?
+
+DROMIO OF EPHESUS	Nay, he struck so plainly, I could too well feel his
+	blows; and withal so doubtfully that I could scarce
+	understand them.
+
+ADRIANA	But say, I prithee, is he coming home? It seems he
+	hath great care to please his wife.

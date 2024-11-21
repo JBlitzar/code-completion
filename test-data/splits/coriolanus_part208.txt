@@ -1,0 +1,20 @@
+Second Servingman	And I shall.
+
+	[Exit]
+
+Third Servingman	Where dwellest thou?
+
+CORIOLANUS	Under the canopy.
+
+Third Servingman	Under the canopy!
+
+CORIOLANUS	Ay.
+
+Third Servingman	Where's that?
+
+CORIOLANUS	I' the city of kites and crows.
+
+Third Servingman	I' the city of kites and crows! What an ass it is!
+	Then thou dwellest with daws too?
+
+CORIOLANUS	No, I serve not thy master.

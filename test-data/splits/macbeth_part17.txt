@@ -1,0 +1,20 @@
+First Witch	All hail, Macbeth! hail to thee, thane of Glamis!
+
+Second Witch	All hail, Macbeth, hail to thee, thane of Cawdor!
+
+Third Witch	All hail, Macbeth, thou shalt be king hereafter!
+
+BANQUO	Good sir, why do you start; and seem to fear
+	Things that do sound so fair? I' the name of truth,
+	Are ye fantastical, or that indeed
+	Which outwardly ye show? My noble partner
+	You greet with present grace and great prediction
+	Of noble having and of royal hope,
+	That he seems rapt withal: to me you speak not.
+	If you can look into the seeds of time,
+	And say which grain will grow and which will not,
+	Speak then to me, who neither beg nor fear
+	Your favours nor your hate.
+
+First Witch	Hail!
+

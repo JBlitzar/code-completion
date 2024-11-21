@@ -1,0 +1,20 @@
+
+	[Enter a Servant]
+
+Servant	Gentlemen, my master Antonio is at his house and
+	desires to speak with you both.
+
+SALARINO	We have been up and down to seek him.
+
+	[Enter TUBAL]
+
+SALANIO	Here comes another of the tribe: a third cannot be
+	matched, unless the devil himself turn Jew.
+
+	[Exeunt SALANIO, SALARINO, and Servant]
+
+SHYLOCK	How now, Tubal! what news from Genoa? hast thou
+	found my daughter?
+
+TUBAL	I often came where I did hear of her, but cannot find her.
+

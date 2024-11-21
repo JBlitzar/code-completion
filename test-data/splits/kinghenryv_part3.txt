@@ -1,0 +1,20 @@
+		|
+FLUELLEN		|  Officers in King Henry's army.
+		|
+MACMORRIS		|
+		|
+JAMY		|
+
+
+BATES	|
+	|
+COURT	|  soldiers in the same.
+	|
+WILLIAMS	|
+
+
+PISTOL:
+
+NYM:
+
+BARDOLPH:

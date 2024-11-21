@@ -1,0 +1,20 @@
+LORD BARDOLPH	Tell thou the earl
+	That the Lord Bardolph doth attend him here.
+
+Porter	His lordship is walk'd forth into the orchard;
+	Please it your honour, knock but at the gate,
+	And he himself wilt answer.
+
+	[Enter NORTHUMBERLAND]
+
+LORD BARDOLPH	Here comes the earl.
+
+	[Exit Porter]
+
+NORTHUMBERLAND	What news, Lord Bardolph? every minute now
+	Should be the father of some stratagem:
+	The times are wild: contention, like a horse
+	Full of high feeding, madly hath broke loose
+	And bears down all before him.
+
+LORD BARDOLPH	Noble earl,

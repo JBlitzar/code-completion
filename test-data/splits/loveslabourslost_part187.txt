@@ -1,0 +1,20 @@
+	I wish you the peace of mind, most royal couplement!
+
+	[Exit]
+
+FERDINAND	Here is like to be a good presence of Worthies. He
+	presents Hector of Troy; the swain, Pompey the
+	Great; the parish curate, Alexander; Armado's page,
+	Hercules; the pedant, Judas Maccabaeus: And if
+	these four Worthies in their first show thrive,
+	These four will change habits, and present the other five.
+
+BIRON	There is five in the first show.
+
+FERDINAND	You are deceived; 'tis not so.
+
+BIRON	The pedant, the braggart, the hedge-priest, the fool
+	and the boy:--
+	Abate throw at novum, and the whole world again
+	Cannot pick out five such, take each one in his vein.
+

@@ -1,0 +1,20 @@
+ALL	                  A deed without a name.
+
+MACBETH	I conjure you, by that which you profess,
+	Howe'er you come to know it, answer me:
+	Though you untie the winds and let them fight
+	Against the churches; though the yesty waves
+	Confound and swallow navigation up;
+	Though bladed corn be lodged and trees blown down;
+	Though castles topple on their warders' heads;
+	Though palaces and pyramids do slope
+	Their heads to their foundations; though the treasure
+	Of nature's germens tumble all together,
+	Even till destruction sicken; answer me
+	To what I ask you.
+
+First Witch	                  Speak.
+
+Second Witch	Demand.
+
+Third Witch	We'll answer.

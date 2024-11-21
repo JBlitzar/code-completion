@@ -1,0 +1,20 @@
+
+
+	[Enter BENEDICK]
+
+BENEDICK	Boy!
+
+	[Enter Boy]
+
+Boy	Signior?
+
+BENEDICK	In my chamber-window lies a book: bring it hither
+	to me in the orchard.
+
+Boy	I am here already, sir.
+
+BENEDICK	I know that; but I would have thee hence, and here again.
+
+	[Exit Boy]
+
+	I do much wonder that one man, seeing how much

@@ -1,0 +1,20 @@
+	[Enter PROSPERO in his magic robes, and ARIEL]
+
+PROSPERO	Now does my project gather to a head:
+	My charms crack not; my spirits obey; and time
+	Goes upright with his carriage. How's the day?
+
+ARIEL	On the sixth hour; at which time, my lord,
+	You said our work should cease.
+
+PROSPERO	I did say so,
+	When first I raised the tempest. Say, my spirit,
+	How fares the king and's followers?
+
+ARIEL	Confined together
+	In the same fashion as you gave in charge,
+	Just as you left them; all prisoners, sir,
+	In the line-grove which weather-fends your cell;
+	They cannot budge till your release. The king,
+	His brother and yours, abide all three distracted
+	And the remainder mourning over them,

@@ -1,0 +1,20 @@
+
+	[Exeunt ROSENCRANTZ and GUILDENSTERN]
+
+HAMLET	What ho! Horatio!
+
+	[Enter HORATIO]
+
+HORATIO	Here, sweet lord, at your service.
+
+HAMLET	Horatio, thou art e'en as just a man
+	As e'er my conversation coped withal.
+
+HORATIO	O, my dear lord,--
+
+HAMLET	                  Nay, do not think I flatter;
+	For what advancement may I hope from thee
+	That no revenue hast but thy good spirits,
+	To feed and clothe thee? Why should the poor be flatter'd?
+	No, let the candied tongue lick absurd pomp,
+	And crook the pregnant hinges of the knee

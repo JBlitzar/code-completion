@@ -1,0 +1,20 @@
+GOBBO	Alack, sir, I am sand-blind; I know you not.
+
+LAUNCELOT	Nay, indeed, if you had your eyes, you might fail of
+	the knowing me: it is a wise father that knows his
+	own child. Well, old man, I will tell you news of
+	your son: give me your blessing: truth will come
+	to light; murder cannot be hid long; a man's son
+	may, but at the length truth will out.
+
+GOBBO	Pray you, sir, stand up: I am sure you are not
+	Launcelot, my boy.
+
+LAUNCELOT	Pray you, let's have no more fooling about it, but
+	give me your blessing: I am Launcelot, your boy
+	that was, your son that is, your child that shall
+	be.
+
+GOBBO	I cannot think you are my son.
+
+LAUNCELOT	I know not what I shall think of that: but I am

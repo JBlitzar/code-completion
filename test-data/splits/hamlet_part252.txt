@@ -1,0 +1,20 @@
+	[Enter HAMLET and HORATIO, at a distance]
+
+First Clown	Cudgel thy brains no more about it, for your dull
+	ass will not mend his pace with beating; and, when
+	you are asked this question next, say 'a
+	grave-maker: 'the houses that he makes last till
+	doomsday. Go, get thee to Yaughan: fetch me a
+	stoup of liquor.
+
+	[Exit Second Clown]
+
+	[He digs and sings]
+
+	In youth, when I did love, did love,
+	Methought it was very sweet,
+	To contract, O, the time, for, ah, my behove,
+	O, methought, there was nothing meet.
+
+HAMLET	Has this fellow no feeling of his business, that he
+	sings at grave-making?

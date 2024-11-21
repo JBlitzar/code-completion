@@ -1,0 +1,20 @@
+ALCIBIADES	Strike up the drum towards Athens! Farewell, Timon:
+	If I thrive well, I'll visit thee again.
+
+TIMON	If I hope well, I'll never see thee more.
+
+ALCIBIADES	I never did thee harm.
+
+TIMON	Yes, thou spokest well of me.
+
+ALCIBIADES	Call'st thou that harm?
+
+TIMON	Men daily find it. Get thee away, and take
+	Thy beagles with thee.
+
+ALCIBIADES	We but offend him. Strike!
+
+	[Drum beats. Exeunt ALCIBIADES, PHRYNIA,
+	and TIMANDRA]
+
+TIMON	That nature, being sick of man's unkindness,

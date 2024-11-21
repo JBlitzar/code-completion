@@ -1,0 +1,20 @@
+
+HAMLET	Do the boys carry it away?
+
+ROSENCRANTZ	Ay, that they do, my lord; Hercules and his load too.
+
+HAMLET	It is not very strange; for mine uncle is king of
+	Denmark, and those that would make mows at him while
+	my father lived, give twenty, forty, fifty, an
+	hundred ducats a-piece for his picture in little.
+	'Sblood, there is something in this more than
+	natural, if philosophy could find it out.
+
+	[Flourish of trumpets within]
+
+GUILDENSTERN	There are the players.
+
+HAMLET	Gentlemen, you are welcome to Elsinore. Your hands,
+	come then: the appurtenance of welcome is fashion
+	and ceremony: let me comply with you in this garb,
+	lest my extent to the players, which, I tell you,

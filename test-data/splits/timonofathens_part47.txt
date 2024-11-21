@@ -1,0 +1,20 @@
+	[Enter a third Servant]
+
+		   How now! what news?
+
+Third Servant	Please you, my lord, that honourable
+	gentleman, Lord Lucullus, entreats your company
+	to-morrow to hunt with him, and has sent your honour
+	two brace of greyhounds.
+
+TIMON	I'll hunt with him; and let them be received,
+	Not without fair reward.
+
+FLAVIUS	[Aside]                What will this come to?
+	He commands us to provide, and give great gifts,
+	And all out of an empty coffer:
+	Nor will he know his purse, or yield me this,
+	To show him what a beggar his heart is,
+	Being of no power to make his wishes good:
+	His promises fly so beyond his state
+	That what he speaks is all in debt; he owes

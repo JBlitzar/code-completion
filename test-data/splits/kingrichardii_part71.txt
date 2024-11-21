@@ -1,0 +1,20 @@
+	[Enter GREEN]
+
+GREEN	God save your majesty! and well met, gentlemen:
+	I hope the king is not yet shipp'd for Ireland.
+
+QUEEN	Why hopest thou so? 'tis better hope he is;
+	For his designs crave haste, his haste good hope:
+	Then wherefore dost thou hope he is not shipp'd?
+
+GREEN	That he, our hope, might have retired his power,
+	And driven into despair an enemy's hope,
+	Who strongly hath set footing in this land:
+	The banish'd Bolingbroke repeals himself,
+	And with uplifted arms is safe arrived
+	At Ravenspurgh.
+
+QUEEN	                  Now God in heaven forbid!
+
+GREEN	Ah, madam, 'tis too true: and that is worse,
+	The Lord Northumberland, his son young Henry Percy,

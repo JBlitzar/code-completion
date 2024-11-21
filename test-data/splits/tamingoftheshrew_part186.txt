@@ -1,0 +1,20 @@
+	I charge you see that he be forthcoming.
+
+VINCENTIO	Carry me to the gaol!
+
+GREMIO	Stay, officer: he shall not go to prison.
+
+BAPTISTA	Talk not, Signior Gremio: I say he shall go to prison.
+
+GREMIO	Take heed, Signior Baptista, lest you be
+	cony-catched in this business: I dare swear this
+	is the right Vincentio.
+
+Pedant	Swear, if thou darest.
+
+GREMIO	Nay, I dare not swear it.
+
+TRANIO	Then thou wert best say that I am not Lucentio.
+
+GREMIO	Yes, I know thee to be Signior Lucentio.
+

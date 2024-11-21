@@ -1,0 +1,20 @@
+AJAX	Ha?
+
+ACHILLES	Good morrow.
+
+AJAX	Ay, and good next day too.
+
+	[Exit]
+
+ACHILLES	What mean these fellows? Know they not Achilles?
+
+PATROCLUS	They pass by strangely: they were used to bend
+	To send their smiles before them to Achilles;
+	To come as humbly as they used to creep
+	To holy altars.
+
+ACHILLES	                  What, am I poor of late?
+	'Tis certain, greatness, once fall'n out with fortune,
+	Must fall out with men too: what the declined is
+	He shall as soon read in the eyes of others
+	As feel in his own fall; for men, like butterflies,

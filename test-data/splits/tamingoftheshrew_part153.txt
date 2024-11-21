@@ -1,0 +1,20 @@
+	[Enter Tailor]
+
+	Come, tailor, let us see these ornaments;
+	Lay forth the gown.
+
+	[Enter Haberdasher]
+
+	What news with you, sir?
+
+Haberdasher	Here is the cap your worship did bespeak.
+
+PETRUCHIO	Why, this was moulded on a porringer;
+	A velvet dish: fie, fie! 'tis lewd and filthy:
+	Why, 'tis a cockle or a walnut-shell,
+	A knack, a toy, a trick, a baby's cap:
+	Away with it! come, let me have a bigger.
+
+KATHARINA	I'll have no bigger: this doth fit the time,
+	And gentlewomen wear such caps as these
+

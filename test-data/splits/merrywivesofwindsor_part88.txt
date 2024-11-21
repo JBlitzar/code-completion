@@ -1,0 +1,20 @@
+RUGBY	'Tis past the hour, sir, that Sir Hugh promised to meet.
+
+DOCTOR CAIUS	By gar, he has save his soul, dat he is no come; he
+	has pray his Pible well, dat he is no come: by gar,
+	Jack Rugby, he is dead already, if he be come.
+
+RUGBY	He is wise, sir; he knew your worship would kill
+	him, if he came.
+
+DOCTOR CAIUS	By gar, de herring is no dead so as I vill kill him.
+	Take your rapier, Jack; I vill tell you how I vill kill him.
+
+RUGBY	Alas, sir, I cannot fence.
+
+DOCTOR CAIUS	Villany, take your rapier.
+
+RUGBY	Forbear; here's company.
+
+	[Enter Host, SHALLOW, SLENDER, and PAGE]
+

@@ -1,0 +1,20 @@
+	|
+PAGE	|  Well met, Master Ford.
+	|
+&C	|
+
+
+FORD	Trust me, a good knot: I have good cheer at home;
+	and I pray you all go with me.
+
+SHALLOW	I must excuse myself, Master Ford.
+
+SLENDER	And so must I, sir: we have appointed to dine with
+	Mistress Anne, and I would not break with her for
+	more money than I'll speak of.
+
+SHALLOW	We have lingered about a match between Anne Page and
+	my cousin Slender, and this day we shall have our answer.
+
+SLENDER	I hope I have your good will, father Page.
+

@@ -1,0 +1,20 @@
+CORIOLANUS	Away!
+
+Second Servingman	Away! get you away.
+
+CORIOLANUS	Now thou'rt troublesome.
+
+Second Servingman	Are you so brave? I'll have you talked with anon.
+
+	[Enter a third Servingman. The first meets him]
+
+Third Servingman	What fellow's this?
+
+First Servingman	A strange one as ever I looked on: I cannot get him
+	out of the house: prithee, call my master to him.
+
+	[Retires]
+
+Third Servingman	What have you to do here, fellow? Pray you, avoid
+	the house.
+

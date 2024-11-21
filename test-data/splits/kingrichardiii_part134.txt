@@ -1,0 +1,20 @@
+
+	[Enter a Messenger]
+
+Messenger	What, ho! my lord!
+
+HASTINGS	[Within]  Who knocks at the door?
+
+Messenger	A messenger from the Lord Stanley.
+
+	[Enter HASTINGS]
+
+HASTINGS	What is't o'clock?
+
+Messenger	Upon the stroke of four.
+
+HASTINGS	Cannot thy master sleep these tedious nights?
+
+Messenger	So it should seem by that I have to say.
+	First, he commends him to your noble lordship.
+

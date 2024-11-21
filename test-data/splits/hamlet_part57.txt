@@ -1,0 +1,20 @@
+	When I to sulphurous and tormenting flames
+	Must render up myself.
+
+HAMLET	Alas, poor ghost!
+
+Ghost	Pity me not, but lend thy serious hearing
+	To what I shall unfold.
+
+HAMLET	Speak; I am bound to hear.
+
+Ghost	 So art thou to revenge, when thou shalt hear.
+
+HAMLET	What?
+
+Ghost	I am thy father's spirit,
+	Doom'd for a certain term to walk the night,
+	And for the day confined to fast in fires,
+	Till the foul crimes done in my days of nature
+	Are burnt and purged away. But that I am forbid
+	To tell the secrets of my prison-house,

@@ -1,0 +1,20 @@
+
+ROSALIND	Why, whither shall we go?
+
+CELIA	To seek my uncle in the forest of Arden.
+
+ROSALIND	Alas, what danger will it be to us,
+	Maids as we are, to travel forth so far!
+	Beauty provoketh thieves sooner than gold.
+
+CELIA	I'll put myself in poor and mean attire
+	And with a kind of umber smirch my face;
+	The like do you: so shall we pass along
+	And never stir assailants.
+
+ROSALIND	Were it not better,
+	Because that I am more than common tall,
+	That I did suit me all points like a man?
+	A gallant curtle-axe upon my thigh,
+	A boar-spear in my hand; and--in my heart
+	Lie there what hidden woman's fear there will--

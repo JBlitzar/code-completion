@@ -1,0 +1,20 @@
+	[Enter BUCKINGHAM and CLIFFORD]
+
+BUCKINGHAM	Health and glad tidings to your majesty!
+
+KING HENRY VI	Why, Buckingham, is the traitor Cade surprised?
+	Or is he but retired to make him strong?
+
+	[Enter below, multitudes, with halters about
+	their necks]
+
+CLIFFORD	He is fled, my lord, and all his powers do yield;
+	And humbly thus, with halters on their necks,
+	Expect your highness' doom of life or death.
+
+KING HENRY VI	Then, heaven, set ope thy everlasting gates,
+	To entertain my vows of thanks and praise!
+	Soldiers, this day have you redeemed your lives,
+	And show'd how well you love your prince and country:
+	Continue still in this so good a mind,
+	And Henry, though he be infortunate,

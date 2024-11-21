@@ -1,0 +1,20 @@
+Second Witch	Hail!
+
+Third Witch	Hail!
+
+First Witch	Lesser than Macbeth, and greater.
+
+Second Witch	Not so happy, yet much happier.
+
+Third Witch	Thou shalt get kings, though thou be none:
+	So all hail, Macbeth and Banquo!
+
+First Witch	Banquo and Macbeth, all hail!
+
+MACBETH	Stay, you imperfect speakers, tell me more:
+	By Sinel's death I know I am thane of Glamis;
+	But how of Cawdor? the thane of Cawdor lives,
+	A prosperous gentleman; and to be king
+	Stands not within the prospect of belief,
+	No more than to be Cawdor. Say from whence
+	You owe this strange intelligence? or why

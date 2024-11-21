@@ -1,0 +1,20 @@
+
+CORNWALL	'Tis best to give him way; he leads himself.
+
+GONERIL	My lord, entreat him by no means to stay.
+
+GLOUCESTER	Alack, the night comes on, and the bleak winds
+	Do sorely ruffle; for many miles about
+	There's scarce a bush.
+
+REGAN	O, sir, to wilful men,
+	The injuries that they themselves procure
+	Must be their schoolmasters. Shut up your doors:
+	He is attended with a desperate train;
+	And what they may incense him to, being apt
+	To have his ear abused, wisdom bids fear.
+
+CORNWALL	Shut up your doors, my lord; 'tis a wild night:
+	My Regan counsels well; come out o' the storm.
+
+	[Exeunt]

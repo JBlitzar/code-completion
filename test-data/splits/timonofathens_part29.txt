@@ -1,0 +1,20 @@
+	[Enter two Lords]
+
+First Lord	What time o' day is't, Apemantus?
+
+APEMANTUS	Time to be honest.
+
+First Lord	That time serves still.
+
+APEMANTUS	The more accursed thou, that still omitt'st it.
+
+Second Lord	Thou art going to Lord Timon's feast?
+
+APEMANTUS	Ay, to see meat fill knaves and wine heat fools.
+
+Second Lord	Fare thee well, fare thee well.
+
+APEMANTUS	Thou art a fool to bid me farewell twice.
+
+Second Lord	Why, Apemantus?
+

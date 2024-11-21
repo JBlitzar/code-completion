@@ -1,0 +1,20 @@
+	(First Officer:)
+	(Messenger:)
+	(Gentleman:)
+	(First Gentleman:)
+	(Second Gentleman:)
+	(Third Gentleman:)
+	(First Musician:)
+
+
+SCENE	Venice: a Sea-port in Cyprus.
+
+
+
+
+	OTHELLO
+
+
+ACT I
+
+

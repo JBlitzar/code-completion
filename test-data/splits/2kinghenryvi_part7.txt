@@ -1,0 +1,20 @@
+	(Servant:)
+	(Soldier:)
+	(Townsman:)
+	(First 'Prentice:)
+	(Second 'Prentice:)
+	(Post:)
+	(Messenger:)
+
+	A Spirit. (Spirit:)
+
+
+
+SCENE	England.
+
+
+
+
+	2 KING HENRY VI
+
+

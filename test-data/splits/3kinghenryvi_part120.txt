@@ -1,0 +1,20 @@
+
+	[Enter a Nobleman]
+
+Nobleman	My gracious lord, Henry your foe is taken,
+	And brought your prisoner to your palace gate.
+
+KING EDWARD IV	See that he be convey'd unto the Tower:
+	And go we, brothers, to the man that took him,
+	To question of his apprehension.
+	Widow, go you along. Lords, use her honourably.
+
+	[Exeunt all but GLOUCESTER]
+
+GLOUCESTER	Ay, Edward will use women honourably.
+	Would he were wasted, marrow, bones and all,
+	That from his loins no hopeful branch may spring,
+	To cross me from the golden time I look for!
+	And yet, between my soul's desire and me--
+	The lustful Edward's title buried--
+	Is Clarence, Henry, and his son young Edward,

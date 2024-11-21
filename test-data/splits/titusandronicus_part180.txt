@@ -1,0 +1,20 @@
+	Eating the flesh that she herself hath bred.
+	'Tis true, 'tis true; witness my knife's sharp point.
+
+	[Kills TAMORA]
+
+SATURNINUS	Die, frantic wretch, for this accursed deed!
+
+	[Kills TITUS]
+
+LUCIUS	Can the son's eye behold his father bleed?
+	There's meed for meed, death for a deadly deed!
+
+	[Kills SATURNINUS. A great tumult. LUCIUS, MARCUS,
+	and others go up into the balcony]
+
+MARCUS ANDRONICUS	You sad-faced men, people and sons of Rome,
+	By uproar sever'd, like a flight of fowl
+	Scatter'd by winds and high tempestuous gusts,
+	O, let me teach you how to knit again
+	This scatter'd corn into one mutual sheaf,

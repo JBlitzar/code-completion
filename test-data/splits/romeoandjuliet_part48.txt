@@ -1,0 +1,20 @@
+	Thou talk'st of nothing.
+
+MERCUTIO	True, I talk of dreams,
+	Which are the children of an idle brain,
+	Begot of nothing but vain fantasy,
+	Which is as thin of substance as the air
+	And more inconstant than the wind, who wooes
+	Even now the frozen bosom of the north,
+	And, being anger'd, puffs away from thence,
+	Turning his face to the dew-dropping south.
+
+BENVOLIO	This wind, you talk of, blows us from ourselves;
+	Supper is done, and we shall come too late.
+
+ROMEO	I fear, too early: for my mind misgives
+	Some consequence yet hanging in the stars
+	Shall bitterly begin his fearful date
+	With this night's revels and expire the term
+	Of a despised life closed in my breast
+	By some vile forfeit of untimely death.

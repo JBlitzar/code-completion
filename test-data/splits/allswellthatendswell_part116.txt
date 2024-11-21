@@ -1,0 +1,20 @@
+	[Enter COUNTESS and Steward]
+
+COUNTESS	Alas! and would you take the letter of her?
+	Might you not know she would do as she has done,
+	By sending me a letter? Read it again.
+
+Steward	[Reads]
+
+	I am Saint Jaques' pilgrim, thither gone:
+	Ambitious love hath so in me offended,
+	That barefoot plod I the cold ground upon,
+	With sainted vow my faults to have amended.
+	Write, write, that from the bloody course of war
+	My dearest master, your dear son, may hie:
+	Bless him at home in peace, whilst I from far
+	His name with zealous fervor sanctify:
+	His taken labours bid him me forgive;
+	I, his despiteful Juno, sent him forth
+	From courtly friends, with camping foes to live,
+	Where death and danger dogs the heels of worth:

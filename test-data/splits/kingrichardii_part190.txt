@@ -1,0 +1,20 @@
+	For 'tis a sign of love; and love to Richard
+	Is a strange brooch in this all-hating world.
+
+	[Enter a Groom of the Stable]
+
+Groom	Hail, royal prince!
+
+KING RICHARD II	Thanks, noble peer;
+	The cheapest of us is ten groats too dear.
+	What art thou? and how comest thou hither,
+	Where no man never comes but that sad dog
+	That brings me food to make misfortune live?
+
+Groom	I was a poor groom of thy stable, king,
+	When thou wert king; who, travelling towards York,
+	With much ado at length have gotten leave
+	To look upon my sometimes royal master's face.
+	O, how it yearn'd my heart when I beheld
+	In London streets, that coronation-day,
+	When Bolingbroke rode on roan Barbary,

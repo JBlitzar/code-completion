@@ -1,0 +1,20 @@
+
+	[Knocking within. Enter a Porter]
+
+Porter	Here's a knocking indeed! If a
+	man were porter of hell-gate, he should have
+	old turning the key.
+
+	[Knocking within]
+		Knock,
+	knock, knock! Who's there, i' the name of
+	Beelzebub? Here's a farmer, that hanged
+	himself on the expectation of plenty: come in
+	time; have napkins enow about you; here
+	you'll sweat for't.
+
+	[Knocking within]
+	Knock,
+	knock! Who's there, in the other devil's
+	name? Faith, here's an equivocator, that could
+	swear in both the scales against either scale;

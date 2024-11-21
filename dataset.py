@@ -15,23 +15,31 @@ class BPEModelManager:
     def __init__(self, root_dir, vocab_size=5000):
         model_path = os.path.join(root_dir, "bpe_model.model")
         try:
+
             bpe = yttm.BPE(model=model_path)
-            if bpe.vocab_size != 5000:
+            if bpe.vocab_size() != vocab_size:
                 print("Vocab size didn't match, assuming bad model.")
+                print(f"Expected size {vocab_size}, got {bpe.vocab_size()}")
                 copyfile(model_path, os.path.join(root_dir, "bpe_model.model.old"))
-                
                 raise ValueError
+            
         except ValueError:
-            yttm.BPE.train(data=os.path.join(root_dir, "/data/corpus.txt"), vocab_size=vocab_size, model=model_path)
+
+            yttm.BPE.train(data=os.path.join(root_dir, "data/corpus.txt"), vocab_size=vocab_size, model=model_path)
             bpe = yttm.BPE(model=model_path)
+
         self.bpe = bpe
     def encode(self, text: str):
         return self.bpe.encode([text], output_type=yttm.OutputType.ID)
 
     def decode(self, ids):
         return self.bpe.decode(ids)
-
-
+    
+    @staticmethod
+    def test():
+        manager = BPEModelManager("test-data")
+        print(manager.encode("This is a test"))
+        print(manager.decode(manager.encode("This is a test")))
 
 class GithubDataset(Dataset):
     def __init__(self, root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), train=False, max_length=512):

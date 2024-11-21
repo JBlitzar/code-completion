@@ -1,0 +1,20 @@
+	to undo us. Will you not go the way of women-kind?
+	Marry, come up, my dish of chastity with rosemary and bays!
+
+	[Exit]
+
+BOULT	Come, mistress; come your ways with me.
+
+MARINA	Whither wilt thou have me?
+
+BOULT	To take from you the jewel you hold so dear.
+
+MARINA	Prithee, tell me one thing first.
+
+BOULT	Come now, your one thing.
+
+MARINA	What canst thou wish thine enemy to be?
+
+BOULT	Why, I could wish him to be my master, or rather, my mistress.
+
+MARINA	Neither of these are so bad as thou art,

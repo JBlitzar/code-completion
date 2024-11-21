@@ -1,0 +1,20 @@
+	[Enter a Townsman of Saint Alban's, crying 'A miracle!']
+
+GLOUCESTER	What means this noise?
+	Fellow, what miracle dost thou proclaim?
+
+Townsman	A miracle! a miracle!
+
+SUFFOLK	Come to the king and tell him what miracle.
+
+Townsman	Forsooth, a blind man at Saint Alban's shrine,
+	Within this half-hour, hath received his sight;
+	A man that ne'er saw in his life before.
+
+KING HENRY VI	Now, God be praised, that to believing souls
+	Gives light in darkness, comfort in despair!
+
+	[Enter the Mayor of Saint Alban's and his
+	brethren, bearing SIMPCOX, between two in a
+	chair, SIMPCOX's Wife following]
+

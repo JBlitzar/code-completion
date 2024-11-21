@@ -1,0 +1,20 @@
+JAQUES	To see no pastime I	what you would have
+	I'll stay to know at your abandon'd cave.
+
+	[Exit]
+
+DUKE SENIOR	Proceed, proceed: we will begin these rites,
+	As we do trust they'll end, in true delights.
+
+	[A dance]
+
+
+
+
+	AS YOU LIKE IT
+
+	EPILOGUE
+
+
+ROSALIND	It is not the fashion to see the lady the epilogue;
+	but it is no more unhandsome than to see the lord
