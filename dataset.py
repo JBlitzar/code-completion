@@ -51,9 +51,10 @@ class TextCorpusDataset(Dataset):
         self.manager = BPEModelManager(root_dir=root_dir,vocab_size=vocab_size)
         self.max_length = max_length
 
-        with open(os.path.join(root_dir, "data/corpus.txt"), "w") as file:
+        with open(os.path.join(root_dir, "data/corpus.txt"), "r") as file:
             text = file.read()
-            self.chunks = [text[i:i+self.max_length] for i in range(0, len(text), self.max_length)]
+            encoded = self.manager.encode(text)[0]
+            self.chunks = [encoded[i:i+self.max_length] for i in range(0, len(encoded), self.max_length)]
 
 
 
@@ -62,7 +63,7 @@ class TextCorpusDataset(Dataset):
         return len(self.chunks)
 
     def __getitem__(self, idx):
-        seq = self.manager.encode(self.chunks[idx])
+        seq = self.chunks[idx]
 
         return seq, self.manager.attention_mask(seq) #todo: convert to tensor.
 
@@ -92,7 +93,6 @@ if __name__ == "__main__":
     print('Number of samples: ', len(d))
 
     a,b = d[4]
-    t = AutoTokenizer.from_pretrained('bert-base-uncased')
-    for i in a:
-        print(t.decode(i.item()), end=" ")
+    manager = BPEModelManager("./test-data/", vocab_size=10000)
+    print(manager.decode(a))
     print()
