@@ -12,8 +12,9 @@ import youtokentome as yttm
 
 
 class BPEModelManager:
-    def __init__(self, root_dir, vocab_size=5000):
+    def __init__(self, root_dir, vocab_size=5000, IS_CODE=False):
         model_path = os.path.join(root_dir, "bpe_model.model")
+        self.IS_CODE = IS_CODE
         try:
 
             bpe = yttm.BPE(model=model_path)
@@ -25,7 +26,21 @@ class BPEModelManager:
             
         except ValueError:
 
-            yttm.BPE.train(data=os.path.join(root_dir, "data/corpus.txt"), vocab_size=vocab_size, model=model_path)
+            with open(os.path.join(root_dir, "data/corpus.txt"), "r") as reader:
+                with open(os.path.join(root_dir, "data/corpus_processed.txt"), "w+") as writer:
+
+                    text = reader.read()
+
+                    # Implement normalization here.
+                    text = text.replace("\t", "    ").lower()
+
+                    if IS_CODE:
+                        #FIXME hacky
+                        text = text.replae("    ", "𝐓")
+
+                    writer.write(text)
+
+            yttm.BPE.train(data=os.path.join(root_dir, "data/corpus_processed.txt"), vocab_size=vocab_size, model=model_path)
             bpe = yttm.BPE(model=model_path)
 
         self.bpe = bpe
@@ -33,7 +48,10 @@ class BPEModelManager:
         return self.bpe.encode([text], output_type=yttm.OutputType.ID)
 
     def decode(self, ids):
-        return self.bpe.decode(ids)
+        if(self.IS_CODE):
+            return self.bpe.decode(ids).replace("𝐓", "    ")
+        else:
+            return self.bpe.decode(ids)
     
     @staticmethod
     def test():
@@ -46,13 +64,17 @@ class BPEModelManager:
         return [1 if token not in mask_token_ids else 0 for token in encoded_sequence]
 
 class TextCorpusDataset(Dataset):
-    def __init__(self, root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), train=False, max_length=512, vocab_size=10000):
+    def __init__(self, root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), train=False, max_length=512, vocab_size=10000,IS_CODE=False):
         self.root = root_dir
-        self.manager = BPEModelManager(root_dir=root_dir,vocab_size=vocab_size)
+        self.manager = BPEModelManager(root_dir=root_dir,vocab_size=vocab_size,IS_CODE=False)
         self.max_length = max_length
 
         with open(os.path.join(root_dir, "data/corpus.txt"), "r") as file:
             text = file.read()
+
+            
+
+
             encoded = self.manager.encode(text)[0]
             self.chunks = [encoded[i:i+self.max_length] for i in range(0, len(encoded), self.max_length)]
 
