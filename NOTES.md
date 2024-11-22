@@ -154,3 +154,6 @@
   - 75 min session.
     - Just got decoder-only xformer implemented.
     - Also got dataset working!
+- Nov 22:
+  - Getting dataset working for more code-specific things, also reformatted all the files.
+  -

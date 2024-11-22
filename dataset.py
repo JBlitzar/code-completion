@@ -11,24 +11,21 @@ import youtokentome as yttm
 
 
 class BPEModelManager:
-    def __init__(self, root_dir, vocab_size=5000, IS_CODE=False):
+    def __init__(self, root_dir, vocab_size=5000):
         self.root_dir = root_dir
         self.vocab_size = vocab_size
-        self.IS_CODE = IS_CODE
         self.model_path = os.path.join(root_dir, "bpe_model.model")
 
         try:
-            bpe = yttm.BPE(model=self.model_path)
-            if bpe.vocab_size() != vocab_size:
+            self.bpe = yttm.BPE(model=self.model_path)
+            if self.bpe.vocab_size() != vocab_size:
                 print(
-                    f"Vocab size mismatch: Expected {vocab_size}, got {bpe.vocab_size()}. Retraining model."
+                    f"Vocab size mismatch: Expected {vocab_size}, got {self.bpe.vocab_size()}. Retraining model."
                 )
                 self._backup_model()
                 raise ValueError
         except ValueError:
             self._train_bpe_model()
-
-        self.bpe = yttm.BPE(model=self.model_path)
 
     def _backup_model(self):
         backup_path = os.path.join(self.root_dir, "bpe_model.model.old")
@@ -41,7 +38,7 @@ class BPEModelManager:
         with open(data_path, "r") as reader:
             raw_text = reader.read()
 
-        processed_text = self.preprocess_text(raw_text, is_code=self.IS_CODE)
+        processed_text = self.preprocess_text(raw_text)
 
         with open(processed_path, "w") as writer:
             writer.write(processed_text)
@@ -50,13 +47,27 @@ class BPEModelManager:
             data=processed_path, vocab_size=self.vocab_size, model=self.model_path
         )
 
-    def preprocess_text(self, text, is_code=False):
-        if is_code:
-            formatted_text = self.format_code(text)
-            processed_text = formatted_text.replace("\t", "    ").replace("    ", "𝐓")
-        else:
-            processed_text = text.lower().replace("\t", "    ")  # .replace("\n", "")
+    def preprocess_text(self, text):
+        return text.lower().replace("\t", "    ")
 
+    def encode(self, text: str):
+        return self.bpe.encode([text], output_type=yttm.OutputType.ID)
+
+    def decode(self, ids):
+        return self.bpe.decode(ids)
+
+    @staticmethod
+    def attention_mask(encoded_sequence, mask_token_ids=[0, 1, 2, 3]):
+        return [1 if token not in mask_token_ids else 0 for token in encoded_sequence]
+
+
+class CodeBPEModelManager(BPEModelManager):
+    def __init__(self, root_dir, vocab_size=5000):
+        super().__init__(root_dir, vocab_size)
+
+    def preprocess_text(self, text):
+        formatted_text = self.format_code(text)
+        processed_text = formatted_text.replace("\t", "    ").replace("    ", "𝐓")
         return processed_text
 
     def format_code(self, code):
@@ -76,19 +87,6 @@ class BPEModelManager:
                 f"Error during code formatting: {e}. Proceeding with unformatted code."
             )
             return code
-
-    def encode(self, text: str):
-        return self.bpe.encode([text], output_type=yttm.OutputType.ID)
-
-    def decode(self, ids):
-        decoded_text = self.bpe.decode(ids)
-        if self.IS_CODE:
-            return decoded_text.replace("𝐓", "    ")
-        return decoded_text
-
-    @staticmethod
-    def attention_mask(encoded_sequence, mask_token_ids=[0, 1, 2, 3]):
-        return [1 if token not in mask_token_ids else 0 for token in encoded_sequence]
 
 
 class TextCorpusDataset(Dataset):
