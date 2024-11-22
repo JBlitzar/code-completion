@@ -7,6 +7,7 @@ DIM = 512
 
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 
+
 class MHA_SelfAttention(nn.Module):
     def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,24 +17,24 @@ class MHA_SelfAttention(nn.Module):
     def forward(self, x, mask=None, triangle_mask=False):
         attn_mask = None
         seq_len = x.size(1)
-        
+
         if triangle_mask:
             attn_mask = torch.triu(torch.ones(seq_len, seq_len), diagonal=1) == 0
             attn_mask = attn_mask.to(x.device)
-        
+
         if mask is not None:
             if attn_mask is not None:
                 attn_mask = mask.unsqueeze(1) & attn_mask.unsqueeze(0)
             else:
                 attn_mask = mask.unsqueeze(1).expand(-1, seq_len, -1)
-        
+
         if attn_mask is not None:
             attn_mask = attn_mask.repeat(self.num_heads, 1, 1)
-        
+
         x = x.transpose(0, 1)
         attn_output, _ = self.mha(x, x, x, attn_mask=attn_mask)
         attn_output = attn_output.transpose(0, 1)
-        
+
         return attn_output
 
 
@@ -42,9 +43,9 @@ class FeedForward(nn.Module):
         super().__init__(*args, **kwargs)
         self.dim = dim
         self.hidden_dim = hidden_dim if hidden_dim is not None else dim
-        
+
         self.block = nn.Sequential(
-            nn.LayerNorm(self.dim), #nobody knows what this does 
+            nn.LayerNorm(self.dim),  # nobody knows what this does
             nn.Linear(self.dim, self.hidden_dim),
             nn.GELU(),
             nn.Linear(self.hidden_dim, self.dim),
@@ -53,7 +54,6 @@ class FeedForward(nn.Module):
 
     def forward(self, x):
         return self.block(x)
-
 
 
 class DecoderBlock(nn.Module):
@@ -82,7 +82,7 @@ class PositionalEncoding(nn.Module):
         pe = torch.zeros(max_len, DIM)
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
-        self.register_buffer('pe', pe.unsqueeze(0))
+        self.register_buffer("pe", pe.unsqueeze(0))
 
     def forward(self, x):
         seq_len = x.size(1)
@@ -99,7 +99,7 @@ class DecoderTransformer(nn.Module):
 
         self.oblock = nn.Sequential(
             nn.Linear(DIM, vocab_size),
-            #nn.Softmax(dim=-1)
+            # nn.Softmax(dim=-1)
         )
 
     def forward(self, x, padding_mask=None):
@@ -110,7 +110,6 @@ class DecoderTransformer(nn.Module):
             padding_mask = padding_mask == 0
 
         x = self.pos_encoding(self.enc_embedding(x))
-
 
         for didx, dblock in enumerate(self.decoders):
             x = dblock(x, padding_mask=padding_mask)

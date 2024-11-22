@@ -7,7 +7,7 @@ t = Transformer()
 t.to("mps")
 
 
-tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 
 
 codes = ["def func(a, b):", "if x > 0:", "for i in range(10):"]
@@ -16,8 +16,8 @@ codes = ["def func(a, b):", "if x > 0:", "for i in range(10):"]
 encoding = tokenizer(codes, padding=True, truncation=True, return_tensors="pt")
 
 
-input_ids = encoding['input_ids']
-attention_mask = encoding['attention_mask']
+input_ids = encoding["input_ids"]
+attention_mask = encoding["attention_mask"]
 
 
 print("Input IDs:")
