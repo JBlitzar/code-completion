@@ -168,3 +168,6 @@
     - But it's actually crazy. 76 vs 0.05 seconds to load.
   - Loading data finally works, just did a quickfix on tensor-ifying attn_mask also.
   - Train.py runs! Never have I ever spent so many hours on dataset.py (like 3 or 4. crazy.). I suppose also first time I used custom dataset.
+- Nov 23:
+  - Ahaa so I thought I was good and I made the rookie error AGAIN of not setting vocab_size. I added a check if its default to print a warning.
+  - Reworked saving so that it saves best only.
