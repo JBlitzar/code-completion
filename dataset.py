@@ -62,8 +62,8 @@ class BPEModelManager:
     @staticmethod
     def attention_mask(encoded_sequence, mask_token_ids=[0, 1, 2, 3]):
         mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int)
-        print(mask_token_tensor)
-        print(encoded_sequence)
+        # print(mask_token_tensor)
+        # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
 
 
