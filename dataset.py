@@ -9,6 +9,7 @@ from shutil import copyfile
 import subprocess
 import youtokentome as yttm
 import re
+import time
 
 
 class BPEModelManager:
@@ -65,8 +66,9 @@ class BPEModelManager:
 
 class CodeBPEModelManager(BPEModelManager):
     mapping_dict = {
-            "\n" : " <NEWLINE> ",
-            "    " : " <INDENT> "
+        "    " : " <INDENT> ",
+        "\n" : " <NEWLINE> ",
+            
         }
     def __init__(self, root_dir, vocab_size=5000):
         super().__init__(root_dir, vocab_size) 
@@ -92,9 +94,12 @@ class CodeBPEModelManager(BPEModelManager):
 
     def decode(self, ids):
         result = self.bpe.decode(ids)[0]
+        print(result)
         for key, value in CodeBPEModelManager.mapping_dict.items():
             result = result.replace(value, key) # value, key
 
+       
+                
         return result
     
     def _train_bpe_model(self):
@@ -166,13 +171,18 @@ class TextCorpusDataset(Dataset):
             )
         self.max_length = max_length
 
-        self.cache_file = os.path.join(root_dir, "chunks_cached.pt")
+        self.cache_file = os.path.join(root_dir, "encoded_cached.pt")
 
+        start_t = time.time()
         if os.path.exists(self.cache_file):
             print("[Dataset] Loading cached chunks...")
-            self.chunks = torch.load(self.cache_file, weights_only=True)  # Load cached chunks
+            
+            encoded = torch.load(self.cache_file, weights_only=True)  # Load cached chunks
+            self.chunks = [
+                encoded[i : i + self.max_length]
+                for i in range(0, len(encoded), self.max_length)
+            ]
         else:
-
             with open(os.path.join(root_dir, "data/corpus_processed.txt"), "r", errors="ignore") as file:
                 text = file.read()
                 print("encoding...")
@@ -181,7 +191,11 @@ class TextCorpusDataset(Dataset):
                     encoded[i : i + self.max_length]
                     for i in range(0, len(encoded), self.max_length)
                 ]
-            torch.save(self.chunks, self.cache_file)
+                
+                torch.save(encoded, self.cache_file)
+        
+        end_t = time.time()
+        print(f"Dataset loading took {end_t - start_t} seconds.")
 
     def __len__(self):
         return len(self.chunks)

@@ -164,3 +164,4 @@
   - Switched to autopep8 because black was being weird
   - Got it to work, and realized that YTTM does whitespace normalization. Fine usually, not fine rn.
   - Autopep8 needs to ignore E402, duh, which moves imports to the top.
+  - Stoped caching chunked file and instead cached pre-chunked, pytorch loads it faster. idk, prob overhead with delimeters or something.
