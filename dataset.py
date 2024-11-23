@@ -70,13 +70,6 @@ class CodeBPEModelManager(BPEModelManager):
     def preprocess_text(self, text):
         print("Formatting....")
         processed_text = self.format_code(text)
-        # Should be fine if we run through black.
-        processed_text = processed_text#.replace("\t", "    ").replace("    ", "𝐓")
-
-        # allegedly the regex for chinese chars, japanese chars, and korean chars, the source of the majority of non-ascii characters.
-        exp = re.compile(r'[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+')
-
-        processed_text = re.sub(exp, '<NON_ASCII>', processed_text)
 
         return processed_text
     
@@ -92,21 +85,34 @@ class CodeBPEModelManager(BPEModelManager):
 
         with open(processed_path, "w", encoding="utf-8") as writer:
             writer.write(processed_text)
+
+
+        print("removing temp file...")
+        temp_file = os.path.join(self.root_dir, "temp_code.py") # dont ask
+        os.remove(temp_file)
+
+
         print("Training....")
         yttm.BPE.train(
-            data=processed_path, vocab_size=self.vocab_size, model=self.model_path, coverage=0.99
+            data=processed_path, vocab_size=self.vocab_size, model=self.model_path, coverage=0.999
         )
+
+
+        
 
     def format_code(self, code):
         try:
             temp_file = os.path.join(self.root_dir, "temp_code.py")
             with open(temp_file, "w") as file:
-                file.write(code)
+                file.write(code.replace("\t", "    ")) # Hacky replacement, black freaks out otherwise
 
-            subprocess.run(["black", temp_file, "--quiet"], check=True)
-
+            #subprocess.run(["black", temp_file, "--quiet"], check=True)
+            subprocess.run(["autopep8", "--in-place", temp_file], check=True)
+            
             with open(temp_file, "r") as file:
                 formatted_code = file.read()
+            
+            
 
             return formatted_code
         except Exception as e:
@@ -154,7 +160,7 @@ class TextCorpusDataset(Dataset):
         return seq, self.manager.attention_mask(seq)  # todo: convert to tensor.
 
 print("Running....")
-dataset = TextCorpusDataset(root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), vocab_size=20000)
+dataset = TextCorpusDataset(root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), vocab_size=10000, IS_CODE=True)
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 

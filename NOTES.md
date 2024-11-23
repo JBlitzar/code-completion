@@ -159,3 +159,6 @@
   - no "T" hack, because YTTM is character-agnostic: doesn't treat whitespace a special way. exactly what I want.
   - I adjusted coverage, because someone put like a unicode dump and there were 14k unique chars
     - After some more investigation, it isnt unicode dumps, its lots of comments in chinese, cuz so many chinese characters.
+    - AHAHAWHAfpesao9hasperugha me when I forget to set a flag that I created and then my code doesnt run removing chinese characters
+    - Nevermind, I'll just use coverage variable like I initially planned. Silly me with no flag.
+  - Switched to autopep8 because black was being weird
