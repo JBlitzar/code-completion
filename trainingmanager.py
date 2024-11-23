@@ -167,7 +167,9 @@ class TrainingManager:
         except KeyError:
             pass
 
-        self.save(val_loss if val_loss < float("inf") else self.tracker.average("Loss/epoch"))
+        self.save(
+            val_loss if val_loss < float("inf") else self.tracker.average("Loss/epoch")
+        )
 
         log_data(
             {

@@ -212,7 +212,9 @@ dset_size = len(dataset)
 train_size = int(0.8 * dset_size)
 test_size = int(dset_size - train_size)
 
-train_dataset, test_dataset, _ = random_split(dataset, [train_size, test_size, len(dataset) - train_size - test_size])
+train_dataset, test_dataset, _ = random_split(
+    dataset, [train_size, test_size, len(dataset) - train_size - test_size]
+)
 
 
 def get_train_dataset():

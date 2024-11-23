@@ -32,7 +32,7 @@ trainer = TrainingManager(
     device=device,
     trainstep_checkin_interval=100,
     epochs=100,
-    val_dataloader=testloader
+    val_dataloader=testloader,
 )
 
 
