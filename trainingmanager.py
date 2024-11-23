@@ -134,7 +134,7 @@ class TrainingManager:
     def save(self, loss):
         self._save("latest.pt")
 
-        best_val_loss = self.get_best_val_loss
+        best_val_loss = self.get_best_val_loss()
         if loss < best_val_loss:
             best_val_loss = loss
             self._save("best.pt")
@@ -161,14 +161,18 @@ class TrainingManager:
             # revert
             self.resume()
 
-        val_loss = self.tracker.average("Loss/val/epoch")
+        val_loss = float("inf")
+        try:
+            val_loss = self.tracker.average("Loss/val/epoch")
+        except KeyError:
+            pass
 
-        self.save(val_loss)
+        self.save(val_loss if val_loss < float("inf") else self.tracker.average("Loss/epoch"))
 
         log_data(
             {
                 "Loss/Epoch": self.tracker.average("Loss/epoch"),
-                "Loss/Val/Epoch": self.tracker.average("Loss/val/epoch"),
+                "Loss/Val/Epoch": val_loss,
             },
             epoch,
         )
@@ -252,4 +256,4 @@ class TrainingManager:
             if e <= self.resume_amt:
                 continue
 
-            self.epoch(e, self.dataloader)
+            self.epoch(e, self.dataloader, self.val_dataloader)

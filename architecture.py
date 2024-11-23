@@ -90,7 +90,7 @@ class PositionalEncoding(nn.Module):
 
 
 class DecoderTransformer(nn.Module):
-    def __init__(self, num_blocks=6, vocab_size=100, seq_len=100, *args, **kwargs):
+    def __init__(self, num_blocks=6, vocab_size=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if vocab_size == 100:

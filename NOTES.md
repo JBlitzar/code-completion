@@ -171,3 +171,7 @@
 - Nov 23:
   - Ahaa so I thought I was good and I made the rookie error AGAIN of not setting vocab_size. I added a check if its default to print a warning.
   - Reworked saving so that it saves best only.
+  - Maybe examine loss before letting it go overnight.
+    - In the spirit of testing, I'm going to run it on a minibatch and make sure val stuff works.
+    - Done, now retrain.
+  - Looking through https://github.com/hyunwoongko/transformer/blob/master/models/blocks/decoder_layer.py, the only other thing I missed was dropout.
