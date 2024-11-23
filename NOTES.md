@@ -156,7 +156,7 @@
     - Also got dataset working!
 - Nov 22:
   - Getting dataset working for more code-specific things, also reformatted all the files.
-  - no "T" hack, because YTTM is character-agnostic: doesn't treat whitespace a special way. exactly what I want.
+  - removed "T" hack (from future self: I basically added it back in because YTTM tried to do whitespace norm :\)
   - I adjusted coverage, because someone put like a unicode dump and there were 14k unique chars
     - After some more investigation, it isnt unicode dumps, its lots of comments in chinese, cuz so many chinese characters.
     - AHAHAWHAfpesao9hasperugha me when I forget to set a flag that I created and then my code doesnt run removing chinese characters
@@ -165,3 +165,6 @@
   - Got it to work, and realized that YTTM does whitespace normalization. Fine usually, not fine rn.
   - Autopep8 needs to ignore E402, duh, which moves imports to the top.
   - Stoped caching chunked file and instead cached pre-chunked, pytorch loads it faster. idk, prob overhead with delimeters or something.
+    - But it's actually crazy. 76 vs 0.05 seconds to load.
+  - Loading data finally works, just did a quickfix on tensor-ifying attn_mask also.
+  - Train.py runs! Never have I ever spent so many hours on dataset.py (like 3 or 4. crazy.). I suppose also first time I used custom dataset.

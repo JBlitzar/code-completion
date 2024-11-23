@@ -92,6 +92,10 @@ class PositionalEncoding(nn.Module):
 class DecoderTransformer(nn.Module):
     def __init__(self, num_blocks=6, vocab_size=100, seq_len=100, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if vocab_size == 100:
+            print("WARNING: vocab_size is set to 100. You probably mean to set it to something else.")
+
         self.num_blocks = num_blocks
         self.decoders = nn.ModuleList([DecoderBlock() for _ in range(num_blocks)])
         self.pos_encoding = PositionalEncoding()

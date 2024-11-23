@@ -1,16 +1,16 @@
 import torch
-from transformers import AutoTokenizer
-from architecture import Transformer
+from architecture import DecoderTransformer
 import os
 import sys
 import time
+from dataset import dataset
 
-EXPERIMENT_DIRECTORY = "runs/shakespeare-test"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v1"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
-net = Transformer()
+net = DecoderTransformer()
 net.to(device)
 
 net.load_state_dict(
@@ -28,27 +28,21 @@ for name, param in net.named_parameters():
         print(f"NaN found in gradients of {name}")
 
 
-tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 
 
-pad_token_id = tokenizer.pad_token_id
-sep_token_id = tokenizer.sep_token_id
+
+pad_token_id = 0
+sep_token_id = None
 
 input_text = input("Prompt: ")
 max_length = 100
 
 
-encoding = tokenizer.encode_plus(
-    input_text,
-    padding="max_length",
-    truncation=True,
-    max_length=512,
-    return_tensors="pt",
-)
+input_ids = torch.tensor(dataset.manager.encode(input_text), dtype=int)
 
-input_ids = encoding["input_ids"].to(device)
-attention_mask = encoding["attention_mask"].to(device)
 
+attention_mask = dataset.manager.attention_mask(input_ids.squeeze(0)).to(device)
+input_ids = input_ids.to(device)
 
 generated_text = input_text
 
@@ -69,15 +63,21 @@ for _ in range(max_length):
         if sep_token_id is not None:
             probs[:, sep_token_id] = 0.0
 
+        # repetition_penalty = 2  # Values > 1.0 penalize repetition
+        # for token in input_ids.tolist():
+        #     probs[0, token] /= repetition_penalty
+
+        #print(probs)
+
         next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
 
         input_ids = torch.cat((input_ids, next_token_id.unsqueeze(-1)), dim=1)
 
         attention_mask = torch.cat(
-            (attention_mask, torch.ones((1, 1), device=device)), dim=1
+            (attention_mask, torch.ones((1,), device=device)), dim=0
         )
 
-        predicted_token = tokenizer.decode(next_token_id.item())
+        predicted_token = dataset.manager.decode(next_token_id)
 
         if not predicted_token.startswith("##") and not predicted_token.startswith(" "):
             predicted_token += " "

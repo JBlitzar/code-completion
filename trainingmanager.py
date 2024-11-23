@@ -52,6 +52,7 @@ class TrainingManager:
         device=device,
         trainstep_checkin_interval=100,
         epochs=100,
+        val_dataloader=None,
     ):
 
         learning_rate = 0.001
@@ -60,6 +61,7 @@ class TrainingManager:
         self.epochs = epochs
 
         self.dataloader = dataloader
+        self.val_dataloader = val_dataloader
 
         self.net = net
         self.net.to(device)
@@ -114,13 +116,32 @@ class TrainingManager:
                 return int(f.read())
         except (FileNotFoundError, ValueError):
             return 0
+        
+    def write_best_val_loss(self, loss):
+        with open(os.path.join(self.dir, "ckpt", "best_val_loss.txt"), "w+") as f:
+            f.write(f"{loss:.6f}")
+
+    def get_best_val_loss(self):
+        try:
+            with open(os.path.join(self.dir, "ckpt", "best_val_loss.txt"), "r") as f:
+                return float(f.read())
+        except (FileNotFoundError, ValueError):
+            return float("inf")
 
     def resume(self):
         self._load("latest.pt")
 
-    def save(self, step, prefix="epoch"):
-        self._save(f"{prefix}_{step}.pt")
+    def save(self, loss):
         self._save("latest.pt")
+
+        best_val_loss = self.get_best_val_loss
+        if loss < best_val_loss:
+            best_val_loss = loss
+            self._save("best.pt")
+            self.write_best_val_loss(best_val_loss)
+
+        #self._save(f"{prefix}_{step}.pt")
+        
 
     def on_trainloop_checkin(self, epoch, step, dataloader_len):
         if self.hasnan():
@@ -141,13 +162,22 @@ class TrainingManager:
             # revert
             self.resume()
 
-        self.save(epoch, "epoch")
+        
 
-        log_data({"Loss/Epoch": self.tracker.average("Loss/epoch")}, epoch)
+        
+
+        val_loss = self.tracker.average("Loss/val/epoch")
+
+        self.save(val_loss)
+
+        log_data({"Loss/Epoch": self.tracker.average("Loss/epoch"), "Loss/Val/Epoch": self.tracker.average("Loss/val/epoch")}, epoch)
 
         self.tracker.reset("Loss/epoch")
+        self.tracker.reset("Loss/val/epoch")
 
         self.write_resume(epoch)
+
+    
 
     def trainstep(self, data):
 
@@ -172,7 +202,29 @@ class TrainingManager:
         self.tracker.add("Loss/trainstep", loss.item())
         self.tracker.add("Loss/epoch", loss.item())
 
-    def epoch(self, epoch: int, dataloader):
+    @torch.no_grad() # decorator yay
+    def valstep(self, data):
+        
+
+        data = tuple(d.to(self.device) for d in data)
+
+        self.optimizer.zero_grad()
+
+        # Different for every model
+        batch, attn_mask = data
+
+        labels = batch[:, 1:].contiguous()
+        batch = batch[:, :-1].contiguous()
+
+        results = self.net(batch, padding_mask=attn_mask[:, :-1])
+
+        loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
+
+        
+        #self.tracker.add("Loss/valstep", loss.item())
+        self.tracker.add("Loss/val/epoch", loss.item())
+
+    def epoch(self, epoch: int, dataloader, val_loader = None):
         for step, data in enumerate(tqdm(dataloader, leave=False, dynamic_ncols=True)):
             self.trainstep(data)
 
@@ -181,6 +233,11 @@ class TrainingManager:
                 == self.trainstep_checkin_interval - 1
             ):
                 self.on_trainloop_checkin(epoch, step, len(dataloader))
+
+        
+        if val_loader is not None:
+            for step, data in enumerate(tqdm(val_loader, leave=False, dynamic_ncols=True)):
+                self.valstep(data)
 
         self.on_epoch_checkin(epoch)
 
