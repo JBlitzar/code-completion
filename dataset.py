@@ -8,6 +8,7 @@ from torch.utils.data import Dataset, DataLoader, random_split
 from shutil import copyfile
 import subprocess
 import youtokentome as yttm
+import re
 
 
 class BPEModelManager:
@@ -26,6 +27,7 @@ class BPEModelManager:
                 raise ValueError
         except ValueError:
             self._train_bpe_model()
+            self.bpe = yttm.BPE(model=self.model_path)
 
     def _backup_model(self):
         backup_path = os.path.join(self.root_dir, "bpe_model.model.old")
@@ -35,7 +37,7 @@ class BPEModelManager:
         data_path = os.path.join(self.root_dir, "data/corpus.txt")
         processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
 
-        with open(data_path, "r") as reader:
+        with open(data_path, "r", errors="ignore") as reader:
             raw_text = reader.read()
 
         processed_text = self.preprocess_text(raw_text)
@@ -63,13 +65,37 @@ class BPEModelManager:
 
 class CodeBPEModelManager(BPEModelManager):
     def __init__(self, root_dir, vocab_size=5000):
-        super().__init__(root_dir, vocab_size)
+        super().__init__(root_dir, vocab_size) 
 
     def preprocess_text(self, text):
-        formatted_text = self.format_code(text)
+        print("Formatting....")
+        processed_text = self.format_code(text)
         # Should be fine if we run through black.
-        processed_text = formatted_text  # .replace("\t", "    ").replace("    ", "𝐓")
+        processed_text = processed_text#.replace("\t", "    ").replace("    ", "𝐓")
+
+        # allegedly the regex for chinese chars, japanese chars, and korean chars, the source of the majority of non-ascii characters.
+        exp = re.compile(r'[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+')
+
+        processed_text = re.sub(exp, '<NON_ASCII>', processed_text)
+
         return processed_text
+    
+    def _train_bpe_model(self):
+        print("Training (1)....")
+        data_path = os.path.join(self.root_dir, "data/corpus.txt")
+        processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
+
+        with open(data_path, "r", errors="ignore", encoding="utf-8") as reader:
+            raw_text = reader.read()
+
+        processed_text = self.preprocess_text(raw_text)
+
+        with open(processed_path, "w", encoding="utf-8") as writer:
+            writer.write(processed_text)
+        print("Training....")
+        yttm.BPE.train(
+            data=processed_path, vocab_size=self.vocab_size, model=self.model_path, coverage=0.99
+        )
 
     def format_code(self, code):
         try:
@@ -84,28 +110,35 @@ class CodeBPEModelManager(BPEModelManager):
 
             return formatted_code
         except Exception as e:
-            print(f"Error during code formatting: {e}.")
+            print(
+                f"Error during code formatting: {e}."
+            )
             return code
 
 
 class TextCorpusDataset(Dataset):
     def __init__(
         self,
-        root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"),
+        root_dir="./test-data",
         train=False,
         max_length=512,
         vocab_size=10000,
         IS_CODE=False,
     ):
         self.root = root_dir
-        self.manager = BPEModelManager(
-            root_dir=root_dir, vocab_size=vocab_size, IS_CODE=False
-        )
+        if IS_CODE:
+            self.manager = CodeBPEModelManager(
+            root_dir=root_dir, vocab_size=vocab_size
+            )
+        else:
+            self.manager = BPEModelManager(
+                root_dir=root_dir, vocab_size=vocab_size
+            )
         self.max_length = max_length
 
-        with open(os.path.join(root_dir, "data/corpus.txt"), "r") as file:
+        with open(os.path.join(root_dir, "data/corpus_processed.txt"), "r", errors="ignore") as file:
             text = file.read()
-
+            print("encoding...")
             encoded = self.manager.encode(text)[0]
             self.chunks = [
                 encoded[i : i + self.max_length]
@@ -120,8 +153,8 @@ class TextCorpusDataset(Dataset):
 
         return seq, self.manager.attention_mask(seq)  # todo: convert to tensor.
 
-
-dataset = TextCorpusDataset(root_dir="./test-data/")
+print("Running....")
+dataset = TextCorpusDataset(root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), vocab_size=20000)
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 
@@ -142,11 +175,11 @@ def get_dataloader(dataset, batch_size=64):
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
-if __name__ == "__main__":
-    d = get_train_dataset()
-    print("Number of samples: ", len(d))
+# if __name__ == "__main__":
+#     d = get_train_dataset()
+#     print("Number of samples: ", len(d))
 
-    a, b = d[4]
-    manager = BPEModelManager("./test-data/", vocab_size=10000)
-    print(manager.decode(a))
-    print()
+#     a, b = d[4]
+#     manager = BPEModelManager("./test-data/", vocab_size=10000)
+#     print(manager.decode(a))
+#     print()

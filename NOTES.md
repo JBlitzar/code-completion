@@ -156,4 +156,6 @@
     - Also got dataset working!
 - Nov 22:
   - Getting dataset working for more code-specific things, also reformatted all the files.
-  - no "t" hack, because YTTM is character-agnostic: doesn't treat whitespace a special way. exactly what I want.
+  - no "T" hack, because YTTM is character-agnostic: doesn't treat whitespace a special way. exactly what I want.
+  - I adjusted coverage, because someone put like a unicode dump and there were 14k unique chars
+    - After some more investigation, it isnt unicode dumps, its lots of comments in chinese, cuz so many chinese characters.
