@@ -93,10 +93,10 @@ class CodeBPEModelManager(BPEModelManager):
         return self.bpe.encode([processed_text], output_type=yttm.OutputType.ID)
 
     def decode(self, ids):
-        result = self.bpe.decode(ids)[0]
-        print(result)
+        result = self.bpe.decode(ids.tolist())[0]
+        #print(result)
         for key, value in CodeBPEModelManager.mapping_dict.items():
-            result = result.replace(value, key) # value, key
+            result = result.replace(value.strip(), key) # value, key
 
        
                 
@@ -150,7 +150,6 @@ class CodeBPEModelManager(BPEModelManager):
             )
             return code
 
-
 class TextCorpusDataset(Dataset):
     def __init__(
         self,
@@ -163,7 +162,7 @@ class TextCorpusDataset(Dataset):
         self.root = root_dir
         if IS_CODE:
             self.manager = CodeBPEModelManager(
-            root_dir=root_dir, vocab_size=vocab_size
+                root_dir=root_dir, vocab_size=vocab_size
             )
         else:
             self.manager = BPEModelManager(
@@ -171,28 +170,28 @@ class TextCorpusDataset(Dataset):
             )
         self.max_length = max_length
 
-        self.cache_file = os.path.join(root_dir, "encoded_cached.pt")
+        self.cache_file = os.path.join(root_dir, "encoded_chunked.pt")
 
         start_t = time.time()
         if os.path.exists(self.cache_file):
-            print("[Dataset] Loading cached chunks...")
-            
-            encoded = torch.load(self.cache_file, weights_only=True)  # Load cached chunks
-            self.chunks = [
-                encoded[i : i + self.max_length]
-                for i in range(0, len(encoded), self.max_length)
-            ]
+            self.chunks = torch.load(self.cache_file, weights_only=True)
         else:
             with open(os.path.join(root_dir, "data/corpus_processed.txt"), "r", errors="ignore") as file:
                 text = file.read()
-                print("encoding...")
                 encoded = self.manager.encode(text)[0]
-                self.chunks = [
-                    encoded[i : i + self.max_length]
+                chunked_data = [
+                    torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
                     for i in range(0, len(encoded), self.max_length)
                 ]
-                
-                torch.save(encoded, self.cache_file)
+
+                # me when the last item is not necesarily of length self.max_length
+                padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
+                padded_chunk[:len(chunked_data[-1])] = chunked_data[-1] # silly zero fill bc im *optimized* like that
+                chunked_data[-1] = padded_chunk
+
+
+                self.chunks = torch.stack(chunked_data)
+                torch.save(self.chunks, self.cache_file)
         
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
@@ -202,8 +201,7 @@ class TextCorpusDataset(Dataset):
 
     def __getitem__(self, idx):
         seq = self.chunks[idx]
-
-        return seq, self.manager.attention_mask(seq)  # todo: convert to tensor.
+        return seq, self.manager.attention_mask(seq)
 
 #print("Running....")
 dataset = TextCorpusDataset(root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), vocab_size=10000, IS_CODE=True)
