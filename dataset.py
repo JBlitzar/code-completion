@@ -208,7 +208,7 @@ dataset = TextCorpusDataset(
     vocab_size=10000,
     IS_CODE=True,
 )
-dset_size = len(dataset)
+dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)
 test_size = int(dset_size - train_size)
 
