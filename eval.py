@@ -28,9 +28,6 @@ for name, param in net.named_parameters():
         print(f"NaN found in gradients of {name}")
 
 
-
-
-
 pad_token_id = 0
 sep_token_id = None
 
@@ -67,7 +64,7 @@ for _ in range(max_length):
         # for token in input_ids.tolist():
         #     probs[0, token] /= repetition_penalty
 
-        #print(probs)
+        # print(probs)
 
         next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
 

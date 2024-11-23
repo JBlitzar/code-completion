@@ -69,15 +69,12 @@ class BPEModelManager:
 
 class CodeBPEModelManager(BPEModelManager):
     mapping_dict = {
-        "    " : " <INDENT> ",
-        "\n" : " <NEWLINE> ",
-            
-        }
+        "    ": " <INDENT> ",
+        "\n": " <NEWLINE> ",
+    }
+
     def __init__(self, root_dir, vocab_size=5000):
-        super().__init__(root_dir, vocab_size) 
-
-
-        
+        super().__init__(root_dir, vocab_size)
 
     def preprocess_text(self, text):
         print("Formatting....")
@@ -87,7 +84,7 @@ class CodeBPEModelManager(BPEModelManager):
             processed_text = processed_text.replace(key, value)
 
         return processed_text
-    
+
     def encode(self, text: str):
         processed_text = text
         for key, value in CodeBPEModelManager.mapping_dict.items():
@@ -97,14 +94,12 @@ class CodeBPEModelManager(BPEModelManager):
 
     def decode(self, ids):
         result = self.bpe.decode(ids.tolist())[0]
-        #print(result)
+        # print(result)
         for key, value in CodeBPEModelManager.mapping_dict.items():
-            result = result.replace(value.strip(), key) # value, key
+            result = result.replace(value.strip(), key)  # value, key
 
-       
-                
         return result
-    
+
     def _train_bpe_model(self):
         print("Training (1)....")
         data_path = os.path.join(self.root_dir, "data/corpus.txt")
@@ -118,40 +113,39 @@ class CodeBPEModelManager(BPEModelManager):
         with open(processed_path, "w", encoding="utf-8") as writer:
             writer.write(processed_text)
 
-
         print("removing temp file...")
-        temp_file = os.path.join(self.root_dir, "temp_code.py") # dont ask
+        temp_file = os.path.join(self.root_dir, "temp_code.py")  # dont ask
         os.remove(temp_file)
-
 
         print("Training....")
         yttm.BPE.train(
-            data=processed_path, vocab_size=self.vocab_size, model=self.model_path, coverage=0.999
+            data=processed_path,
+            vocab_size=self.vocab_size,
+            model=self.model_path,
+            coverage=0.999,
         )
-
-
-        
 
     def format_code(self, code):
         try:
             temp_file = os.path.join(self.root_dir, "temp_code.py")
             with open(temp_file, "w") as file:
-                file.write(code.replace("\t", "    ")) # Hacky replacement, black freaks out otherwise
+                file.write(
+                    code.replace("\t", "    ")
+                )  # Hacky replacement, black freaks out otherwise
 
-            #subprocess.run(["black", temp_file, "--quiet"], check=True)
-            subprocess.run(["autopep8", "--in-place", "--ignore=E402", temp_file], check=True)
+            # subprocess.run(["black", temp_file, "--quiet"], check=True)
+            subprocess.run(
+                ["autopep8", "--in-place", "--ignore=E402", temp_file], check=True
+            )
 
             with open(temp_file, "r") as file:
                 formatted_code = file.read()
-            
-            
 
             return formatted_code
         except Exception as e:
-            print(
-                f"Error during code formatting: {e}."
-            )
+            print(f"Error during code formatting: {e}.")
             return code
+
 
 class TextCorpusDataset(Dataset):
     def __init__(
@@ -164,13 +158,9 @@ class TextCorpusDataset(Dataset):
     ):
         self.root = root_dir
         if IS_CODE:
-            self.manager = CodeBPEModelManager(
-                root_dir=root_dir, vocab_size=vocab_size
-            )
+            self.manager = CodeBPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
         else:
-            self.manager = BPEModelManager(
-                root_dir=root_dir, vocab_size=vocab_size
-            )
+            self.manager = BPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
         self.max_length = max_length
 
         self.cache_file = os.path.join(root_dir, "encoded_chunked.pt")
@@ -179,7 +169,11 @@ class TextCorpusDataset(Dataset):
         if os.path.exists(self.cache_file):
             self.chunks = torch.load(self.cache_file, weights_only=True)
         else:
-            with open(os.path.join(root_dir, "data/corpus_processed.txt"), "r", errors="ignore") as file:
+            with open(
+                os.path.join(root_dir, "data/corpus_processed.txt"),
+                "r",
+                errors="ignore",
+            ) as file:
                 text = file.read()
                 encoded = self.manager.encode(text)[0]
                 chunked_data = [
@@ -189,13 +183,14 @@ class TextCorpusDataset(Dataset):
 
                 # me when the last item is not necesarily of length self.max_length
                 padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
-                padded_chunk[:len(chunked_data[-1])] = chunked_data[-1] # silly zero fill bc im *optimized* like that
+                padded_chunk[: len(chunked_data[-1])] = chunked_data[
+                    -1
+                ]  # silly zero fill bc im *optimized* like that
                 chunked_data[-1] = padded_chunk
-
 
                 self.chunks = torch.stack(chunked_data)
                 torch.save(self.chunks, self.cache_file)
-        
+
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
@@ -206,8 +201,13 @@ class TextCorpusDataset(Dataset):
         seq = self.chunks[idx]
         return seq, self.manager.attention_mask(seq)
 
-#print("Running....")
-dataset = TextCorpusDataset(root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), vocab_size=10000, IS_CODE=True)
+
+# print("Running....")
+dataset = TextCorpusDataset(
+    root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"),
+    vocab_size=10000,
+    IS_CODE=True,
+)
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 

@@ -116,7 +116,7 @@ class TrainingManager:
                 return int(f.read())
         except (FileNotFoundError, ValueError):
             return 0
-        
+
     def write_best_val_loss(self, loss):
         with open(os.path.join(self.dir, "ckpt", "best_val_loss.txt"), "w+") as f:
             f.write(f"{loss:.6f}")
@@ -140,8 +140,7 @@ class TrainingManager:
             self._save("best.pt")
             self.write_best_val_loss(best_val_loss)
 
-        #self._save(f"{prefix}_{step}.pt")
-        
+        # self._save(f"{prefix}_{step}.pt")
 
     def on_trainloop_checkin(self, epoch, step, dataloader_len):
         if self.hasnan():
@@ -162,22 +161,22 @@ class TrainingManager:
             # revert
             self.resume()
 
-        
-
-        
-
         val_loss = self.tracker.average("Loss/val/epoch")
 
         self.save(val_loss)
 
-        log_data({"Loss/Epoch": self.tracker.average("Loss/epoch"), "Loss/Val/Epoch": self.tracker.average("Loss/val/epoch")}, epoch)
+        log_data(
+            {
+                "Loss/Epoch": self.tracker.average("Loss/epoch"),
+                "Loss/Val/Epoch": self.tracker.average("Loss/val/epoch"),
+            },
+            epoch,
+        )
 
         self.tracker.reset("Loss/epoch")
         self.tracker.reset("Loss/val/epoch")
 
         self.write_resume(epoch)
-
-    
 
     def trainstep(self, data):
 
@@ -202,9 +201,8 @@ class TrainingManager:
         self.tracker.add("Loss/trainstep", loss.item())
         self.tracker.add("Loss/epoch", loss.item())
 
-    @torch.no_grad() # decorator yay
+    @torch.no_grad()  # decorator yay
     def valstep(self, data):
-        
 
         data = tuple(d.to(self.device) for d in data)
 
@@ -220,11 +218,10 @@ class TrainingManager:
 
         loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
 
-        
-        #self.tracker.add("Loss/valstep", loss.item())
+        # self.tracker.add("Loss/valstep", loss.item())
         self.tracker.add("Loss/val/epoch", loss.item())
 
-    def epoch(self, epoch: int, dataloader, val_loader = None):
+    def epoch(self, epoch: int, dataloader, val_loader=None):
         for step, data in enumerate(tqdm(dataloader, leave=False, dynamic_ncols=True)):
             self.trainstep(data)
 
@@ -234,9 +231,10 @@ class TrainingManager:
             ):
                 self.on_trainloop_checkin(epoch, step, len(dataloader))
 
-        
         if val_loader is not None:
-            for step, data in enumerate(tqdm(val_loader, leave=False, dynamic_ncols=True)):
+            for step, data in enumerate(
+                tqdm(val_loader, leave=False, dynamic_ncols=True)
+            ):
                 self.valstep(data)
 
         self.on_epoch_checkin(epoch)

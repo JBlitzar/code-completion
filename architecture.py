@@ -94,7 +94,9 @@ class DecoderTransformer(nn.Module):
         super().__init__(*args, **kwargs)
 
         if vocab_size == 100:
-            print("WARNING: vocab_size is set to 100. You probably mean to set it to something else. Comment out the exit line below if this was intentional")
+            print(
+                "WARNING: vocab_size is set to 100. You probably mean to set it to something else. Comment out the exit line below if this was intentional"
+            )
             exit()
 
         self.num_blocks = num_blocks

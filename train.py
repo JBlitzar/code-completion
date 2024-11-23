@@ -11,8 +11,6 @@ import torchvision
 from trainingmanager import TrainingManager
 
 
-
-
 EXPERIMENT_DIRECTORY = "runs/code-decoder-v1"
 
 
