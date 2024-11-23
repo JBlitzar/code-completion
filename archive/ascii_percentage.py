@@ -5,7 +5,7 @@ def calculate_ascii_percentage(file_path):
     try:
         with open(file_path, "rb") as f:
             data = f.read()
-        
+
         total_chars = len(data)
         if total_chars == 0:
             return 0
@@ -18,7 +18,10 @@ def calculate_ascii_percentage(file_path):
         print(f"Error: {e}")
         return None
 
-file_path = os.path.expanduser("~/torch_datasets/github-python/corpus/data/corpus_processed.txt")
+
+file_path = os.path.expanduser(
+    "~/torch_datasets/github-python/corpus/data/corpus_processed.txt"
+)
 ascii_percentage = calculate_ascii_percentage(file_path)
 if ascii_percentage is not None:
     print(f"Percentage of ASCII characters: {ascii_percentage:.2f}%")
@@ -38,14 +41,16 @@ def find_unicode_passages(file_path, threshold=0.5, min_length=20):
                 total_chars = len(line.strip())
                 if total_chars < min_length:
                     continue  # Skip short lines
-                
+
                 non_ascii_count = sum(1 for c in line if ord(c) >= 128)
                 if non_ascii_count / total_chars > threshold:
                     print(f"Line {line_num}: {line.strip()}")
-                    print(f"  -> Non-ASCII Density: {non_ascii_count / total_chars:.2%}")
+                    print(
+                        f"  -> Non-ASCII Density: {non_ascii_count / total_chars:.2%}"
+                    )
     except Exception as e:
         print(f"Error: {e}")
 
+
 # Example usage
 find_unicode_passages(file_path, threshold=0.5, min_length=20)
-
