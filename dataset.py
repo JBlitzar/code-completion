@@ -48,7 +48,7 @@ class BPEModelManager:
         )
 
     def preprocess_text(self, text):
-        return text.lower().replace("\t", "    ")
+        return text.lower()
 
     def encode(self, text: str):
         return self.bpe.encode([text], output_type=yttm.OutputType.ID)
@@ -67,7 +67,8 @@ class CodeBPEModelManager(BPEModelManager):
 
     def preprocess_text(self, text):
         formatted_text = self.format_code(text)
-        processed_text = formatted_text.replace("\t", "    ").replace("    ", "𝐓")
+        # Should be fine if we run through black.
+        processed_text = formatted_text  # .replace("\t", "    ").replace("    ", "𝐓")
         return processed_text
 
     def format_code(self, code):
@@ -83,9 +84,7 @@ class CodeBPEModelManager(BPEModelManager):
 
             return formatted_code
         except Exception as e:
-            print(
-                f"Error during code formatting: {e}. Proceeding with unformatted code."
-            )
+            print(f"Error during code formatting: {e}.")
             return code
 
 
