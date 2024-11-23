@@ -64,14 +64,38 @@ class BPEModelManager:
 
 
 class CodeBPEModelManager(BPEModelManager):
+    mapping_dict = {
+            "\n" : " <NEWLINE> ",
+            "    " : " <INDENT> "
+        }
     def __init__(self, root_dir, vocab_size=5000):
         super().__init__(root_dir, vocab_size) 
+
+
+        
 
     def preprocess_text(self, text):
         print("Formatting....")
         processed_text = self.format_code(text)
 
+        for key, value in CodeBPEModelManager.mapping_dict.items():
+            processed_text = processed_text.replace(key, value)
+
         return processed_text
+    
+    def encode(self, text: str):
+        processed_text = text
+        for key, value in CodeBPEModelManager.mapping_dict.items():
+            processed_text = processed_text.replace(key, value)
+
+        return self.bpe.encode([processed_text], output_type=yttm.OutputType.ID)
+
+    def decode(self, ids):
+        result = self.bpe.decode(ids)[0]
+        for key, value in CodeBPEModelManager.mapping_dict.items():
+            result = result.replace(value, key) # value, key
+
+        return result
     
     def _train_bpe_model(self):
         print("Training (1)....")
@@ -107,7 +131,7 @@ class CodeBPEModelManager(BPEModelManager):
                 file.write(code.replace("\t", "    ")) # Hacky replacement, black freaks out otherwise
 
             #subprocess.run(["black", temp_file, "--quiet"], check=True)
-            subprocess.run(["autopep8", "--in-place", temp_file], check=True)
+            subprocess.run(["autopep8", "--in-place", "--ignore=E402", temp_file], check=True)
 
             with open(temp_file, "r") as file:
                 formatted_code = file.read()

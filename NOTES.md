@@ -162,3 +162,5 @@
     - AHAHAWHAfpesao9hasperugha me when I forget to set a flag that I created and then my code doesnt run removing chinese characters
     - Nevermind, I'll just use coverage variable like I initially planned. Silly me with no flag.
   - Switched to autopep8 because black was being weird
+  - Got it to work, and realized that YTTM does whitespace normalization. Fine usually, not fine rn.
+  - Autopep8 needs to ignore E402, duh, which moves imports to the top.
