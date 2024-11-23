@@ -228,8 +228,15 @@ class TrainingManager:
         self.tracker.add("Loss/val/epoch", loss.item())
 
     def epoch(self, epoch: int, dataloader, val_loader=None):
-        for step, data in enumerate(tqdm(dataloader, leave=False, dynamic_ncols=True)):
+        
+        for step, data in enumerate(train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True)):
             self.trainstep(data)
+
+            avg_train_loss = self.tracker.average("Loss/trainstep")
+            train_tqdm.set_postfix({
+                "Train Loss": f"{avg_train_loss:.3f}"
+            })
+
 
             if (
                 step % self.trainstep_checkin_interval
@@ -239,9 +246,13 @@ class TrainingManager:
 
         if val_loader is not None:
             for step, data in enumerate(
-                tqdm(val_loader, leave=False, dynamic_ncols=True)
+                test_tqdm := tqdm(val_loader, leave=False, dynamic_ncols=True)
             ):
                 self.valstep(data)
+                avg_val_loss = self.tracker.average("Loss/val/epoch")
+                test_tqdm.set_postfix({
+                    "Val Loss": f"{avg_val_loss:.3f}"
+                })
 
         self.on_epoch_checkin(epoch)
 
