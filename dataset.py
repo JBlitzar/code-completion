@@ -108,7 +108,7 @@ class CodeBPEModelManager(BPEModelManager):
 
             #subprocess.run(["black", temp_file, "--quiet"], check=True)
             subprocess.run(["autopep8", "--in-place", temp_file], check=True)
-            
+
             with open(temp_file, "r") as file:
                 formatted_code = file.read()
             
@@ -142,14 +142,22 @@ class TextCorpusDataset(Dataset):
             )
         self.max_length = max_length
 
-        with open(os.path.join(root_dir, "data/corpus_processed.txt"), "r", errors="ignore") as file:
-            text = file.read()
-            print("encoding...")
-            encoded = self.manager.encode(text)[0]
-            self.chunks = [
-                encoded[i : i + self.max_length]
-                for i in range(0, len(encoded), self.max_length)
-            ]
+        self.cache_file = os.path.join(root_dir, "chunks_cached.pt")
+
+        if os.path.exists(self.cache_file):
+            print("[Dataset] Loading cached chunks...")
+            self.chunks = torch.load(self.cache_file, weights_only=True)  # Load cached chunks
+        else:
+
+            with open(os.path.join(root_dir, "data/corpus_processed.txt"), "r", errors="ignore") as file:
+                text = file.read()
+                print("encoding...")
+                encoded = self.manager.encode(text)[0]
+                self.chunks = [
+                    encoded[i : i + self.max_length]
+                    for i in range(0, len(encoded), self.max_length)
+                ]
+            torch.save(self.chunks, self.cache_file)
 
     def __len__(self):
         return len(self.chunks)
@@ -159,7 +167,7 @@ class TextCorpusDataset(Dataset):
 
         return seq, self.manager.attention_mask(seq)  # todo: convert to tensor.
 
-print("Running....")
+#print("Running....")
 dataset = TextCorpusDataset(root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"), vocab_size=10000, IS_CODE=True)
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
@@ -181,11 +189,11 @@ def get_dataloader(dataset, batch_size=64):
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
-# if __name__ == "__main__":
-#     d = get_train_dataset()
-#     print("Number of samples: ", len(d))
+if __name__ == "__main__":
+    d = get_train_dataset()
+    print("Number of samples: ", len(d))
 
-#     a, b = d[4]
-#     manager = BPEModelManager("./test-data/", vocab_size=10000)
-#     print(manager.decode(a))
-#     print()
+    a, b = d[4]
+    manager = dataset.manager
+    print(manager.decode(a))
+    print()
