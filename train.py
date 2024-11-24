@@ -45,5 +45,4 @@ for batch, attn_mask in dataloader:
     break
 
 
-trainer.val_loop(testloader) # for testing
-#trainer.train()
+trainer.train()

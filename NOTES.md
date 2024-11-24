@@ -181,8 +181,24 @@
   - Stopped training, changed to smaller context window. Retraining. Perhaps 99% was too restrictive. Later retry with 99.5%, but should be fine I guess for now.
 - Nov 24
   - Ugh, more NaNs in the loss overnight.
-  - Time for some ✨debugging✨
-    - Nans in loss come from nans in results
-    - But there are no nans in labels or batch.
-      - `torch.isnan(batch).any()`
-    -
+  - Time for some ✨debugging✨ - Nans in loss come from nans in results - But there are no nans in labels or batch. - `torch.isnan(batch).any()` - Removing layernorm didnt help. - I'm going to use torch.autograd.set_detect_anomaly(True) - Did some funny
+
+```python
+    def forward_hook(module, input, output):
+    if isinstance(output, tuple):
+    return
+    if torch.isnan(output).any() or torch.isinf(output).any():
+    print(f"NaNs/Infs detected in {module}")
+
+for module in net.modules():
+module.register_forward_hook(forward_hook)
+```
+
+- Continuing
+  - So looks like MHA is the issue.
+  - And what do you know, https://github.com/pytorch/pytorch/issues/21518
+  - So yeah. Lets give that fix a try
+  - Nope, it seems that NaNs in x are occuring before they even are in MHA_selfattn.
+  - Ok, so it seems to be occuring when it comes out of the MultiHeadAttention.
+  - The problem is I forgot to cast mask to float 🤦
+  - Ran through val and no NaN.

@@ -274,3 +274,15 @@ class TrainingManager:
                 continue
 
             self.epoch(e, self.dataloader, self.val_dataloader)
+
+    def nan_debug(self):
+        torch.autograd.set_detect_anomaly(True)
+        def forward_hook(module, input, output):
+            if isinstance(output, tuple):
+                return
+            if torch.isnan(output).any() or torch.isinf(output).any():
+                print(f"NaNs/Infs detected in {module}")
+
+        for module in self.net.modules():
+            module.register_forward_hook(forward_hook)
+        self.val_loop(self.val_dataloader)
