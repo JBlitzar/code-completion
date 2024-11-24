@@ -277,6 +277,7 @@ class TrainingManager:
 
     def nan_debug(self):
         torch.autograd.set_detect_anomaly(True)
+
         def forward_hook(module, input, output):
             if isinstance(output, tuple):
                 return

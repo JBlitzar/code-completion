@@ -48,7 +48,7 @@ class MHA_SelfAttention(nn.Module):
 
         # if torch.isnan(attn_output).any() or torch.isinf(attn_output).any():
         #     print("NAN or INF detected in attn_output!")
-        #print(f"Output stats: max={attn_output.max()}, min={attn_output.min()}, mean={attn_output.mean()}")
+        # print(f"Output stats: max={attn_output.max()}, min={attn_output.min()}, mean={attn_output.mean()}")
 
         return attn_output
 
@@ -82,7 +82,6 @@ class DecoderBlock(nn.Module):
         x = self.sa(x, mask=padding_mask, triangle_mask=True)
         x = x + res_x
 
-       
         res_x_2 = x
         x = self.block(x)
         x = x + res_x_2
@@ -143,7 +142,7 @@ class DecoderTransformer(nn.Module):
         #     print("NAN ALERT!")
 
         for didx, dblock in enumerate(self.decoders):
-            
+
             x = dblock(x, padding_mask=padding_mask)
 
         x = self.oblock(x)
