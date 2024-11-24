@@ -55,9 +55,7 @@ class TrainingManager:
         val_dataloader=None,
     ):
 
-        learning_rate = 0.001
-
-        self.clip = 10
+        learning_rate = 0.0001
 
         self.trainstep_checkin_interval = trainstep_checkin_interval
         self.epochs = epochs
@@ -204,8 +202,6 @@ class TrainingManager:
 
         loss.backward()
 
-        torch.nn.utils.clip_grad_norm_(self.net.parameters(), self.clip)
-
         self.optimizer.step()
 
         self.tracker.add("Loss/trainstep", loss.item())
@@ -272,7 +268,7 @@ class TrainingManager:
         if dataloader is not None:
             self.dataloader = dataloader
 
-        for e in trange(self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60):
+        for e in trange(self.epochs, dynamic_ncols=True):
 
             if e <= self.resume_amt:
                 continue
