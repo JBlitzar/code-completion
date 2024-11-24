@@ -178,3 +178,4 @@
   - Made a decision to do only 70 chars for that 99%. Should be fine.
   - Running train.py code-decoder-v2-smallchar. Train loss is a lot smaller than when I don't reduce chars.
   - Loss is small, but it still has a ways to go: `for i in range(in s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) _F _F .append( s[i]) s[i]) s[2] in range( in in in in s[i]) s[i]) s[i]) _func in in s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) ] s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) RIT s[i]) s[i]) tmp s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) tmp s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) tmp s[i]) s[i]) s[i]) s[i]) s[i]) tmp s[i]) tmp tmp s[i]) rgb .append( tmp tmp s[i]) s[i]) s[i]) _test, .append( tmp tmp s[i]) s[i]) s[i]) s[i]) NIST hy tmp tmp s[i]) s.to( s.to( s.to( tmp tmp s[i]) s[i]) NE NE hy s.to( 4 uidance s[i])`
+  - Stopped training, changed to smaller context window. Retraining. Perhaps 99% was too restrictive. Later retry with 99.5%, but should be fine I guess for now.
