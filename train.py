@@ -11,7 +11,7 @@ import torchvision
 from trainingmanager import TrainingManager
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v2-smallchar"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v3-tester"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -44,4 +44,6 @@ for batch, attn_mask in dataloader:
     )
     break
 
-trainer.train()
+
+trainer.val_loop(testloader) # for testing
+#trainer.train()

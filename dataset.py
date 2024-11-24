@@ -169,8 +169,10 @@ class TextCorpusDataset(Dataset):
         start_t = time.time()
         if os.path.exists(self.cache_file):
             self.chunks = torch.load(self.cache_file, weights_only=True)
-            if(self.chunks.size(-1) != self.max_length):
-                if input("Attempting to fix and re-chunk data to correct length. Continue? [y/N]: "):
+            if self.chunks.size(-1) != self.max_length:
+                if input(
+                    "Attempting to fix and re-chunk data to correct length. Continue? [y/N]: "
+                ):
                     self._chunk_and_save(torch.flatten(self.chunks).tolist())
                     print("Re-chunked successfully!")
                 else:
@@ -185,7 +187,6 @@ class TextCorpusDataset(Dataset):
                 encoded = self.manager.encode(text)[0]
 
                 self._chunk_and_save(encoded)
-                
 
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
@@ -219,7 +220,7 @@ dataset = TextCorpusDataset(
     root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"),
     vocab_size=10000,
     IS_CODE=True,
-    max_length=50
+    max_length=50,
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)

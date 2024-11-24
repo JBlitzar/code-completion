@@ -55,7 +55,7 @@ class TrainingManager:
         val_dataloader=None,
     ):
 
-        learning_rate = 0.001
+        learning_rate = 0.0001
 
         self.trainstep_checkin_interval = trainstep_checkin_interval
         self.epochs = epochs
@@ -212,8 +212,6 @@ class TrainingManager:
 
         data = tuple(d.to(self.device) for d in data)
 
-        
-
         # Different for every model
         batch, attn_mask = data
 
@@ -224,19 +222,29 @@ class TrainingManager:
 
         loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
 
+        if torch.isnan(loss).item():
+            print("NAN ALERT!")
+
         # self.tracker.add("Loss/valstep", loss.item())
         self.tracker.add("Loss/val/epoch", loss.item())
 
-    def epoch(self, epoch: int, dataloader, val_loader=None):
-        
-        for step, data in enumerate(train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True)):
+    def val_loop(self, val_loader):
+        if val_loader is not None:
+            for step, data in enumerate(
+                test_tqdm := tqdm(val_loader, leave=False, dynamic_ncols=True)
+            ):
+                self.valstep(data)
+                avg_val_loss = self.tracker.average("Loss/val/epoch")
+                test_tqdm.set_postfix({"Val Loss": f"{avg_val_loss:.3f}"})
+
+    def train_loop(self, dataloader, epoch):
+        for step, data in enumerate(
+            train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True)
+        ):
             self.trainstep(data)
 
             avg_train_loss = self.tracker.average("Loss/trainstep")
-            train_tqdm.set_postfix({
-                "Train Loss": f"{avg_train_loss:.3f}"
-            })
-
+            train_tqdm.set_postfix({"Train Loss": f"{avg_train_loss:.3f}"})
 
             if (
                 step % self.trainstep_checkin_interval
@@ -244,15 +252,11 @@ class TrainingManager:
             ):
                 self.on_trainloop_checkin(epoch, step, len(dataloader))
 
-        if val_loader is not None:
-            for step, data in enumerate(
-                test_tqdm := tqdm(val_loader, leave=False, dynamic_ncols=True)
-            ):
-                self.valstep(data)
-                avg_val_loss = self.tracker.average("Loss/val/epoch")
-                test_tqdm.set_postfix({
-                    "Val Loss": f"{avg_val_loss:.3f}"
-                })
+    def epoch(self, epoch: int, dataloader, val_loader=None):
+
+        self.train_loop(dataloader, epoch)
+
+        self.val_loop(val_loader)
 
         self.on_epoch_checkin(epoch)
 
