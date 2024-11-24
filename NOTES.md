@@ -200,5 +200,6 @@ module.register_forward_hook(forward_hook)
   - So yeah. Lets give that fix a try
   - Nope, it seems that NaNs in x are occuring before they even are in MHA_selfattn.
   - Ok, so it seems to be occuring when it comes out of the MultiHeadAttention.
-  - The problem is I forgot to cast mask to float 🤦
+  - The problem is I forgot to cast mask to float 🤦 (I think?)
   - Ran through val and no NaN.
+- All right, going to retrain.
