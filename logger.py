@@ -27,4 +27,4 @@ def init_logger(net, data=None, dir="runs"):
     # writer.close()
     net.train()
     os.system("tensorboard --logdir runs > /dev/null 2>&1 &")
-    os.system("sleep 5; open http://localhost:6006 &")
+    os.system("sleep 5; open -a /Applications/Safari.app http://localhost:6006 &")

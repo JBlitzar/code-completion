@@ -202,4 +202,9 @@ module.register_forward_hook(forward_hook)
   - Ok, so it seems to be occuring when it comes out of the MultiHeadAttention.
   - The problem is I forgot to cast mask to float 🤦 (I think?)
   - Ran through val and no NaN.
-- All right, going to retrain.
+- All right, going to retrain. Also lowered lr by a factor of 10 and it doesnt explode anymore, so good sign.
+  - Its been 2 epochs, avg loss went from 11 to 35, weird spikes. I'll put screenshot. <img src="readme-imgs/code-decoder-v2-loss-curve-1.png" width="200">
+  - Weird spikes: Perhaps do some sort of weight initialization? See https://github.com/pytorch/examples/blob/main/word_language_model/model.py
+  - Maybe LR is too low now that we actually diagnosed the nans as coming from my MHA.
+  - https://github.com/hyunwoongko/transformer/blob/master/train.py Uses Xavier initialization and clips gradients, so I will.
+- Starting up runs/code-decoder-v3-regularized
