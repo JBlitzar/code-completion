@@ -55,9 +55,9 @@ class TrainingManager:
         val_dataloader=None,
     ):
 
-        learning_rate = 0.001
+        learning_rate = 1e-5
 
-        self.clip = 10
+        self.clip = 1
 
         self.trainstep_checkin_interval = trainstep_checkin_interval
         self.epochs = epochs
