@@ -10,6 +10,7 @@ import subprocess
 import youtokentome as yttm
 import re
 import time
+from tqdm import trange
 
 
 class BPEModelManager:
@@ -122,7 +123,7 @@ class CodeBPEModelManager(BPEModelManager):
             data=processed_path,
             vocab_size=self.vocab_size,
             model=self.model_path,
-            coverage=0.999,
+            coverage=0.99,
         )
 
     def format_code(self, code):
@@ -168,6 +169,12 @@ class TextCorpusDataset(Dataset):
         start_t = time.time()
         if os.path.exists(self.cache_file):
             self.chunks = torch.load(self.cache_file, weights_only=True)
+            if(self.chunks.size(-1) != self.max_length):
+                if input("Attempting to fix and re-chunk data to correct length. Continue? [y/N]: "):
+                    self._chunk_and_save(torch.flatten(self.chunks).tolist())
+                    print("Re-chunked successfully!")
+                else:
+                    print("Operation aborted.")
         else:
             with open(
                 os.path.join(root_dir, "data/corpus_processed.txt"),
@@ -176,23 +183,28 @@ class TextCorpusDataset(Dataset):
             ) as file:
                 text = file.read()
                 encoded = self.manager.encode(text)[0]
-                chunked_data = [
-                    torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
-                    for i in range(0, len(encoded), self.max_length)
-                ]
 
-                # me when the last item is not necesarily of length self.max_length
-                padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
-                padded_chunk[: len(chunked_data[-1])] = chunked_data[
-                    -1
-                ]  # silly zero fill bc im *optimized* like that
-                chunked_data[-1] = padded_chunk
-
-                self.chunks = torch.stack(chunked_data)
-                torch.save(self.chunks, self.cache_file)
+                self._chunk_and_save(encoded)
+                
 
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
+
+    def _chunk_and_save(self, encoded):
+        chunked_data = [
+            torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
+            for i in trange(0, len(encoded), self.max_length, leave=False)
+        ]
+
+        # me when the last item is not necesarily of length self.max_length
+        padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
+        padded_chunk[: len(chunked_data[-1])] = chunked_data[
+            -1
+        ]  # silly zero fill bc im *optimized* like that
+        chunked_data[-1] = padded_chunk
+
+        self.chunks = torch.stack(chunked_data)
+        torch.save(self.chunks, self.cache_file)
 
     def __len__(self):
         return len(self.chunks)
@@ -207,6 +219,7 @@ dataset = TextCorpusDataset(
     root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"),
     vocab_size=10000,
     IS_CODE=True,
+    max_length=50
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)

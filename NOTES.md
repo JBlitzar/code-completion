@@ -156,7 +156,7 @@
     - Also got dataset working!
 - Nov 22:
   - Getting dataset working for more code-specific things, also reformatted all the files.
-  - removed "T" hack (from future self: I basically added it back in because YTTM tried to do whitespace norm :\)
+  - removed "T" hack (from future self: I basically added it back in because YTTM tried to do whitespace norm :\ )
   - I adjusted coverage, because someone put like a unicode dump and there were 14k unique chars
     - After some more investigation, it isnt unicode dumps, its lots of comments in chinese, cuz so many chinese characters.
     - AHAHAWHAfpesao9hasperugha me when I forget to set a flag that I created and then my code doesnt run removing chinese characters
@@ -175,3 +175,6 @@
     - In the spirit of testing, I'm going to run it on a minibatch and make sure val stuff works.
     - Done, now retrain.
   - Looking through https://github.com/hyunwoongko/transformer/blob/master/models/blocks/decoder_layer.py, the only other thing I missed was dropout.
+  - Made a decision to do only 70 chars for that 99%. Should be fine.
+  - Running train.py code-decoder-v2-smallchar. Train loss is a lot smaller than when I don't reduce chars.
+  - Loss is small, but it still has a ways to go: `for i in range(in s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) _F _F .append( s[i]) s[i]) s[2] in range( in in in in s[i]) s[i]) s[i]) _func in in s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) ] s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) RIT s[i]) s[i]) tmp s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) tmp s[i]) s[i]) s[i]) s[i]) s[i]) s[i]) tmp s[i]) s[i]) s[i]) s[i]) s[i]) tmp s[i]) tmp tmp s[i]) rgb .append( tmp tmp s[i]) s[i]) s[i]) _test, .append( tmp tmp s[i]) s[i]) s[i]) s[i]) NIST hy tmp tmp s[i]) s.to( s.to( s.to( tmp tmp s[i]) s[i]) NE NE hy s.to( 4 uidance s[i])`

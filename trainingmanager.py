@@ -212,7 +212,7 @@ class TrainingManager:
 
         data = tuple(d.to(self.device) for d in data)
 
-        self.optimizer.zero_grad()
+        
 
         # Different for every model
         batch, attn_mask = data
