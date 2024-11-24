@@ -79,18 +79,18 @@ class DecoderBlock(nn.Module):
         self.sa = MHA_SelfAttention()
         self.block = FeedForward()
 
-        self.drop = nn.Dropout(p=0.1)
+        #self.drop = nn.Dropout(p=0.1)
 
     def forward(self, x, padding_mask=None):
         res_x = x
         x = self.sa(x, mask=padding_mask, triangle_mask=True)
 
-        x = self.drop(x)
+        #x = self.drop(x)
         x = x + res_x
 
         res_x_2 = x
         x = self.block(x)
-        x = self.drop(x)
+        #x = self.drop(x)
         x = x + res_x_2
 
         # if torch.isnan(x).any():
