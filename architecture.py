@@ -15,8 +15,8 @@ class MHA_SelfAttention(nn.Module):
         self.num_heads = num_heads
 
     def forward(self, x, mask=None, triangle_mask=False):
-        if torch.isnan(x).any():
-            print("NAN ALERT!")
+        # if torch.isnan(x).any():
+        #     print("NAN ALERT!")
         attn_mask = None
         seq_len = x.size(1)
 
@@ -32,7 +32,9 @@ class MHA_SelfAttention(nn.Module):
 
         if attn_mask is not None:
             attn_mask = attn_mask.repeat(self.num_heads, 1, 1).float()
-            attn_mask = attn_mask.masked_fill(~attn_mask.bool(), -1e9)
+            attn_mask = attn_mask.masked_fill(
+                ~attn_mask.bool(), -1e9
+            )  # https://github.com/pytorch/pytorch/issues/21518 we don't talk about how long that took to know. Later it seems like they also support bool, but idk 🤷
 
         # print(f"attn_mask shape: {attn_mask.shape if attn_mask is not None else None}")
         # if attn_mask is not None:

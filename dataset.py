@@ -106,24 +106,26 @@ class CodeBPEModelManager(BPEModelManager):
         data_path = os.path.join(self.root_dir, "data/corpus.txt")
         processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
 
-        with open(data_path, "r", errors="ignore", encoding="utf-8") as reader:
-            raw_text = reader.read()
+        if input("Reformat? Will take time [y/N]") == "y":
 
-        processed_text = self.preprocess_text(raw_text)
+            with open(data_path, "r", errors="ignore", encoding="utf-8") as reader:
+                raw_text = reader.read()
 
-        with open(processed_path, "w", encoding="utf-8") as writer:
-            writer.write(processed_text)
+            processed_text = self.preprocess_text(raw_text)
 
-        print("removing temp file...")
-        temp_file = os.path.join(self.root_dir, "temp_code.py")  # dont ask
-        os.remove(temp_file)
+            with open(processed_path, "w", encoding="utf-8") as writer:
+                writer.write(processed_text)
+
+            print("removing temp file...")
+            temp_file = os.path.join(self.root_dir, "temp_code.py")  # dont ask
+            os.remove(temp_file)
 
         print("Training....")
         yttm.BPE.train(
             data=processed_path,
             vocab_size=self.vocab_size,
             model=self.model_path,
-            coverage=0.99,
+            coverage=0.995,
         )
 
     def format_code(self, code):
@@ -134,7 +136,7 @@ class CodeBPEModelManager(BPEModelManager):
                     code.replace("\t", "    ")
                 )  # Hacky replacement, black freaks out otherwise
 
-            # subprocess.run(["black", temp_file, "--quiet"], check=True)
+            subprocess.run(["black", temp_file, "--quiet"], check=True)
             subprocess.run(
                 ["autopep8", "--in-place", "--ignore=E402", temp_file], check=True
             )
@@ -220,7 +222,7 @@ dataset = TextCorpusDataset(
     root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"),
     vocab_size=10000,
     IS_CODE=True,
-    max_length=50,
+    max_length=100,
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)
