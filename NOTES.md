@@ -208,3 +208,23 @@ module.register_forward_hook(forward_hook)
   - Maybe LR is too low now that we actually diagnosed the nans as coming from my MHA.
   - https://github.com/hyunwoongko/transformer/blob/master/train.py Uses Xavier initialization and clips gradients, so I will.
 - Starting up runs/code-decoder-v3-regularized
+  - Training, sample: (bracketed prompt from dataset)
+
+```python
+    [
+                          loss_ = self.gwta_loss(out, yss, m, grid_factor=np.power(2, idx))
+                     else:
+                          loss_ = m(out, yss)
+                     loss += loss_
+                     losses.append(loss_.item())
+
+                loss.backward()
+                self.optimizers.step()
+    ]
+
+                # -- Histd_ +', b as do ed single This to to update is update
+                             #                             continue     last LR ed this ") ', training
+     # if output if args.local_rank not arg e:
+```
+
+- Not quite there yet, but looking like code. optimizer.step() is indeed to update parameters, and it does involve training, so it's getting there.

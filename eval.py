@@ -3,9 +3,9 @@ from architecture import DecoderTransformer
 import os
 import sys
 import time
-from dataset import dataset
+from dataset import dataset, get_train_dataset
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v2-smallchar"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v3-regularized"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -15,7 +15,7 @@ net.to(device)
 
 net.load_state_dict(
     torch.load(
-        os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
+        os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "best.pt"), weights_only=True
     )
 )
 
@@ -36,12 +36,22 @@ max_length = 100
 
 
 input_ids = torch.tensor(dataset.manager.encode(input_text), dtype=int)
-
-
+print(input_ids.shape)
 attention_mask = dataset.manager.attention_mask(input_ids.squeeze(0)).to(device)
-input_ids = input_ids.to(device)
 
-generated_text = input_text
+input_ids, attention_mask = get_train_dataset()[4]
+
+
+
+input_ids = input_ids.to(device).unsqueeze(0)
+
+attention_mask = attention_mask.to(device)#.unsqueeze(0)
+
+print(input_ids.shape)
+
+generated_text = dataset.manager.decode(input_ids)
+
+print(generated_text)
 
 
 for _ in range(max_length):
