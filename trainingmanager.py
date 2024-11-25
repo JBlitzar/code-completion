@@ -55,7 +55,7 @@ class TrainingManager:
         val_dataloader=None,
     ):
 
-        learning_rate = 0.001
+        learning_rate = 0.0001
 
         self.clip = 10
 

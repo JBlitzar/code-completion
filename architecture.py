@@ -134,10 +134,11 @@ class DecoderTransformer(nn.Module):
             # nn.Softmax(dim=-1)
         )
 
+        # https://github.com/hyunwoongko/transformer
         @torch.no_grad()
         def _initialize_weights(m):
             if hasattr(m, 'weight') and m.weight.dim() > 1:
-                nn.init.kaiming_uniform(m.weight.data)
+                nn.init.kaiming_uniform_(m.weight.data)
 
         self.apply(_initialize_weights)
 
