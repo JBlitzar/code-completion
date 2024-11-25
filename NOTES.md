@@ -228,3 +228,8 @@ module.register_forward_hook(forward_hook)
 ```
 
 - Not quite there yet, but looking like code. optimizer.step() is indeed to update parameters, and it does involve training, so it's getting there.
+- Nov 25
+  - So loss went up after a bit. It's kind of weird. <img src="readme-imgs/code-decoder-v3-loss-curve.png" width="500">
+  - Loss went wayy up after it seemed like it was going well going down.
+  - Maybe over-regularization? I'm going to implement the lr schedule that https://github.com/hyunwoongko/transformer does and I adjusted gradient clipping to a lower threshold (1.0 vs 10.0)
+  - https://github.com/hyunwoongko/transformer also just trained it a lot longer

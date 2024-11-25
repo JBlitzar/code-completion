@@ -57,7 +57,7 @@ class TrainingManager:
 
         learning_rate = 0.0001
 
-        self.clip = 10
+        self.clip = 1.0
 
         self.trainstep_checkin_interval = trainstep_checkin_interval
         self.epochs = epochs
@@ -71,9 +71,14 @@ class TrainingManager:
 
         self.dir = dir
 
-        self.criterion = torch.nn.CrossEntropyLoss()
+        self.criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
         self.optimizer = torch.optim.Adam(self.net.parameters(), lr=learning_rate)
 
+        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizers=self.optimizer,
+                                                 verbose=True,
+                                                 factor=0.9,
+                                                 patience=10) # No clue what this does. Maybe its good
+ 
         self.tracker = ValueTracker()
 
         self.resume_amt = self.get_resume()
