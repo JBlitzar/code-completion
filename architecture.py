@@ -79,18 +79,18 @@ class DecoderBlock(nn.Module):
         self.sa = MHA_SelfAttention()
         self.block = FeedForward()
 
-        #self.drop = nn.Dropout(p=0.1)
+        # self.drop = nn.Dropout(p=0.1)
 
     def forward(self, x, padding_mask=None):
         res_x = x
         x = self.sa(x, mask=padding_mask, triangle_mask=True)
 
-        #x = self.drop(x)
+        # x = self.drop(x)
         x = x + res_x
 
         res_x_2 = x
         x = self.block(x)
-        #x = self.drop(x)
+        # x = self.drop(x)
         x = x + res_x_2
 
         # if torch.isnan(x).any():
@@ -137,12 +137,14 @@ class DecoderTransformer(nn.Module):
         # https://github.com/hyunwoongko/transformer
         @torch.no_grad()
         def _initialize_weights(m):
-            if hasattr(m, 'weight') and m.weight.dim() > 1:
+            if hasattr(m, "weight") and m.weight.dim() > 1:
                 nn.init.kaiming_uniform_(m.weight.data)
 
         self.apply(_initialize_weights)
 
-        print(f"Model initialized with {sum(p.numel() for p in self.parameters() if p.requires_grad)} params.")
+        print(
+            f"Model initialized with {sum(p.numel() for p in self.parameters() if p.requires_grad)} params."
+        )
 
     def forward(self, x, padding_mask=None):
         # if torch.isnan(x).any():

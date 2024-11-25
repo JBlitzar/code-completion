@@ -5,7 +5,9 @@ import sys
 import time
 from dataset import dataset, get_train_dataset
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v3-regularized"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = (
+    "runs/code-decoder-v3-regularized"  # shakespeare-test, run1-python
+)
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -14,9 +16,7 @@ net = DecoderTransformer(vocab_size=10000)
 net.to(device)
 
 net.load_state_dict(
-    torch.load(
-        os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "best.pt"), weights_only=True
-    )
+    torch.load(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "best.pt"), weights_only=True)
 )
 
 
@@ -42,10 +42,9 @@ attention_mask = dataset.manager.attention_mask(input_ids.squeeze(0)).to(device)
 input_ids, attention_mask = get_train_dataset()[4]
 
 
-
 input_ids = input_ids.to(device).unsqueeze(0)
 
-attention_mask = attention_mask.to(device)#.unsqueeze(0)
+attention_mask = attention_mask.to(device)  # .unsqueeze(0)
 
 print(input_ids.shape)
 

@@ -74,11 +74,11 @@ class TrainingManager:
         self.criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
         self.optimizer = torch.optim.Adam(self.net.parameters(), lr=learning_rate)
 
-        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizers=self.optimizer,
-                                                 verbose=True,
-                                                 factor=0.9,
-                                                 patience=10) # No clue what this does. Maybe its good
- 
+        # No clue what this does. Maybe its good
+        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer=self.optimizer, verbose=True, factor=0.9, patience=10
+        )
+
         self.tracker = ValueTracker()
 
         self.resume_amt = self.get_resume()
@@ -277,7 +277,9 @@ class TrainingManager:
         if dataloader is not None:
             self.dataloader = dataloader
 
-        for e in trange(self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60):
+        for e in trange(
+            self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+        ):
 
             if e <= self.resume_amt:
                 continue
