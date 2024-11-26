@@ -48,7 +48,10 @@ class BPEModelManager:
             writer.write(processed_text)
 
         yttm.BPE.train(
-            data=processed_path, vocab_size=self.vocab_size, model=self.model_path, coverage=0.9999
+            data=processed_path,
+            vocab_size=self.vocab_size,
+            model=self.model_path,
+            coverage=0.9999,
         )
 
     def preprocess_text(self, text):
@@ -173,8 +176,11 @@ class TextCorpusDataset(Dataset):
         if os.path.exists(self.cache_file):
             self.chunks = torch.load(self.cache_file, weights_only=True)
             if self.chunks.size(-1) != self.max_length:
-                if input(
-                    "Attempting to fix and re-chunk data to correct length. Continue? [y/N]: "
+                if (
+                    input(
+                        "Attempting to fix and re-chunk data to correct length. Continue? [y/N]: "
+                    )
+                    == "y"
                 ):
                     self._chunk_and_save(torch.flatten(self.chunks).tolist())
                     print("Re-chunked successfully!")
@@ -220,10 +226,12 @@ class TextCorpusDataset(Dataset):
 
 # print("Running....")
 dataset = TextCorpusDataset(
-    root_dir=os.path.expanduser("~/torch_datasets/wikitext/train"),#os.path.expanduser("~/torch_datasets/github-python/corpus"),
+    root_dir=os.path.expanduser(
+        "~/torch_datasets/github-python/corpus"
+    ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=10000,
-    IS_CODE=False,
-    max_length=512,
+    IS_CODE=True,  # Remember to change!
+    max_length=100,
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)

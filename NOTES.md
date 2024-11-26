@@ -256,3 +256,6 @@ module.register_forward_hook(forward_hook)
       - Loss is 8 (now 7.6, now 7.2), yeah model is underpowered.
     - What are standard model sizes? Looks like 12 decoders and 768-sized embedding.
     - Ok, so wikitext was a good source of inspiration. Let's rerun code decoder with bigger. This will inevitably come with more hparam tuning
+    - Training `v6-big`
+      - 57911056 params
+      - Loss is only going up after first 100 steps. It hit 11k. This isnt right. LR down?

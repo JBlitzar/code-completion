@@ -3,7 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-DIM = 512
+DIM = 768
+print(f"DIM IS SET TO {DIM}")
 
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 
