@@ -235,3 +235,6 @@ module.register_forward_hook(forward_hook)
   - https://github.com/hyunwoongko/transformer also just trained it a lot longer
   - Learning is slower, loss is at 1.3, but its stable, which is good.
   - Loss is literally the same within 2 decimal places as it was 2 hrs ago. 3.22 or whatever. Sometimes with projects, after you've done all the learning and coding, the rest is like fine-tuning and training 1 million times, and that isn't super fulfilling. Transformers was really cool though, and I totally want to run this on wikitext.
+  - So this is (maybe) a classic case of too-low learning rate and so it got stuck in local minimum. Fine line between overfitting and over-regularization.
+    - Rerunning with higher LR.
+    - `v5-enabled`.
