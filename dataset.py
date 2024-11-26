@@ -48,7 +48,7 @@ class BPEModelManager:
             writer.write(processed_text)
 
         yttm.BPE.train(
-            data=processed_path, vocab_size=self.vocab_size, model=self.model_path
+            data=processed_path, vocab_size=self.vocab_size, model=self.model_path, coverage=0.9999
         )
 
     def preprocess_text(self, text):
@@ -58,7 +58,7 @@ class BPEModelManager:
         return self.bpe.encode([text], output_type=yttm.OutputType.ID)
 
     def decode(self, ids):
-        return self.bpe.decode(ids)
+        return self.bpe.decode(ids.tolist())[0]
 
     @staticmethod
     def attention_mask(encoded_sequence, mask_token_ids=[0, 1, 2, 3]):
@@ -159,6 +159,7 @@ class TextCorpusDataset(Dataset):
         vocab_size=10000,
         IS_CODE=False,
     ):
+        print(root_dir)
         self.root = root_dir
         if IS_CODE:
             self.manager = CodeBPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
@@ -219,10 +220,10 @@ class TextCorpusDataset(Dataset):
 
 # print("Running....")
 dataset = TextCorpusDataset(
-    root_dir=os.path.expanduser("~/torch_datasets/github-python/corpus"),
+    root_dir=os.path.expanduser("~/torch_datasets/wikitext/train"),#os.path.expanduser("~/torch_datasets/github-python/corpus"),
     vocab_size=10000,
-    IS_CODE=True,
-    max_length=100,
+    IS_CODE=False,
+    max_length=512,
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)

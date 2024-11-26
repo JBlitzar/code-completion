@@ -229,6 +229,7 @@ module.register_forward_hook(forward_hook)
 
 - Not quite there yet, but looking like code. optimizer.step() is indeed to update parameters, and it does involve training, so it's getting there.
 - Nov 25
+
   - So loss went up after a bit. It's kind of weird. <img src="readme-imgs/code-decoder-v3-loss-curve.png" width="500">
   - Loss went wayy up after it seemed like it was going well going down.
   - Maybe over-regularization? I'm going to implement the lr schedule that https://github.com/hyunwoongko/transformer does and I adjusted gradient clipping to a lower threshold (1.0 vs 10.0)
@@ -236,6 +237,7 @@ module.register_forward_hook(forward_hook)
   - Learning is slower, loss is at 1.3, but its stable, which is good.
   - Loss is literally the same within 2 decimal places as it was 2 hrs ago. 3.22 or whatever. Sometimes with projects, after you've done all the learning and coding, the rest is like fine-tuning and training 1 million times, and that isn't super fulfilling. Transformers was really cool though, and I totally want to run this on wikitext.
   - So this is (maybe) a classic case of too-low learning rate and so it got stuck in local minimum. Fine line between overfitting and over-regularization.
+
     - Rerunning with higher LR.
     - `v5-enabled`.
     - aaand a factor of 10 on the lr was too much (loss of 7k after a few steps). Split the difference and go 0.0005
@@ -244,5 +246,13 @@ module.register_forward_hook(forward_hook)
     - 0.0003 seems to be converging faster but not exploding.
       - Aw man! It was looking good but it was not to last.
     - 0.0002?
+
       - Converging faster, which is good. Loss is 1.33 after 42 mins.
       - It seemes to have leveled off at 1.32 again, just quicker this time.
+
+    - It's entirely possible that model is underpowered. Reports 19,711,760 params, but model size is tiny: 80 mb. Something going on?
+
+    - Just for fun, let's train on wikitext.
+      - Loss is 8 (now 7.6, now 7.2), yeah model is underpowered.
+    - What are standard model sizes? Looks like 12 decoders and 768-sized embedding.
+    - Ok, so wikitext was a good source of inspiration. Let's rerun code decoder with bigger. This will inevitably come with more hparam tuning

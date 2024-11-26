@@ -11,7 +11,7 @@ import torchvision
 from trainingmanager import TrainingManager
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v5-enabled"
+EXPERIMENT_DIRECTORY = "runs/wikitexter-v1"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
