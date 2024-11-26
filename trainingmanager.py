@@ -76,7 +76,7 @@ class TrainingManager:
 
         # No clue what this does. Maybe its good
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer=self.optimizer, verbose=True, factor=0.9, patience=10
+            optimizer=self.optimizer, factor=0.9, patience=10
         )
 
         self.tracker = ValueTracker()
