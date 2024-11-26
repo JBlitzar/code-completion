@@ -238,3 +238,11 @@ module.register_forward_hook(forward_hook)
   - So this is (maybe) a classic case of too-low learning rate and so it got stuck in local minimum. Fine line between overfitting and over-regularization.
     - Rerunning with higher LR.
     - `v5-enabled`.
+    - aaand a factor of 10 on the lr was too much (loss of 7k after a few steps). Split the difference and go 0.0005
+      - That was also too much and resulted in exploding gradients.
+    - Hyperparameter tuning is _the worst._
+    - 0.0003 seems to be converging faster but not exploding.
+      - Aw man! It was looking good but it was not to last.
+    - 0.0002?
+      - Converging faster, which is good. Loss is 1.33 after 42 mins.
+      - It seemes to have leveled off at 1.32 again, just quicker this time.
