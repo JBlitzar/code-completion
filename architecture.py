@@ -3,15 +3,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-DIM = 768
+DIM = 128
 print(f"DIM IS SET TO {DIM}")
 
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
 class MHA_SelfAttention(nn.Module):
-    def __init__(self, embed_dim=DIM, num_heads=8, *args, **kwargs):
+    def __init__(self, embed_dim=DIM, num_heads=2, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if num_heads != 8:
+            print("Num heads is not 8. This is a reminder to change this back after experimenting with smaller architectures")
         self.mha = nn.MultiheadAttention(embed_dim, num_heads)
         self.num_heads = num_heads
 

@@ -181,17 +181,17 @@
   - Stopped training, changed to smaller context window. Retraining. Perhaps 99% was too restrictive. Later retry with 99.5%, but should be fine I guess for now.
 - Nov 24
   - Ugh, more NaNs in the loss overnight.
-  - Time for some ✨debugging✨ - Nans in loss come from nans in results - But there are no nans in labels or batch. - `torch.isnan(batch).any()` - Removing layernorm didnt help. - I'm going to use torch.autograd.set_detect_anomaly(True) - Did some funny
+  - Time for some ✨debugging✨ - Nans in loss come from nans in results - But there are no nans in labels or batch. - `torch.isnan(batch).any()` - Removing layernorm didnt help. - I'm going to use `torch.autograd.set_detect_anomaly(True)` - Did some funny
 
 ```python
     def forward_hook(module, input, output):
-    if isinstance(output, tuple):
-    return
-    if torch.isnan(output).any() or torch.isinf(output).any():
-    print(f"NaNs/Infs detected in {module}")
+        if isinstance(output, tuple):
+            return
+        if torch.isnan(output).any() or torch.isinf(output).any():
+            print(f"NaNs/Infs detected in {module}")
 
 for module in net.modules():
-module.register_forward_hook(forward_hook)
+    module.register_forward_hook(forward_hook)
 ```
 
 - Continuing
@@ -255,9 +255,36 @@ module.register_forward_hook(forward_hook)
     - Just for fun, let's train on wikitext.
       - Loss is 8 (now 7.6, now 7.2), yeah model is underpowered.
     - What are standard model sizes? Looks like 12 decoders and 768-sized embedding.
+      - Previous was 6 decoders and 512 embedding.
     - Ok, so wikitext was a good source of inspiration. Let's rerun code decoder with bigger. This will inevitably come with more hparam tuning
     - Training `v6-big`
       - 57911056 params
       - Loss is only going up after first 100 steps. It hit 11k. This isnt right. LR down?
       - Lr is down, now after 2 hrs its converged on loss of 6, its also only epoch 2. Unclear.
       - Weird, so it didn't work. Just converged on 5.7. Ugh, minor architecture changes after already having a good model are the worst.
+
+- Nov 27
+  - Nick thoughts:
+    - Simple. Scale down before scaling up.
+    - You get one line and just predict the next token?
+    - Look at it differently at how you want to evaluate it.
+    - Tweak optimizers etc. AdamW?
+    - The problem is not data scarcity. Is the model overpowered instead?
+    - Model might be overpowered given that its the same size as lm1b.
+      - 3 blocks, reduced dim, less heads.
+      - _really_ simplify
+      - Is it training?
+        - Maybe, doesn't really look too good. Markov-chain level, barely above random.
+      - How to prove that we can train something? Having a baseline of markov chain, rnn, really small xformer?
+      - How can we on the code task, convince ourselves that we can run something simple?
+      - Do a subset train, handpicked, micro.
+        - Train it on that, _get it to overfit._
+        - Grep for train.py, subset of that even
+        - 2 blocks, small dim, less heads.
+        - if still not working, consider another model
+          - rnn
+          - markov
+          - yikes
+        - Understand that it is challenging, do something you want
+        - "convince yourself that this works"
+          - How to figure out what isn't working, test and iterate quickly on small homogenous subset

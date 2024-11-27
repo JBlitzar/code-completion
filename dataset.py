@@ -227,11 +227,12 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        "~/torch_datasets/github-python/corpus"
+        "~/torch_datasets/github-python/all_trains_subset_corpus"
+        #"~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=10000,
+    vocab_size=500,
     IS_CODE=True,  # Remember to change!
-    max_length=100,
+    max_length=50,
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)
