@@ -259,3 +259,5 @@ module.register_forward_hook(forward_hook)
     - Training `v6-big`
       - 57911056 params
       - Loss is only going up after first 100 steps. It hit 11k. This isnt right. LR down?
+      - Lr is down, now after 2 hrs its converged on loss of 6, its also only epoch 2. Unclear.
+      - Weird, so it didn't work. Just converged on 5.7. Ugh, minor architecture changes after already having a good model are the worst.
