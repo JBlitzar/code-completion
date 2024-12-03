@@ -294,3 +294,4 @@ for module in net.modules():
   - Running eval on v7-small shows that it's still pretty bad though.
   - Lets get a baseline markov chain, cuz why not?
   - Also pro tokenization strategy: Strip comments and docstrings. Split by punctuation etc, within variable names split by capitalization and underscore.
+  - That was great except for the fact that it caused 186904 unique tokens.

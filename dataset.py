@@ -151,16 +151,82 @@ class CodeBPEModelManager(BPEModelManager):
         except Exception as e:
             print(f"Error during code formatting: {e}.")
             return code
-        
+
 
 class CodeCustomTokenizerManager(BPEModelManager):
     reserved_keywords = [
-        "false", "await", "else", "import", "pass", "none", "break", "except",
-        "in", "raise", "true", "class", "finally", "is", "return", "and", "continue",
-        "for", "lambda", "try", "as", "def", "from", "nonlocal", "while", "assert",
-        "del", "global", "not", "with", "async", "elif", "if", "or", "yield"
+        "false",
+        "await",
+        "else",
+        "import",
+        "pass",
+        "none",
+        "break",
+        "except",
+        "in",
+        "raise",
+        "true",
+        "class",
+        "finally",
+        "is",
+        "return",
+        "and",
+        "continue",
+        "for",
+        "lambda",
+        "try",
+        "as",
+        "def",
+        "from",
+        "nonlocal",
+        "while",
+        "assert",
+        "del",
+        "global",
+        "not",
+        "with",
+        "async",
+        "elif",
+        "if",
+        "or",
+        "yield",
     ]
-    symbols = ["(", ")", "[", "]", "{", "}", ".", ",", ":", ";", "+", "-", "*", "/", "%", "=", "<", ">", "&", "|", "^", "~", "!", "==", "!=", "<=", ">=", "**", "//", "@", "#", "\\", "'", "\""]
+    symbols = [
+        "(",
+        ")",
+        "[",
+        "]",
+        "{",
+        "}",
+        ".",
+        ",",
+        ":",
+        ";",
+        "+",
+        "-",
+        "*",
+        "/",
+        "%",
+        "=",
+        "<",
+        ">",
+        "&",
+        "|",
+        "^",
+        "~",
+        "!",
+        "==",
+        "!=",
+        "<=",
+        ">=",
+        "**",
+        "//",
+        "@",
+        "#",
+        "\\",
+        "'",
+        '"',
+    ]
 
     def __init__(self, root_dir, vocab_size=5000):
         self.root_dir = root_dir
@@ -177,39 +243,37 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
     def make_vocab(self):
         data_path = os.path.join(self.root_dir, "data/corpus.txt")
-        # processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
+        processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
 
         with open(data_path, "r", errors="ignore") as reader:
             raw_text = reader.read()
 
         processed_text = self.preprocess_text(raw_text)
 
-        # with open(processed_path, "w") as writer:
-        #     writer.write(processed_text)
+        with open(processed_path, "w") as writer:
+            writer.write(" ".join(processed_text))
 
         for token in processed_text:
             if token not in self.token_to_id:
 
                 self.token_to_id[token] = len(self.token_to_id)
 
-        
     def preprocess_text(self, code):
         print("Preprocessing text...", code[:20])
 
         code = code.lower()
-        #print(code[:100])
-        
+        # print(code[:100])
+
         # comments
         code = re.sub(r"#.*", "", code)
-        code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL) # funny usage of re
+        code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL)  # funny usage of re
         code = re.sub(r"'''(.*?)'''", "", code, flags=re.DOTALL)
 
-        code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
-        #print(code[:100])
+        # print(code[:100])
 
         # filter non-ascii
         code = re.sub(r"[^\x00-\x7F]+", "", code.lower())
-        #print(code[:100])
+        # print(code[:100])
 
         # each reserved word/symbol is a token. We split by space at the end, so this works.
         for word in self.reserved_keywords:
@@ -217,12 +281,14 @@ class CodeCustomTokenizerManager(BPEModelManager):
         for symbol in self.symbols:
             code = code.replace(symbol, f" {symbol} ")
 
-        #print(code[:100])
+        # print(code[:100])
 
         # Split identifiers by spaces, underscores, or capitalization
         def split_token(token):
             result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
             return result.split("_")
+
+        code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
 
         tokens = []
         for token in code.split(" "):
@@ -230,15 +296,13 @@ class CodeCustomTokenizerManager(BPEModelManager):
                 tokens.extend(split_token(token))
 
         print(tokens[500:700])
-        
+
         print("500-700")
 
         return [tok for tok in tokens if tok.strip()]
-    
-    
 
     def encode(self, code):
-        tokens = self.preprocess_text(code)
+        tokens = code.split(" ")
         ids = []
 
         for token in tokens:
@@ -258,8 +322,6 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     result += " "
 
         return result
-
-
 
     def format_code(self, code):
         try:
@@ -281,7 +343,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         except Exception as e:
             print(f"Error during code formatting: {e}.")
             return code
-        
+
     def save_vocab(self, file_path):
         with open(file_path, "w") as file:
             for token, id in self.token_to_id.items():
@@ -291,9 +353,13 @@ class CodeCustomTokenizerManager(BPEModelManager):
         self.token_to_id = {}
         with open(file_path, "r") as file:
             for line in file.read().split("\n"):
-                token, id = line.strip().split("\t")
-                self.token_to_id[token] = int(id)
-
+                try:
+                    token, id = line.strip().split("\t")
+                    self.token_to_id[token] = int(id)
+                except ValueError:
+                    # print(line)
+                    # print("^^ is error")
+                    pass  # Should be fine, ends up being blank lines
 
 
 class TextCorpusDataset(Dataset):
@@ -304,7 +370,7 @@ class TextCorpusDataset(Dataset):
         max_length=512,
         vocab_size=10000,
         IS_CODE=False,
-        IS_CUSTOM=False
+        IS_CUSTOM=False,
     ):
         print(root_dir)
         self.root = root_dir
@@ -312,7 +378,9 @@ class TextCorpusDataset(Dataset):
             if IS_CUSTOM:
                 self.manager = CodeCustomTokenizerManager(root_dir=root_dir)
             else:
-                self.manager = CodeBPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
+                self.manager = CodeBPEModelManager(
+                    root_dir=root_dir, vocab_size=vocab_size
+                )
         else:
             self.manager = BPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
         self.max_length = max_length
@@ -374,7 +442,7 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        #"~/torch_datasets/github-python/all_trains_subset_corpus"
+        # "~/torch_datasets/github-python/all_trains_subset_corpus"
         "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=500,
