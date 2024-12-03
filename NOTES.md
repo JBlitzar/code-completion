@@ -288,3 +288,9 @@ for module in net.modules():
         - Understand that it is challenging, do something you want
         - "convince yourself that this works"
           - How to figure out what isn't working, test and iterate quickly on small homogenous subset
+  - Trained it super small, all train.py files, num_heads small, low dim, low vocab size.
+    - Got loss of 1.234493 after 100 epochs. Go for 1k epochs? its 1.5s per epoch so.
+- Nov 29
+  - Running eval on v7-small shows that it's still pretty bad though.
+  - Lets get a baseline markov chain, cuz why not?
+  - Also pro tokenization strategy: Strip comments and docstrings. Split by punctuation etc, within variable names split by capitalization and underscore.

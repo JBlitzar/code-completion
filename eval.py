@@ -5,12 +5,12 @@ import sys
 import time
 from dataset import dataset, get_train_dataset
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v7-small" #"runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
-net = DecoderTransformer(vocab_size=10000)
+net = DecoderTransformer(vocab_size=500, num_blocks=2)
 net.to(device)
 
 net.load_state_dict(
