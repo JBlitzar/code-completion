@@ -151,6 +151,117 @@ class CodeBPEModelManager(BPEModelManager):
         except Exception as e:
             print(f"Error during code formatting: {e}.")
             return code
+        
+
+class CodeCustomTokenizerManager(BPEModelManager):
+    reserved_keywords = [
+        "false", "await", "else", "import", "pass", "none", "break", "except",
+        "in", "raise", "true", "class", "finally", "is", "return", "and", "continue",
+        "for", "lambda", "try", "as", "def", "from", "nonlocal", "while", "assert",
+        "del", "global", "not", "with", "async", "elif", "if", "or", "yield"
+    ]
+    symbols = ["(", ")", "[", "]", "{", "}", ".", ",", ":", ";", "+", "-", "*", "/", "%", "=", "<", ">", "&", "|", "^", "~", "!", "==", "!=", "<=", ">=", "**", "//", "@", "#", "\\", "'", "\""]
+
+    def __init__(self, root_dir, vocab_size=5000):
+        self.root_dir = root_dir
+        self.token_to_id = {}
+        print("This is CodeCustomTokenizerManager, vocab size will be disregarded.")
+
+    def preprocess_text(self, code):
+        print("Preprocessing text...")
+
+        code = code.lower().replace("	", "    ")
+        
+        # comments
+        code = re.sub(r"#.*", "", code)
+        code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL) # funny usage of re
+        code = re.sub(r"'''(.*?)'''", "", code, flags=re.DOTALL)
+
+        # filter non-ascii
+        code = re.sub(r"[^\x00-\x7F]+", "", code.lower())
+
+        # each reserved word/symbol is a token. We split by space at the end, so this works.
+        for word in self.reserved_keywords:
+            code = re.sub(rf"\b{word}\b", f" {word} ", code)
+        for symbol in self.symbols:
+            code = code.replace(symbol, f" {symbol} ")
+
+        # Split identifiers by spaces, underscores, or capitalization
+        def split_token(token):
+            result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
+            return result.split("_")
+
+        tokens = []
+        for token in re.split(r"(\W)", code):
+            if token.strip():
+                tokens.extend(split_token(token))
+
+        return [tok for tok in tokens if tok.strip()]
+    
+    
+
+    def encode(self, code):
+        tokens = self.preprocess_text(code)
+
+        for token in tokens:
+            if token not in self.token_to_id:
+                new_id = len(self.token_to_id)
+                self.token_to_id[token] = new_id
+                self.id_to_token[new_id] = token
+
+        return [self.token_to_id[token] for token in tokens]
+
+    def decode(self, ids):
+        result = self.bpe.decode(ids.tolist())[0]
+        # print(result)
+        for key, value in CodeBPEModelManager.mapping_dict.items():
+            result = result.replace(value.strip(), key)  # value, key
+
+        return result
+
+    def _train_bpe_model(self):
+        print("Training (1)....")
+        data_path = os.path.join(self.root_dir, "data/corpus.txt")
+        processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
+
+        if input("Reformat? Will take time [y/N]") == "y":
+
+            with open(data_path, "r", errors="ignore", encoding="utf-8") as reader:
+                raw_text = reader.read()
+
+            processed_text = self.preprocess_text(raw_text)
+
+            with open(processed_path, "w", encoding="utf-8") as writer:
+                writer.write(processed_text)
+
+            print("removing temp file...")
+            temp_file = os.path.join(self.root_dir, "temp_code.py")  # dont ask
+            os.remove(temp_file)
+
+
+
+
+    def format_code(self, code):
+        try:
+            temp_file = os.path.join(self.root_dir, "temp_code.py")
+            with open(temp_file, "w") as file:
+                file.write(
+                    code.replace("\t", "    ")
+                )  # Hacky replacement, black freaks out otherwise
+
+            subprocess.run(["black", temp_file, "--quiet"], check=True)
+            subprocess.run(
+                ["autopep8", "--in-place", "--ignore=E402", temp_file], check=True
+            )
+
+            with open(temp_file, "r") as file:
+                formatted_code = file.read()
+
+            return formatted_code
+        except Exception as e:
+            print(f"Error during code formatting: {e}.")
+            return code
+
 
 
 class TextCorpusDataset(Dataset):
