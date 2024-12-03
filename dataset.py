@@ -194,23 +194,30 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         
     def preprocess_text(self, code):
-        print("Preprocessing text...")
+        print("Preprocessing text...", code[:20])
 
-        code = code.lower().replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
+        code = code.lower()
+        #print(code[:100])
         
         # comments
         code = re.sub(r"#.*", "", code)
         code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL) # funny usage of re
         code = re.sub(r"'''(.*?)'''", "", code, flags=re.DOTALL)
 
+        code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
+        #print(code[:100])
+
         # filter non-ascii
         code = re.sub(r"[^\x00-\x7F]+", "", code.lower())
+        #print(code[:100])
 
         # each reserved word/symbol is a token. We split by space at the end, so this works.
         for word in self.reserved_keywords:
             code = re.sub(rf"\b{word}\b", f" {word} ", code)
         for symbol in self.symbols:
             code = code.replace(symbol, f" {symbol} ")
+
+        #print(code[:100])
 
         # Split identifiers by spaces, underscores, or capitalization
         def split_token(token):
@@ -223,6 +230,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
                 tokens.extend(split_token(token))
 
         print(tokens[500:700])
+        
+        print("500-700")
 
         return [tok for tok in tokens if tok.strip()]
     
