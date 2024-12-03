@@ -171,7 +171,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         vocab_path = os.path.join(self.root_dir, "custom_tokens_vocab.txt")
         try:
             self.load_vocab(vocab_path)
-        except ValueError:
+        except FileNotFoundError:
             self.make_vocab()
             self.save_vocab(vocab_path)
 
@@ -186,18 +186,17 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         # with open(processed_path, "w") as writer:
         #     writer.write(processed_text)
-        i = 1
+
         for token in processed_text:
             if token not in self.token_to_id:
 
-                self.token_to_id[token] = i
-                i += 1
+                self.token_to_id[token] = len(self.token_to_id)
 
         
     def preprocess_text(self, code):
         print("Preprocessing text...")
 
-        code = code.lower().replace("	", "    ")
+        code = code.lower().replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
         
         # comments
         code = re.sub(r"#.*", "", code)
@@ -219,9 +218,11 @@ class CodeCustomTokenizerManager(BPEModelManager):
             return result.split("_")
 
         tokens = []
-        for token in re.split(r"(\W)", code):
+        for token in code.split(" "):
             if token.strip():
                 tokens.extend(split_token(token))
+
+        print(tokens[500:700])
 
         return [tok for tok in tokens if tok.strip()]
     
@@ -280,7 +281,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
     def load_vocab(self, file_path):
         self.token_to_id = {}
         with open(file_path, "r") as file:
-            for line in file:
+            for line in file.read().split("\n"):
                 token, id = line.strip().split("\t")
                 self.token_to_id[token] = int(id)
 
@@ -294,11 +295,15 @@ class TextCorpusDataset(Dataset):
         max_length=512,
         vocab_size=10000,
         IS_CODE=False,
+        IS_CUSTOM=False
     ):
         print(root_dir)
         self.root = root_dir
         if IS_CODE:
-            self.manager = CodeBPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
+            if IS_CUSTOM:
+                self.manager = CodeCustomTokenizerManager(root_dir=root_dir)
+            else:
+                self.manager = CodeBPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
         else:
             self.manager = BPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
         self.max_length = max_length
@@ -326,7 +331,7 @@ class TextCorpusDataset(Dataset):
                 errors="ignore",
             ) as file:
                 text = file.read()
-                encoded = self.manager.encode(text)[0]
+                encoded = self.manager.encode(text)
 
                 self._chunk_and_save(encoded)
 
@@ -360,11 +365,12 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        "~/torch_datasets/github-python/all_trains_subset_corpus"
-        #"~/torch_datasets/github-python/corpus"
+        #"~/torch_datasets/github-python/all_trains_subset_corpus"
+        "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=500,
     IS_CODE=True,  # Remember to change!
+    IS_CUSTOM=True,
     max_length=50,
 )
 dset_size = int(len(dataset))
