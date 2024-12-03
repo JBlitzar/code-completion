@@ -164,9 +164,36 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
     def __init__(self, root_dir, vocab_size=5000):
         self.root_dir = root_dir
+
         self.token_to_id = {}
         print("This is CodeCustomTokenizerManager, vocab size will be disregarded.")
 
+        vocab_path = os.path.join(self.root_dir, "custom_tokens_vocab.txt")
+        try:
+            self.load_vocab(vocab_path)
+        except ValueError:
+            self.make_vocab()
+            self.save_vocab(vocab_path)
+
+    def make_vocab(self):
+        data_path = os.path.join(self.root_dir, "data/corpus.txt")
+        # processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
+
+        with open(data_path, "r", errors="ignore") as reader:
+            raw_text = reader.read()
+
+        processed_text = self.preprocess_text(raw_text)
+
+        # with open(processed_path, "w") as writer:
+        #     writer.write(processed_text)
+        i = 1
+        for token in processed_text:
+            if token not in self.token_to_id:
+
+                self.token_to_id[token] = i
+                i += 1
+
+        
     def preprocess_text(self, code):
         print("Preprocessing text...")
 
@@ -202,42 +229,25 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
     def encode(self, code):
         tokens = self.preprocess_text(code)
+        ids = []
 
         for token in tokens:
+            # New token
             if token not in self.token_to_id:
-                new_id = len(self.token_to_id)
-                self.token_to_id[token] = new_id
-                self.id_to_token[new_id] = token
+                self.token_to_id[token] = len(self.token_to_id)
+            ids.append(self.token_to_id[token])
 
-        return [self.token_to_id[token] for token in tokens]
+        return ids
 
     def decode(self, ids):
-        result = self.bpe.decode(ids.tolist())[0]
-        # print(result)
-        for key, value in CodeBPEModelManager.mapping_dict.items():
-            result = result.replace(value.strip(), key)  # value, key
+        result = ""
+        for id in ids.tolist():
+            for token, id_iterator in self.token_to_id.items():
+                if id_iterator == id:
+                    result += token
+                    result += " "
 
         return result
-
-    def _train_bpe_model(self):
-        print("Training (1)....")
-        data_path = os.path.join(self.root_dir, "data/corpus.txt")
-        processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
-
-        if input("Reformat? Will take time [y/N]") == "y":
-
-            with open(data_path, "r", errors="ignore", encoding="utf-8") as reader:
-                raw_text = reader.read()
-
-            processed_text = self.preprocess_text(raw_text)
-
-            with open(processed_path, "w", encoding="utf-8") as writer:
-                writer.write(processed_text)
-
-            print("removing temp file...")
-            temp_file = os.path.join(self.root_dir, "temp_code.py")  # dont ask
-            os.remove(temp_file)
-
 
 
 
@@ -261,6 +271,18 @@ class CodeCustomTokenizerManager(BPEModelManager):
         except Exception as e:
             print(f"Error during code formatting: {e}.")
             return code
+        
+    def save_vocab(self, file_path):
+        with open(file_path, "w") as file:
+            for token, id in self.token_to_id.items():
+                file.write(f"{token}\t{id}\n")
+
+    def load_vocab(self, file_path):
+        self.token_to_id = {}
+        with open(file_path, "r") as file:
+            for line in file:
+                token, id = line.strip().split("\t")
+                self.token_to_id[token] = int(id)
 
 
 
