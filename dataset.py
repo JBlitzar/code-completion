@@ -97,6 +97,8 @@ class CodeBPEModelManager(BPEModelManager):
         return self.bpe.encode([processed_text], output_type=yttm.OutputType.ID)
 
     def decode(self, ids):
+        # print(ids)
+        # print("ids^^")
         result = self.bpe.decode(ids.tolist())[0]
         # print(result)
         for key, value in CodeBPEModelManager.mapping_dict.items():

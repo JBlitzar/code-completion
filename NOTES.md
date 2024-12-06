@@ -291,7 +291,10 @@ for module in net.modules():
   - Trained it super small, all train.py files, num_heads small, low dim, low vocab size.
     - Got loss of 1.234493 after 100 epochs. Go for 1k epochs? its 1.5s per epoch so.
 - Nov 29
+
   - Running eval on v7-small shows that it's still pretty bad though.
   - Lets get a baseline markov chain, cuz why not?
   - Also pro tokenization strategy: Strip comments and docstrings. Split by punctuation etc, within variable names split by capitalization and underscore.
   - That was great except for the fact that it caused 186904 unique tokens.
+
+  - Retrained on _tiny_ dataset, and it did not overfit.
