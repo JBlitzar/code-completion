@@ -10,7 +10,7 @@ DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
 class MHA_SelfAttention(nn.Module):
-    def __init__(self, embed_dim=DIM, num_heads=2, *args, **kwargs):
+    def __init__(self, embed_dim=DIM, num_heads=1, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if num_heads != 8:
             print(

@@ -11,7 +11,7 @@ import torchvision
 from trainingmanager import TrainingManager
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v7-small"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v8-smaller"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -21,7 +21,7 @@ dataloader = get_dataloader(get_train_dataset())
 testloader = get_dataloader(get_test_dataset())
 
 
-net = DecoderTransformer(vocab_size=500, num_blocks=2)
+net = DecoderTransformer(vocab_size=199, num_blocks=1)
 net.to(device)
 
 

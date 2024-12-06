@@ -128,7 +128,7 @@ class CodeBPEModelManager(BPEModelManager):
             data=processed_path,
             vocab_size=self.vocab_size,
             model=self.model_path,
-            coverage=0.995,
+            coverage=1#0.995,
         )
 
     def format_code(self, code):
@@ -257,6 +257,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
             if token not in self.token_to_id:
 
                 self.token_to_id[token] = len(self.token_to_id)
+
+        print(f"Number of tokens: {len(self.token_to_id)}")
 
     def preprocess_text(self, code):
         print("Preprocessing text...", code[:20])
@@ -416,14 +418,15 @@ class TextCorpusDataset(Dataset):
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
     def _chunk_and_save(self, encoded):
+        encoded = encoded[0]# Changed this because encoded was shape [1,n]. If giving shape errors, remove this or something
         chunked_data = [
             torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
-            for i in trange(0, len(encoded), self.max_length, leave=False)
+            for i in trange(0, len(encoded), self.max_length, leave=False) 
         ]
 
         # me when the last item is not necesarily of length self.max_length
-        padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
-        padded_chunk[: len(chunked_data[-1])] = chunked_data[
+        padded_chunk = torch.zeros(self.max_length, dtype=torch.int)#.unsqueeze(0)
+        padded_chunk[:len(chunked_data[-1])] = chunked_data[
             -1
         ]  # silly zero fill bc im *optimized* like that
         chunked_data[-1] = padded_chunk
@@ -442,12 +445,13 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
+        "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
-        "~/torch_datasets/github-python/corpus"
+        #"~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=500,
+    vocab_size=199,
     IS_CODE=True,  # Remember to change!
-    IS_CUSTOM=True,
+    #IS_CUSTOM=True,
     max_length=50,
 )
 dset_size = int(len(dataset))
@@ -477,7 +481,7 @@ if __name__ == "__main__":
     d = get_train_dataset()
     print("Number of samples: ", len(d))
 
-    a, b = d[4]
+    a, b = d[-1]
     manager = dataset.manager
     print(manager.decode(a))
     print()
