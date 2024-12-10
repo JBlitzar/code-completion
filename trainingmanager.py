@@ -228,7 +228,7 @@ class TrainingManager:
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
-        results = self.net(batch, padding_mask=attn_mask[:, :-1])
+        results = self.net(batch)#, padding_mask=attn_mask[:, :-1])
 
         loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
 

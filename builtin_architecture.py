@@ -71,7 +71,9 @@ class BuiltinTransformerModel(nn.Transformer):
         nn.init.uniform_(self.decoder.weight, -initrange, initrange)
 
     def forward(self, src, has_mask=True):
-
+        #pov when goofy errors
+        # maybe fixes?
+        src = src.transpose(0,1)
 
         if has_mask:
             device = src.device

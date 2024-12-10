@@ -1,17 +1,19 @@
 import torch
-from architecture import DecoderTransformer
+#from architecture import DecoderTransformer
+from builtin_architecture import make_model
 import os
 import sys
 import time
 from dataset import dataset, get_train_dataset
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 device = "cpu"
 
-net = DecoderTransformer(vocab_size=199, num_blocks=1)
+# net = DecoderTransformer(vocab_size=199, num_blocks=1)
+net = make_model()
 net.to(device)
 
 net.load_state_dict(
@@ -55,7 +57,7 @@ print(generated_text)
 
 for _ in range(max_length):
     with torch.no_grad():
-        outputs = net(input_ids, padding_mask=attention_mask)
+        outputs = net(input_ids)#, padding_mask=attention_mask)
 
         logits = outputs
 
@@ -76,8 +78,11 @@ for _ in range(max_length):
         # print(probs)
 
         next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
+        # Ensure the next_token_id has the same batch size (1 in this case)
+        next_token_id = next_token_id.unsqueeze(0)  # Shape: (1, 1)
+        input_ids = torch.cat((input_ids, next_token_id), dim=1)
 
-        input_ids = torch.cat((input_ids, next_token_id.unsqueeze(-1)), dim=1)
+        #input_ids = torch.cat((input_ids, next_token_id.unsqueeze(-1)), dim=1)
 
         attention_mask = torch.cat(
             (attention_mask, torch.ones((1,), device=device)), dim=0
