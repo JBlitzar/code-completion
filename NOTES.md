@@ -349,3 +349,9 @@ divide(num1,izzbuzz(n): ! 0:y
 ```
 
 - Not ideal.
+- It's sad when you make stuff and it doesnt work.
+- Perhaps even try pytorch trainer on our code, but that's really product over process
+- Where do you draw the line? what are the goals here? Transformers are cool. I hope I can make one myself.
+- So there you go. We can stick with this for a while.
+- At the same time, where's the innovation? LLMs exist, people already do transformers. It would be cool to either do something new and do a write-up on it or use AI/ML to solve a real-world problem
+- We'll see I guess.
