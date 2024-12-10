@@ -302,4 +302,4 @@ for module in net.modules():
 - Decenber 9.
   - Yeah. It's been a long week.
   - Research allegedly shows that nn.Transformer accepts shapes of (seq_len, batch_size) for some reason instead of the other way around??
-    - Super non-debuggable error. See funny_stack_trace.txt
+    - Super non-debuggable error. See [stack trace](readme-imgs/funny_stack_trace.txt)
