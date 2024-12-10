@@ -1,0 +1,250 @@
+We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+if self.src_mask is None or self.src_mask.size(0) != len(src):
+Traceback (most recent call last):
+File "/Users/USER/Documents/GitHub/code-completion/train.py", line 44, in <module>
+init_logger(
+File "/Users/USER/Documents/GitHub/code-completion/logger.py", line 26, in init_logger
+writer.add_graph(net, data)
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/utils/tensorboard/writer.py", line 841, in add_graph
+graph(model, input_to_model, verbose, use_strict_trace)
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/utils/tensorboard/\_pytorch_graph.py", line 331, in graph
+trace = torch.jit.trace(model, args, strict=use_strict_trace)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/jit/\_trace.py", line 1002, in trace
+traced_func = \_trace_impl(
+^^^^^^^^^^^^
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/jit/\_trace.py", line 698, in \_trace_impl
+return trace_module(
+^^^^^^^^^^^^^
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/jit/\_trace.py", line 1306, in trace_module
+\_check_trace(
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/utils/\_contextlib.py", line 116, in decorate_context
+return func(*args, \*\*kwargs)
+^^^^^^^^^^^^^^^^^^^^^
+File "/Users/USER/anaconda3/lib/python3.11/site-packages/torch/jit/\_trace.py", line 592, in \_check_trace
+raise TracingCheckError(*diag_info)
+torch.jit.\_trace.TracingCheckError: Tracing failed sanity checks!
+ERROR: Graphs differed across invocations!
+Graph diff:
+graph(%self.1 : **torch**.builtin_architecture.BuiltinTransformerModel,
+%src.1 : Tensor):
+%decoder : **torch**.torch.nn.modules.linear.Linear = prim::GetAttr[name="decoder"](%self.1)
+%encoder : **torch**.torch.nn.modules.transformer.TransformerEncoder = prim::GetAttr[name="encoder"](%self.1)
+%pos_encoder : **torch**.builtin_architecture.BuiltinPositionalEncoding = prim::GetAttr[name="pos_encoder"](%self.1)
+%input_emb : **torch**.torch.nn.modules.sparse.Embedding = prim::GetAttr[name="input_emb"](%self.1) - %6 : int = prim::Constant[value=2]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %7 : int = prim::Constant[value=2]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %8 : int[] = prim::ListConstruct(%6, %7) - %9 : NoneType = prim::Constant() - %10 : NoneType = prim::Constant() - %11 : Device = prim::Constant[value="cpu"]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %12 : bool = prim::Constant[value=0]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %13 : Tensor = aten::ones(%8, %9, %10, %11, %12) # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %14 : int = prim::Constant[value=0]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %15 : Tensor = aten::tril(%13, %14) # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %16 : Tensor = aten::log(%15) # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:65:0 - %17 : int = prim::Constant[value=6]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:79:0 - %18 : int = prim::Constant[value=0]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:79:0
+? ^^ ^ ^ ^ + %mask : Tensor = prim::Constant[value= 0 -inf 0 0 [ MPSFloatType{2,2} ]]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:78:0
+? ^^^^ ^^ ^^^ + +++++++++++++++++++++++++++++++++ ^ - %19 : Device = prim::Constant[value="mps:0"]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:79:0 - %20 : NoneType = prim::Constant() - %21 : bool = prim::Constant[value=0]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:79:0 - %22 : bool = prim::Constant[value=0]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:79:0 - %23 : NoneType = prim::Constant() - %mask : Tensor = aten::to(%16, %17, %18, %19, %20, %21, %22, %23) # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:79:0 - %34 : bool = prim::Constant[value=0](), scope: **module.input_emb # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2551:0
+? ^^ + %16 : bool = prim::Constant[value=0](), scope: **module.input_emb # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2551:0
+? ^^ - %35 : int = prim::Constant[value=-1](), scope: **module.input_emb # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2551:0
+? ^^ + %17 : int = prim::Constant[value=-1](), scope: **module.input_emb # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2551:0
+? ^^
+%weight.9 : Tensor = prim::GetAttr[name="weight"](%input_emb) - %37 : Tensor = aten::embedding(%weight.9, %src.1, %35, %34, %34), scope: **module.input_emb # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2551:0
+? ^^ ^^ ^^ ^^ + %19 : Tensor = aten::embedding(%weight.9, %src.1, %17, %16, %16), scope: **module.input_emb # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2551:0
+? ^^ ^^ ^^ ^^ - %26 : Tensor = prim::Constant[value={11.3137}]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:84:0
+? ^^ + %8 : Tensor = prim::Constant[value={11.3137}]() # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:84:0
+? ^ - %x : Tensor = aten::mul(%37, %26) # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:84:0
+? ^^ ^^ + %x : Tensor = aten::mul(%19, %8) # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:84:0
+? ^^ ^ - %38 : float = prim::Constant[value=0.](), scope: **module.pos_encoder/**module.pos_encoder.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ + %20 : float = prim::Constant[value=0.](), scope: **module.pos_encoder/**module.pos_encoder.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ - %39 : bool = prim::Constant[value=0](), scope: **module.pos_encoder/**module.pos_encoder.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ + %21 : bool = prim::Constant[value=0](), scope: **module.pos_encoder/**module.pos_encoder.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ - %40 : int = prim::Constant[value=9223372036854775807](), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ + %22 : int = prim::Constant[value=9223372036854775807](), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ - %41 : int = prim::Constant[value=1](), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ + %23 : int = prim::Constant[value=1](), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ - %42 : int = prim::Constant[value=0](), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? - + %24 : int = prim::Constant[value=0](), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? +
+%pe : Tensor = prim::GetAttr[name="pe"](%pos_encoder) - %44 : int = aten::size(%x, %42), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ - + %26 : int = aten::size(%x, %24), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ + - %45 : Tensor = aten::slice(%pe, %42, %42, %44, %41), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0 - %46 : Tensor = aten::slice(%45, %41, %42, %40, %41), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ - - - ^^^^^^^ + %27 : Tensor = aten::slice(%pe, %24, %24, %26, %23), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ ++++++ + + ^^ + %28 : Tensor = aten::slice(%27, %23, %24, %22, %23), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0 - %input.1 : Tensor = aten::add(%x, %46, %41), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ ^^ + %input.1 : Tensor = aten::add(%x, %28, %23), scope: **module.pos_encoder # /Users/USER/Documents/GitHub/code-completion/builtin_architecture.py:47:0
+? ^^ ^^ - %src : Tensor = aten::dropout(%input.1, %38, %39), scope: **module.pos_encoder/**module.pos_encoder.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ ^^ + %src : Tensor = aten::dropout(%input.1, %20, %21), scope: **module.pos_encoder/**module.pos_encoder.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ ^^ - %49 : bool = prim::Constant[value=0](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^ + %31 : bool = prim::Constant[value=0](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^ - %50 : bool = prim::Constant[value=1](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^ + %32 : bool = prim::Constant[value=1](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^ - %51 : float = prim::Constant[value=0.](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^^^^^^^ + %33 : float = prim::Constant[value=0.](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^^^^^^^ - %52 : NoneType = prim::Constant(), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ + %34 : NoneType = prim::Constant(), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ - %53 : int = prim::Constant[value=-2](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5506:0
+? ^^^^^^^ + %35 : int = prim::Constant[value=-2](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5506:0
+? + ^^^^^^ - %54 : int = prim::Constant[value=3](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/\_tensor.py:1376:0
+? ^^^^^^^^ + %36 : int = prim::Constant[value=3](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/\_tensor.py:1376:0
+? ^^^^^^^^ - %55 : int = prim::Constant[value=-1](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5497:0
+? ^^^^^^^^ + %37 : int = prim::Constant[value=-1](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5497:0
+? ^^^^^^^^ - %56 : str = prim::Constant[value="trunc"](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6074:0
+? ^^^^^^^^ + %38 : str = prim::Constant[value="trunc"](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6074:0
+? ^^^^^^^^ - %57 : Tensor = prim::Constant[value={1}](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6074:0
+? ^^^^ + %39 : Tensor = prim::Constant[value={1}](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6074:0
+? ^^^^ - %58 : int = prim::Constant[value=2](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ + %40 : int = prim::Constant[value=2](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ - %59 : int = prim::Constant[value=1](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ + %41 : int = prim::Constant[value=1](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ - %60 : int = prim::Constant[value=0](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ + %42 : int = prim::Constant[value=0](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ - %61 : float = prim::Constant[value=0.10000000000000001](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^^^ + %43 : float = prim::Constant[value=0.10000000000000001](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^^^ - %62 : float = prim::Constant[value=1.0000000000000001e-05](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^ + %44 : float = prim::Constant[value=1.0000000000000001e-05](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^ - %63 : int = prim::Constant[value=128](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^^^^^ + %45 : int = prim::Constant[value=128](), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^^^^^
+%norm : **torch**.torch.nn.modules.normalization.LayerNorm = prim::GetAttr[name="norm"](%encoder)
+%layers : **torch**.torch.nn.modules.container.ModuleList = prim::GetAttr[name="layers"](%encoder)
+%\_0 : **torch**.torch.nn.modules.transformer.TransformerEncoderLayer = prim::GetAttr[name="0"](%layers)
+%norm2 : **torch**.torch.nn.modules.normalization.LayerNorm = prim::GetAttr[name="norm2"](%_0)
+%dropout2 : **torch**.torch.nn.modules.dropout.Dropout = prim::GetAttr[name="dropout2"](%_0)
+%linear2 : **torch**.torch.nn.modules.linear.Linear = prim::GetAttr[name="linear2"](%_0)
+%dropout : **torch**.torch.nn.modules.dropout.Dropout = prim::GetAttr[name="dropout"](%_0)
+%linear1 : **torch**.torch.nn.modules.linear.Linear = prim::GetAttr[name="linear1"](%_0)
+%norm1 : **torch**.torch.nn.modules.normalization.LayerNorm = prim::GetAttr[name="norm1"](%_0)
+%dropout1 : **torch**.torch.nn.modules.dropout.Dropout = prim::GetAttr[name="dropout1"](%_0)
+%self_attn : **torch**.torch.nn.modules.activation.MultiheadAttention = prim::GetAttr[name="self_attn"](%_0)
+%out_proj : **torch**.torch.nn.modules.linear.NonDynamicallyQuantizableLinear = prim::GetAttr[name="out_proj"](%self_attn)
+%bias.7 : Tensor = prim::GetAttr[name="bias"](%out_proj)
+%out_proj.1 : **torch**.torch.nn.modules.linear.NonDynamicallyQuantizableLinear = prim::GetAttr[name="out_proj"](%self_attn)
+%weight.11 : Tensor = prim::GetAttr[name="weight"](%out_proj.1)
+%in_proj_bias : Tensor = prim::GetAttr[name="in_proj_bias"](%self_attn)
+%in_proj_weight : Tensor = prim::GetAttr[name="in_proj_weight"](%self_attn) - %81 : int = aten::size(%src, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ ^^ + %63 : int = aten::size(%src, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^^^^^^^^ ^^ - %tgt_len : Tensor = prim::NumToTensor(%81), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ + %tgt_len : Tensor = prim::NumToTensor(%63), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ - %83 : int = aten::size(%src, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0 - %bsz : Tensor = prim::NumToTensor(%83), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %85 : int = aten::size(%src, %58), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^ ^^ + %65 : int = aten::size(%src, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0
+? ^ ^^ + %bsz : Tensor = prim::NumToTensor(%65), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn + %67 : int = aten::size(%src, %40), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6030:0 - %embed_dim : Tensor = prim::NumToTensor(%85), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ + %embed_dim : Tensor = prim::NumToTensor(%67), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ - %head_dim : Tensor = aten::div(%embed_dim, %57, %56), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6074:0
+? ^^ ^^ + %head_dim : Tensor = aten::div(%embed_dim, %39, %38), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6074:0
+? ^^ ^^ - %88 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %89 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %90 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ + %70 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ - %91 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ + %71 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ - %92 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ + %72 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ - %93 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ + %73 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ + %74 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn + %75 : int = aten::Int(%head_dim), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %94 : int = aten::size(%src, %55), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5497:0
+? ^^^^^^^^ ^^ + %76 : int = aten::size(%src, %37), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5497:0
+? ^^^^^^^^ ^^ - %95 : Tensor = aten::linear(%src, %in_proj_weight, %in_proj_bias), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5501:0
+? ^^^^ + %77 : Tensor = aten::linear(%src, %in_proj_weight, %in_proj_bias), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5501:0
+? ^^^^ - %96 : int[] = prim::ListConstruct(%54, %94), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ + %78 : int[] = prim::ListConstruct(%36, %76), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ - %97 : Tensor = aten::unflatten(%95, %55, %96), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/\_tensor.py:1376:0
+? ^^^ ^^ ^^ ^^ + %79 : Tensor = aten::unflatten(%77, %37, %78), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/\_tensor.py:1376:0
+? + ^^ ^^ ^^ ^^ - %98 : Tensor = aten::unsqueeze(%97, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5505:0
+? - ^^ - ^^ + %80 : Tensor = aten::unsqueeze(%79, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5505:0
+? ^^^ + ^^ - %99 : Tensor = aten::transpose(%98, %60, %53), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5506:0
+? ^^^^ - ^^ - + %81 : Tensor = aten::transpose(%80, %42, %35), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5506:0
+? ^^^^ + ^^ + - %100 : Tensor = aten::squeeze(%99, %53), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5507:0
+? ^^^^^ ^^ - + %82 : Tensor = aten::squeeze(%81, %35), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5507:0
+? ^^^^ ^^ + - %proj : Tensor = aten::contiguous(%100, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5508:0
+? ^^^ ^^ + %proj : Tensor = aten::contiguous(%82, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5508:0
+? ^^ ^^ - %q.1 : Tensor = aten::select(%proj, %60, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5510:0
+? ^^ ^^ + %q.1 : Tensor = aten::select(%proj, %42, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5510:0
+? ^^ ^^ - %k.1 : Tensor = aten::select(%proj, %60, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5510:0
+? ^^ ^^ + %k.1 : Tensor = aten::select(%proj, %42, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5510:0
+? ^^ ^^ - %v.1 : Tensor = aten::select(%proj, %60, %58), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5510:0
+? ^^ ^^ + %v.1 : Tensor = aten::select(%proj, %42, %40), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:5510:0
+? ^^ ^^ - %105 : Tensor = aten::mul(%bsz, %57), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6163:0 - %106 : int = aten::Int(%105), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %107 : int[] = prim::ListConstruct(%81, %106, %93), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %108 : Tensor = aten::view(%q.1, %107), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6163:0 - %q.3 : Tensor = aten::transpose(%108, %60, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6163:0 - %110 : int = aten::size(%k.1, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 - %111 : Tensor = aten::mul(%bsz, %57), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 - %112 : int = aten::Int(%111), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %113 : int[] = prim::ListConstruct(%110, %112, %92), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %114 : Tensor = aten::view(%k.1, %113), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 - %k.3 : Tensor = aten::transpose(%114, %60, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 - %116 : int = aten::size(%v.1, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0 - %117 : Tensor = aten::mul(%bsz, %57), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0
+? ^^ ^^ - + %87 : Tensor = aten::mul(%bsz, %39), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6163:0
+? ^ ^^ + - %118 : int = aten::Int(%117), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? -- ^^ + %88 : int = aten::Int(%87), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? + ^ - %119 : int[] = prim::ListConstruct(%116, %118, %91), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ -- ^^ ^^ + %89 : int[] = prim::ListConstruct(%63, %88, %75), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^ + ^ ^^ + %90 : Tensor = aten::view(%q.1, %89), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6163:0 + %q.3 : Tensor = aten::transpose(%90, %42, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6163:0 + %92 : int = aten::size(%k.1, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 + %93 : Tensor = aten::mul(%bsz, %39), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 + %94 : int = aten::Int(%93), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn + %95 : int[] = prim::ListConstruct(%92, %94, %74), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn + %96 : Tensor = aten::view(%k.1, %95), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 + %k.3 : Tensor = aten::transpose(%96, %42, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6165:0 + %98 : int = aten::size(%v.1, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0 + %99 : Tensor = aten::mul(%bsz, %39), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0 + %100 : int = aten::Int(%99), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn + %101 : int[] = prim::ListConstruct(%98, %100, %73), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn - %120 : Tensor = aten::view(%v.1, %119), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0
+? ^^^ ^^ + %102 : Tensor = aten::view(%v.1, %101), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0
+? + ^^ ^^ - %v.3 : Tensor = aten::transpose(%120, %60, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0
+? - ^^ ^^ + %v.3 : Tensor = aten::transpose(%102, %42, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6176:0
+? + ^^ ^^ - %122 : int = aten::size(%k.3, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6202:0
+? ^^^^^^^^ ^^ + %104 : int = aten::size(%k.3, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6202:0
+? ^^^^^^^^ ^^ - %123 : int[] = prim::ListConstruct(%83, %59, %81, %90), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^ ^^^^^^^^^^^^ + %105 : int[] = prim::ListConstruct(%65, %41, %63, %72), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^^^^^^^^^^ ^^ - %q : Tensor = aten::view(%q.3, %123), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6274:0
+? ^^ + %q : Tensor = aten::view(%q.3, %105), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6274:0
+? ^^ - %125 : int[] = prim::ListConstruct(%83, %59, %122, %89), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ ^^ ^^ + %107 : int[] = prim::ListConstruct(%65, %41, %104, %71), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ ^^ ^^ - %k : Tensor = aten::view(%k.3, %125), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6275:0
+? ^^ + %k : Tensor = aten::view(%k.3, %107), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6275:0
+? ^^ - %127 : int[] = prim::ListConstruct(%83, %59, %122, %88), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ ^^ ^^ + %109 : int[] = prim::ListConstruct(%65, %41, %104, %70), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ ^^ ^^ - %v : Tensor = aten::view(%v.3, %127), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6276:0
+? ^^ + %v : Tensor = aten::view(%v.3, %109), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6276:0
+? ^^ - %attn_output.1 : Tensor = aten::scaled_dot_product_attention(%q, %k, %v, %52, %51, %50, %52, %49), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^ ^^^^^^ ------------------------------------ -------------------------- + %attn_output.1 : Tensor = aten::scaled_dot_product_attention(%q, %k, %v, %34, %33, %32, %34, %31), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6278:0
+? ^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - %130 : int[] = prim::ListConstruct(%58, %60, %59, %54), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^^^^^ ^^ - + %112 : int[] = prim::ListConstruct(%40, %42, %41, %36), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^ ^^ ++++++ - %131 : Tensor = aten::permute(%attn_output.1, %130), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^^ ^^ + %113 : Tensor = aten::permute(%attn_output.1, %112), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? + ^^ ^^ - %132 : Tensor = aten::contiguous(%131, %60), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^^^ - ^^ + %114 : Tensor = aten::contiguous(%113, %42), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^^^ + ^^ - %133 : Tensor = aten::mul(%bsz, %tgt_len), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^^^ + %115 : Tensor = aten::mul(%bsz, %tgt_len), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^^^ - %134 : int = aten::Int(%133), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ + %116 : int = aten::Int(%115), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ - %135 : int[] = prim::ListConstruct(%134, %85), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ + %117 : int[] = prim::ListConstruct(%116, %67), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^ ^^ - %attn_output.3 : Tensor = aten::view(%132, %135), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^ ^^ + %attn_output.3 : Tensor = aten::view(%114, %117), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6282:0
+? ^^ ^^
+%attn_output : Tensor = aten::linear(%attn_output.3, %weight.11, %bias.7), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6285:0 - %138 : int = aten::size(%attn_output, %59), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6286:0
+? ^^^^^^^^ ^^ + %120 : int = aten::size(%attn_output, %41), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6286:0
+? ^^^^^^^^ ^^ - %139 : int[] = prim::ListConstruct(%81, %83, %138), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^^^^^^ ^^ + %121 : int[] = prim::ListConstruct(%63, %65, %120), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn
+? ^^ ^ +++++ ^^ - %input.3 : Tensor = aten::view(%attn_output, %139), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6286:0
+? ^^ + %input.3 : Tensor = aten::view(%attn_output, %121), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.self_attn # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:6286:0
+? ^^ - %141 : Tensor = aten::dropout(%input.3, %61, %49), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ---------------------------------- ^^^^^^^ + %123 : Tensor = aten::dropout(%input.3, %43, %31), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? +++++++++++++++++++++++++++++++++++++++ ^^ - %input.5 : Tensor = aten::add(%src, %141, %59), scope: **module.encoder/**module.encoder.layers.0 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/transformer.py:903:0
+? ----- + %input.5 : Tensor = aten::add(%src, %123, %41), scope: **module.encoder/**module.encoder.layers.0 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/transformer.py:903:0
+? +++++
+%bias.9 : Tensor = prim::GetAttr[name="bias"](%norm1)
+%weight.13 : Tensor = prim::GetAttr[name="weight"](%norm1) - %145 : int[] = prim::ListConstruct(%63), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1
+? ^^ ^^ + %127 : int[] = prim::ListConstruct(%45), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1
+? ^^ ^^ - %input.7 : Tensor = aten::layer_norm(%input.5, %145, %weight.13, %bias.9, %62, %50), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^^^^^^^^^^^^^^^^^^^^^^^ ----- + %input.7 : Tensor = aten::layer_norm(%input.5, %127, %weight.13, %bias.9, %44, %32), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ++++++++++++++++++++++++++ ^^^^^
+%bias.11 : Tensor = prim::GetAttr[name="bias"](%linear1)
+%weight.15 : Tensor = prim::GetAttr[name="weight"](%linear1)
+%input.9 : Tensor = aten::linear(%input.7, %weight.15, %bias.11), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.linear1 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/linear.py:125:0
+%input.11 : Tensor = aten::relu(%input.9), scope: **module.encoder/**module.encoder.layers.0 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1704:0 - %input.13 : Tensor = aten::dropout(%input.11, %61, %49), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ ^^ + %input.13 : Tensor = aten::dropout(%input.11, %43, %31), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^ ^^
+%bias.13 : Tensor = prim::GetAttr[name="bias"](%linear2)
+%weight.17 : Tensor = prim::GetAttr[name="weight"](%linear2)
+%input.15 : Tensor = aten::linear(%input.13, %weight.17, %bias.13), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.linear2 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/linear.py:125:0 - %155 : Tensor = aten::dropout(%input.15, %61, %49), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout2 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^^^ ^^ ^^ + %137 : Tensor = aten::dropout(%input.15, %43, %31), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.dropout2 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:1425:0
+? ^^^^ ^^ ^^ - %input.17 : Tensor = aten::add(%input.7, %155, %59), scope: **module.encoder/**module.encoder.layers.0 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/transformer.py:906:0
+? ^^ ^^ + %input.17 : Tensor = aten::add(%input.7, %137, %41), scope: **module.encoder/**module.encoder.layers.0 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/transformer.py:906:0
+? ^^ ^^
+%bias.15 : Tensor = prim::GetAttr[name="bias"](%norm2)
+%weight.19 : Tensor = prim::GetAttr[name="weight"](%norm2) - %159 : int[] = prim::ListConstruct(%63), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm2
+? ^^ ^^ + %141 : int[] = prim::ListConstruct(%45), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm2
+? ^^ ^^ - %input.19 : Tensor = aten::layer_norm(%input.17, %159, %weight.19, %bias.15, %62, %50), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm2 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ----- + %input.19 : Tensor = aten::layer_norm(%input.17, %141, %weight.19, %bias.15, %44, %32), scope: **module.encoder/**module.encoder.layers.0/**module.encoder.layers.0.norm2 # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? +++++++++++++++++++++++ ^^^^^^^^^
+%bias.17 : Tensor = prim::GetAttr[name="bias"](%norm)
+%weight.21 : Tensor = prim::GetAttr[name="weight"](%norm) - %163 : int[] = prim::ListConstruct(%63), scope: **module.encoder/**module.encoder.norm
+? ^^ ^^ + %145 : int[] = prim::ListConstruct(%45), scope: **module.encoder/**module.encoder.norm
+? ^^ ^^ - %input.21 : Tensor = aten::layer_norm(%input.19, %163, %weight.21, %bias.17, %62, %50), scope: **module.encoder/**module.encoder.norm # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ + %input.21 : Tensor = aten::layer_norm(%input.19, %145, %weight.21, %bias.17, %44, %32), scope: **module.encoder/**module.encoder.norm # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2900:0
+? ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^
+%bias : Tensor = prim::GetAttr[name="bias"](%decoder)
+%weight : Tensor = prim::GetAttr[name="weight"](%decoder)
+%input : Tensor = aten::linear(%input.21, %weight, %bias), scope: **module.decoder # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/modules/linear.py:125:0 - %31 : int = prim::Constant[value=-1]() # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2248:0
+? - + %13 : int = prim::Constant[value=-1]() # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2248:0
+? + - %32 : NoneType = prim::Constant()
+? ^^ + %14 : NoneType = prim::Constant()
+? ^^ - %33 : Tensor = aten::log_softmax(%input, %31, %32) # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2248:0
+? ^^ ^^^^^ + %15 : Tensor = aten::log_softmax(%input, %13, %14) # /Users/USER/anaconda3/lib/python3.11/site-packages/torch/nn/functional.py:2248:0
+? ^^ + +++ ^ - return (%33)
+? ^^ + return (%15)
+? ^^
+First diverging operator:
+Node diff: - %decoder : **torch**.torch.nn.modules.linear.**\_torch_mangle_5.Linear = prim::GetAttr[name="decoder"](%self.1)
+? ^ + %decoder : **torch**.torch.nn.modules.linear.\_**torch_mangle_20.Linear = prim::GetAttr[name="decoder"](%self.1)
+?

@@ -298,3 +298,8 @@ for module in net.modules():
   - That was great except for the fact that it caused 186904 unique tokens.
 
   - Retrained on _tiny_ dataset, and it did not overfit.
+
+- Decenber 9.
+  - Yeah. It's been a long week.
+  - Research allegedly shows that nn.Transformer accepts shapes of (seq_len, batch_size) for some reason instead of the other way around??
+    - Super non-debuggable error. See funny_stack_trace.txt
