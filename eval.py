@@ -45,23 +45,47 @@ attention_mask = dataset.manager.attention_mask(input_ids.squeeze(0)).to(device)
 generated_text = dataset.manager.decode(input_ids)
 
 print(generated_text)
-input_ids = torch.randint(199, (1, 1), dtype=torch.long).to(device)  # Initial token
-temp = 1.0
-generated_text = dataset.manager.decode(input_ids[0].tolist())  # Decode initial token
+generated_text = ""
+input_ids = torch.randint(199, (1, 1), dtype=torch.long).to(device)
+
+net.eval()  # Set model to evaluation mode
+temp = 1.0  # Balanced temperature
 
 for _ in range(max_length):
     with torch.no_grad():
-        output = net(input_ids)  # Model forward pass
-        logits = output[-1, :]  # Get logits for the last token
-        word_weights = F.softmax(logits.div(temp), dim=-1).cpu().exp()  # Normalize to probabilities
-        word_idx = torch.multinomial(word_weights, 1).item()  # Sample a word index
+        output = net(input_ids)  # Model output
+        logits = F.log_softmax(output[-1], dim=-1)  # Normalize logits
+        word_weights = logits.div(temp).cpu()  # Scale by temperature
 
-        word_tensor = torch.tensor([[word_idx]], dtype=torch.long).to(device)  # Wrap sampled token
-        input_ids = torch.cat([input_ids, word_tensor], dim=1)  # Append to sequence
+       # Top-k sampling
+        top_k = 10  # Adjust based on your vocabulary size
+        vocab_size = word_weights.size(0)
+        top_k = min(top_k, vocab_size)  # Ensure top_k is valid
 
-        predicted_token = dataset.manager.decode(word_idx)
-        print(predicted_token, end="")  # Print as it generates
-        generated_text += " " + predicted_token
+        top_probs, top_indices = torch.topk(word_weights, k=top_k)
 
-print("\n\nFINAL TEXT:")
-print(generated_text)
+        # Handle edge case: only one valid token
+        if top_probs.size(0) == 1:
+            word_idx = top_indices[0]  # Directly choose the only available token
+        else:
+            sampled_idx = torch.multinomial(top_probs, 1).item()
+            word_idx = top_indices[sampled_idx]
+
+
+        # Decode and append token
+        print(word_idx)
+        predicted_token = dataset.manager.decode(word_idx.item())
+        print(predicted_token, end=" ")
+        generated_text += predicted_token
+
+        print("Word Weights:", word_weights)
+        print("Top Probabilities:", top_probs)
+        print("Top Indices:", top_indices)
+
+        # Update input sequence
+        word_tensor = torch.tensor([[word_idx]], dtype=torch.long).to(device)
+        input_ids = torch.cat([input_ids, word_tensor], dim=1)
+
+print("\nGenerated text:", generated_text)
+with open("output.txt", "w+") as f:
+    f.write(generated_text)
