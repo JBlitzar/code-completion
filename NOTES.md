@@ -391,3 +391,6 @@ print("Hello,      btract(num1,
     exit()
     ```
     - None of them match T[-1]. What's going on?
+    - I made train_dataset dataset. Now acc stays at .3?
+    - Maybe its better. Was it cheating before somehow?
+    - Listen, I gotta go to bed. I'll figure this out tomorrow, or not.

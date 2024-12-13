@@ -1,1 +1,17 @@
-str(n) 
+return <PAD> num2): <PAD> + == <PAD> <PAD> <PAD> orld! return * return num1 num1 "Fizz" <PAD> 
+ 
+ def
+y(num1, str(n) 
+ <PAD> <PAD> "Fizzbuzz" num2 
+ % 
+ <PAD> def <PAD> <PAD> % <PAD> <PAD> <PAD> <PAD> 
+
+<PAD> def <PAD> - % 0:      as <PAD> 
+ <PAD> 0: <PAD> 3 5 
+      n <PAD> num2):
+<PAD> 
+ num1      <PAD> print_h 0: <PAD> <PAD> return      
+      
+ "Buzz" <PAD> T print_hello_world(): % <PAD>
+% 
+ <PAD> <PAD> <PAD> num2): <PAD> print("Hello, <PAD> <PAD> print_hello_world():      <PAD> <PAD> <PAD>      <PAD> np % <PAD>

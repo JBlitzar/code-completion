@@ -61,6 +61,6 @@ with open("output.txt", 'w') as outf:
             print(word)
             print(word_idx)
             print(T[-1])
-            exit()
+            #exit()
 
             

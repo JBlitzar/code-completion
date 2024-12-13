@@ -472,6 +472,8 @@ train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]
 )
 
+train_dataset = dataset # TODO change
+
 
 def get_train_dataset():
     return train_dataset
