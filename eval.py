@@ -6,7 +6,7 @@ import sys
 import time
 from dataset import dataset, get_train_dataset
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -61,23 +61,26 @@ for _ in range(max_length):
 
         logits = outputs
 
-        next_token_logits = logits[:, -1, :]
+        next_token_id = torch.argmax(logits.view(-1, logits.size(-1))[-1], dim=1)
 
-        probs = torch.softmax(next_token_logits, dim=-1)
 
-        if pad_token_id is not None:
-            probs[:, pad_token_id] = 0.0
+        # next_token_logits = logits.squeeze(1)
 
-        if sep_token_id is not None:
-            probs[:, sep_token_id] = 0.0
+        # probs = torch.softmax(next_token_logits, dim=-1)
 
-        # repetition_penalty = 2  # Values > 1.0 penalize repetition
-        # for token in input_ids.tolist():
-        #     probs[0, token] /= repetition_penalty
+        # if pad_token_id is not None:
+        #     probs[:, pad_token_id] = 0.0
 
-        # print(probs)
+        # if sep_token_id is not None:
+        #     probs[:, sep_token_id] = 0.0
 
-        next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
+        # # repetition_penalty = 2  # Values > 1.0 penalize repetition
+        # # for token in input_ids.tolist():
+        # #     probs[0, token] /= repetition_penalty
+
+        # # print(probs)
+
+        # next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
         # Ensure the next_token_id has the same batch size (1 in this case)
         next_token_id = next_token_id.unsqueeze(0)  # Shape: (1, 1)
         input_ids = torch.cat((input_ids, next_token_id), dim=1)
@@ -89,13 +92,7 @@ for _ in range(max_length):
         )
 
         predicted_token = dataset.manager.decode(next_token_id)
-
-        if not predicted_token.startswith("##") and not predicted_token.startswith(" "):
-            predicted_token += " "
-        generated_text += predicted_token.replace("##", "")
-
-        sys.stdout.write(predicted_token.replace("##", ""))
-        sys.stdout.flush()
+        print(predicted_token)
 
 print()
 print()

@@ -87,6 +87,8 @@ class BuiltinTransformerModel(nn.Transformer):
         src = self.pos_encoder(src)
         output = self.encoder(src, mask=self.src_mask)
         output = self.decoder(output)
+
+        
         return F.log_softmax(output, dim=-1)
     
 def make_model():

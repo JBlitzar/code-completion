@@ -161,7 +161,13 @@ class TrainingManager:
             epoch * dataloader_len + step,
         )
 
+        log_data(
+            {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
+            epoch * dataloader_len + step,
+        )
+
         self.tracker.reset("Loss/trainstep")
+        self.tracker.reset("Acc/trainstep")
 
     def on_epoch_checkin(self, epoch):
         if self.hasnan():
@@ -186,6 +192,14 @@ class TrainingManager:
             epoch,
         )
 
+        log_data(
+            {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
+            epoch,
+        )
+        print(self.tracker.average("Acc/trainstep"))
+
+        self.tracker.reset("Acc/epoch")
+
         self.tracker.reset("Loss/epoch")
         self.tracker.reset("Loss/val/epoch")
 
@@ -207,6 +221,11 @@ class TrainingManager:
         results = self.net(batch)#, padding_mask=attn_mask[:, :-1])
 
         loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
+
+        #TODO remove this maybe
+        acc = torch.sum(torch.argmax(results.view(-1, results.size(-1)), dim=1) == labels.view(-1)) / len(labels.view(-1))
+
+        self.tracker.add("Acc/trainstep", acc.item())
 
         loss.backward()
 

@@ -355,3 +355,8 @@ divide(num1,izzbuzz(n): ! 0:y
 - So there you go. We can stick with this for a while.
 - At the same time, where's the innovation? LLMs exist, people already do transformers. It would be cool to either do something new and do a write-up on it or use AI/ML to solve a real-world problem
 - We'll see I guess.
+
+- Dec 12
+  - Debugged stuff, transpose is the way to go, compared w/ pytorch example
+  - Made a scuffed accuracy metric for next-token I guess, but it actually converged really well. Problem is elsewhere?
+    - 0.984 after 1000 epochs on the tiny dataset
