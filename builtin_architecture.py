@@ -70,10 +70,11 @@ class BuiltinTransformerModel(nn.Transformer):
         nn.init.zeros_(self.decoder.bias)
         nn.init.uniform_(self.decoder.weight, -initrange, initrange)
 
-    def forward(self, src, has_mask=True):
+    def forward(self, src, has_mask=True, transpose=True):
         #pov when goofy errors
         # maybe fixes?
-        src = src.transpose(0,1)
+        if transpose:
+            src = src.transpose(0,1)
 
         if has_mask:
             device = src.device
@@ -88,7 +89,7 @@ class BuiltinTransformerModel(nn.Transformer):
         output = self.encoder(src, mask=self.src_mask)
         output = self.decoder(output)
 
-        
+
         return F.log_softmax(output, dim=-1)
     
 def make_model():

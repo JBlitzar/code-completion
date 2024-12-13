@@ -31,12 +31,17 @@ for name, param in net.named_parameters():
 
 input = torch.randint(199, (1, 1), dtype=torch.long).to(device)
 
+input, _ = get_train_dataset()[0]
+input = input.unsqueeze(1) # dont ask
+
+print(input)
+
 temperature = 1.0
 
 with open("output.txt", 'w') as outf:
     with torch.no_grad():  # no tracking history
         for i in range(100):
-            output = net(input, False)
+            output = net(input, transpose=False)
             word_weights = output[-1].squeeze().div(temperature).exp().cpu()
             word_idx = torch.multinomial(word_weights, 1)[0]
             word_tensor = torch.Tensor([[word_idx]]).long().to(device)
@@ -45,3 +50,5 @@ with open("output.txt", 'w') as outf:
             word = dataset.manager.decode(word_idx)
 
             outf.write(word + ('\n' if i % 20 == 19 else ' '))
+
+            
