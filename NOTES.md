@@ -399,3 +399,5 @@ divide(num1,izzbuzz(n): ! 0:y
 - Maybe its better. Was it cheating before somehow?
 - Listen, I gotta go to bed. I'll figure this out tomorrow, or not.
 - 167 freaking commits, code borrowed from 3 seperate codebases, and this thing doesnt even work when I give it all the answers
+- Dec 13
+  - More compute doesnt help

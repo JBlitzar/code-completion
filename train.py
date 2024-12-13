@@ -35,7 +35,7 @@ trainer = TrainingManager(
     dataloader=dataloader,
     device=device,
     trainstep_checkin_interval=100,
-    epochs=1000,
+    epochs=3000,
     val_dataloader=testloader,
 )
 
@@ -50,3 +50,4 @@ for batch, attn_mask in dataloader:
 
 
 trainer.train()
+os.system("bash cleanup.sh")

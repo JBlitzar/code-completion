@@ -95,9 +95,9 @@ class BuiltinTransformerModel(nn.Transformer):
 def make_model():
     vocab_size = 199
     embed_dim = 128
-    heads = 1
-    ff_dim=50
-    layers = 1
+    heads = 2
+    ff_dim=128
+    layers = 2
     drop=0
 
     xformer_real = BuiltinTransformerModel(vocab_size, embed_dim, heads, ff_dim,layers, drop)#nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
