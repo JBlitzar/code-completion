@@ -380,3 +380,14 @@ print("Hello,      btract(num1,
 ```
 
     - WHY CANT I JUST HAVE THE MODEL WORK???
+    - I even just prompted with the dataset.
+    - I'm not sure how accuracy was up before, because this isnt matching.
+    ```
+    MOST = torch.argmax(output.view(-1, output.size(-1)), dim=1)
+    print(MOST)
+    print(word)
+    print(word_idx)
+    print(T[-1])
+    exit()
+    ```
+    - None of them match T[-1]. What's going on?

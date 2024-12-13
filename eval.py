@@ -31,7 +31,12 @@ for name, param in net.named_parameters():
 
 input = torch.randint(199, (1, 1), dtype=torch.long).to(device)
 
-input, _ = get_train_dataset()[0]
+T, _ = get_train_dataset()[0]
+input= T[:-1]
+
+print(input)
+print(dataset.manager.decode(input))
+print("inp^")
 input = input.unsqueeze(1) # dont ask
 
 print(input)
@@ -50,5 +55,12 @@ with open("output.txt", 'w') as outf:
             word = dataset.manager.decode(word_idx)
 
             outf.write(word + ('\n' if i % 20 == 19 else ' '))
+
+            MOST = torch.argmax(output.view(-1, output.size(-1)), dim=1)
+            print(MOST)
+            print(word)
+            print(word_idx)
+            print(T[-1])
+            exit()
 
             
