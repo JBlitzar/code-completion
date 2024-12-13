@@ -99,7 +99,9 @@ class CodeBPEModelManager(BPEModelManager):
     def decode(self, ids):
         # print(ids)
         # print("ids^^")
-        l = ids.tolist()
+        l = ids
+        if isinstance(l, torch.Tensor):
+            l = ids.tolist()
         if isinstance(l, int):
             l = [l]
 
