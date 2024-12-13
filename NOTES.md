@@ -367,31 +367,35 @@ divide(num1,izzbuzz(n): ! 0:y
   - So I just did the default code. Outputs
 
 ```
-print_h 2 3 n de(num1, <INDE % np a "Buzz" ultiply(num1, mport tu else "Fizz" orl add(num1, <IND % 1
-fizzbuzz(n): else zzbuzz(n): "Fizz" if y(num1, d tiply(num1,
- T  World!") p NEW
- c " _ 15 add
-<EOS> el + num2 "Fizzbuzz" def add(num1, nump print(" f as ultiply(num1, nump <NEW numpy or def num2 ltiply(num1, =
-f a return - tr(n World!") print_hello_ orld ply(num1, as num print zzbuzz(n): orl subtract(num1, "F I izzbuzz(n): % ply(num1,
-print("Hello,      btract(num1,
- np "Fizzbuzz" INE re l 5
- izzbuzz(n):  tract(num1, v tract vide(num1, f (num1, i
+    print_h 2 3 n de(num1, <INDE % np a "Buzz" ultiply(num1, mport tu else "Fizz" orl add(num1, <IND % 1
+    fizzbuzz(n): else zzbuzz(n): "Fizz" if y(num1, d tiply(num1,
+    T  World!") p NEW
+    c " _ 15 add
+    <EOS> el + num2 "Fizzbuzz" def add(num1, nump print(" f as ultiply(num1, nump <NEW numpy or def num2 ltiply(num1, =
+    f a return - tr(n World!") print_hello_ orld ply(num1, as num print zzbuzz(n): orl subtract(num1, "F I izzbuzz(n): % ply(num1,
+    print("Hello,      btract(num1,
+    np "Fizzbuzz" INE re l 5
+    izzbuzz(n):  tract(num1, v tract vide(num1, f (num1, i
 
 ```
 
-    - WHY CANT I JUST HAVE THE MODEL WORK???
-    - I even just prompted with the dataset.
-    - I'm not sure how accuracy was up before, because this isnt matching.
-    ```
+- WHY CANT I JUST HAVE THE MODEL WORK???
+- I even just prompted with the dataset.
+- I'm not sure how accuracy was up before, because this isnt matching.
+
+```
+
     MOST = torch.argmax(output.view(-1, output.size(-1)), dim=1)
     print(MOST)
     print(word)
     print(word_idx)
     print(T[-1])
     exit()
-    ```
-    - None of them match T[-1]. What's going on?
-    - I made train_dataset dataset. Now acc stays at .3?
-    - Maybe its better. Was it cheating before somehow?
-    - Listen, I gotta go to bed. I'll figure this out tomorrow, or not.
-    - 167 freaking commits, code borrowed from 3 seperate codebases, and this thing doesnt even work when I give it all the answers
+
+```
+
+- None of them match T[-1]. What's going on?
+- I made train_dataset dataset. Now acc stays at .3?
+- Maybe its better. Was it cheating before somehow?
+- Listen, I gotta go to bed. I'll figure this out tomorrow, or not.
+- 167 freaking commits, code borrowed from 3 seperate codebases, and this thing doesnt even work when I give it all the answers
