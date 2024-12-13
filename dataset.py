@@ -99,7 +99,11 @@ class CodeBPEModelManager(BPEModelManager):
     def decode(self, ids):
         # print(ids)
         # print("ids^^")
-        result = self.bpe.decode(ids.tolist())[0]
+        l = ids.tolist()
+        if isinstance(l, int):
+            l = [l]
+
+        result = self.bpe.decode(l)[0]
         # print(result)
         for key, value in CodeBPEModelManager.mapping_dict.items():
             result = result.replace(value.strip(), key)  # value, key

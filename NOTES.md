@@ -360,3 +360,7 @@ divide(num1,izzbuzz(n): ! 0:y
   - Debugged stuff, transpose is the way to go, compared w/ pytorch example
   - Made a scuffed accuracy metric for next-token I guess, but it actually converged really well. Problem is elsewhere?
     - 0.984 after 1000 epochs on the tiny dataset
+  - Take more time with eval file. Problem is probably there.
+  - _try not to rush_
+    - "faster than you can understand"
+  - Bias towards things? mask out, beam search

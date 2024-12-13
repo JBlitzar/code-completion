@@ -41,59 +41,30 @@ print(input_ids.shape)
 attention_mask = dataset.manager.attention_mask(input_ids.squeeze(0)).to(device)
 
 
-#input_ids, attention_mask = get_train_dataset()[4]
-
-
-# input_ids = input_ids.to(device).unsqueeze(0)
-
-# attention_mask = attention_mask.to(device)  # .unsqueeze(0)
-
-# print(input_ids.shape)
-
 generated_text = dataset.manager.decode(input_ids)
 
 print(generated_text)
+input_ids = torch.randint(199, (1, 1), dtype=torch.long).to(device)
 
+temp = 0.1
 
 for _ in range(max_length):
     with torch.no_grad():
-        outputs = net(input_ids)#, padding_mask=attention_mask)
-
-        logits = outputs
-
-        next_token_id = torch.argmax(logits.view(-1, logits.size(-1))[-1], dim=1)
 
 
-        # next_token_logits = logits.squeeze(1)
+        output = net(input_ids)
+        word_weights = output[-1].squeeze().div(0.1).exp().cpu()
+        word_idx = torch.multinomial(word_weights, 1)[0]
+        word_tensor = torch.Tensor([[word_idx]]).long().to(device)
+        input_ids = torch.cat([input_ids, word_tensor], 0)
 
-        # probs = torch.softmax(next_token_logits, dim=-1)
+        predicted_token = dataset.manager.decode(word_idx)
+        print(predicted_token, end="")
 
-        # if pad_token_id is not None:
-        #     probs[:, pad_token_id] = 0.0
-
-        # if sep_token_id is not None:
-        #     probs[:, sep_token_id] = 0.0
-
-        # # repetition_penalty = 2  # Values > 1.0 penalize repetition
-        # # for token in input_ids.tolist():
-        # #     probs[0, token] /= repetition_penalty
-
-        # # print(probs)
-
-        # next_token_id = torch.multinomial(probs, num_samples=1).squeeze(-1)
-        # Ensure the next_token_id has the same batch size (1 in this case)
-        next_token_id = next_token_id.unsqueeze(0)  # Shape: (1, 1)
-        input_ids = torch.cat((input_ids, next_token_id), dim=1)
-
-        #input_ids = torch.cat((input_ids, next_token_id.unsqueeze(-1)), dim=1)
-
-        attention_mask = torch.cat(
-            (attention_mask, torch.ones((1,), device=device)), dim=0
-        )
-
-        predicted_token = dataset.manager.decode(next_token_id)
-        print(predicted_token)
+        generated_text += predicted_token
+        
 
 print()
 print()
+print("FINAL THING BELOW vvv")
 print(generated_text)
