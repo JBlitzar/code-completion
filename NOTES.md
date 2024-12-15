@@ -401,3 +401,20 @@ divide(num1,izzbuzz(n): ! 0:y
 - 167 freaking commits, code borrowed from 3 seperate codebases, and this thing doesnt even work when I give it all the answers
 - Dec 13
   - More compute doesnt help
+- Dec 14
+
+  - We are going even smaller with smaller-er test data. Its just the alphabet over and over. It better overfit is all im saying.
+  - Acc at 47% looks like. Thats weird. Now 0.485. Some sort of weird limit? Like previously it stopped somewhere near 1/3, now its stopping somewhere near 1/2? Something weird going on. 0.489 accuracy.
+  - Ran again with another line of abcs in the data and it converged on 0.3. This must be a weird padding token thing.
+  - now THIS is depression:
+
+  ```
+    m f d j I b <PAD> r z p h w W v A r d
+    <PAD> n g I y e o e x t <PAD> d I t b NE L W
+    h n n z p m l c m o <PAD> e o y g I j x A
+    s d h NE I <PAD> s t NE o n h d v NE A m o
+    L NE I u <PAD> l I NE o h e d t w e y x
+
+  ```
+
+  - Yeah.

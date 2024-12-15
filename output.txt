@@ -1,27 +1,5 @@
-divide(num1,      
- numpy <PAD> print <PAD> n 
- <PAD> fizzbuzz(n): <PAD> <PAD> a return %      
- == 
-
-<PAD> <PAD> num2): str(n)      num1 <PAD> <PAD> str(n) + 
- <PAD> 
- num2): <PAD> == 
- == <PAD> 
-
-elif 
- elif 5 
- <PAD> 
- <PAD> <PAD> import <PAD> <PAD> num2): 
-      == <PAD> <PAD> + num2):
-% 
- 
- def elif print("Hello, multiply(num1, subtract(num1, <PAD> <PAD> 
- num2): 
- else: <PAD> 
- return num1      
-
-<PAD> num2 
- def elif num2):      def elif <PAD>      
- 
- + <PAD> <PAD> num1 
- <PAD> 0:
+ m f d  j I b <PAD> r z p  h w W v A r d
+<PAD> n g I y e o e x t  <PAD> d I t b NE  L W
+h  n n z p m l c m o <PAD> e o y g I j x A
+s d  h NE I <PAD> s t NE o n h d v NE  A m o
+L NE I u <PAD>   l I NE o h e d t  w e y x

@@ -15,7 +15,7 @@ import torch.nn as nn
 
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v10-vanilla-smaller-batchfirst"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v11-vanilla-alphabet"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -50,4 +50,4 @@ for batch, attn_mask in dataloader:
 
 
 trainer.train()
-os.system("bash cleanup.sh")
+#os.system("bash cleanup.sh")

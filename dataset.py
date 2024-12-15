@@ -453,11 +453,12 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        "./smaller-test-data"
+        "./smaller-er-test-data"
+        #"./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
         #"~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=199,
+    vocab_size=60,
     IS_CODE=True,  # Remember to change!
     #IS_CUSTOM=True,
     max_length=50,
@@ -492,8 +493,9 @@ def get_dataloader(dataset, batch_size=128):
 if __name__ == "__main__":
     d = get_train_dataset()
     print("Number of samples: ", len(d))
+    for a, b in d:
+        #a, b = d[-1]
+        manager = dataset.manager
+        print(manager.decode(a))
+        print()
 
-    a, b = d[-1]
-    manager = dataset.manager
-    print(manager.decode(a))
-    print()

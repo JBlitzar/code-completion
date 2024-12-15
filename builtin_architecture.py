@@ -93,7 +93,7 @@ class BuiltinTransformerModel(nn.Transformer):
         return F.log_softmax(output, dim=-1)
     
 def make_model():
-    vocab_size = 199
+    vocab_size = 60
     embed_dim = 128
     heads = 2
     ff_dim=128
