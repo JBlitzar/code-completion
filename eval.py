@@ -41,8 +41,7 @@ print("inp^")
 
 print(input)
 
-temperature = 1.0
-def evaluate(model, start_sequence, max_len=20, temperature=1.0):
+def evaluate(model, start_sequence, amt=1, temperature=0.1, window_size=10):
     model.eval()
     generated_sequence = start_sequence.clone()
     batch_size = start_sequence.size(1)
@@ -50,47 +49,20 @@ def evaluate(model, start_sequence, max_len=20, temperature=1.0):
     generated_sequence = generated_sequence.to(device)
 
     with torch.no_grad():
-        for _ in range(max_len - start_sequence.size(0)):
-            output = model(generated_sequence, transpose=True)
+        for _ in range(amt):
+            input_sequence = generated_sequence[-window_size:]
+            output = model(input_sequence, transpose=True)
             logits = output[-1, :, :]
             logits = logits / temperature
             probs = torch.nn.functional.softmax(logits, dim=-1)
-
             output = output.transpose(0,1)
-            print(f"ARGMAZX: {torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]}")
+            # print(f"ARGMAZX: {torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]}")
+            # print(probs)
             next_token = torch.multinomial(probs, 1)
             next_token = next_token.transpose(0, 1)
-            #next_token = next_token.unsqueeze(0)
             generated_sequence = torch.cat((generated_sequence, next_token), dim=1)
 
     return generated_sequence
 print(evaluate(net, input))
 exit()
-with open("output.txt", 'w') as outf:
-    with torch.no_grad():  # no tracking history
-        for i in range(100):
-            output = net(input, transpose=True)
-            output = output.transpose(0,1)
-
-            output = output.reshape(-1, output.size(-1))
-
-            word_weights = output[-1].squeeze().div(temperature).exp().cpu()
-            word_idx = torch.multinomial(word_weights, 1)[0]
-            word_tensor = torch.Tensor([[word_idx]]).long().to(device)
-            print(word_tensor.shape)
-            print(input.shape)
-
-            input = torch.cat([input, word_tensor], 1)
-
-            word = dataset.manager.decode(word_idx)
-
-            outf.write(word + ('\n' if i % 20 == 19 else ' '))
-
-            MOST = torch.argmax(output.view(-1, output.size(-1)), dim=1)
-            print(MOST)
-            print(word)
-            print(word_idx)
-            print(T[-1])
-            #exit()
-
-            
+# 
