@@ -1,5 +1,6 @@
 import torch
-#from architecture import DecoderTransformer
+
+# from architecture import DecoderTransformer
 from builtin_architecture import make_model
 import os
 import sys
@@ -7,7 +8,7 @@ import time
 from dataset import dataset, get_train_dataset
 import torch.nn.functional as F
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v10-vanilla-smaller-batchfirst"  # "runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -57,7 +58,7 @@ for _ in range(max_length):
         logits = F.log_softmax(output[-1], dim=-1)  # Normalize logits
         word_weights = logits.div(temp).cpu()  # Scale by temperature
 
-       # Top-k sampling
+        # Top-k sampling
         top_k = 10  # Adjust based on your vocabulary size
         vocab_size = word_weights.size(0)
         top_k = min(top_k, vocab_size)  # Ensure top_k is valid
@@ -70,7 +71,6 @@ for _ in range(max_length):
         else:
             sampled_idx = torch.multinomial(top_probs, 1).item()
             word_idx = top_indices[sampled_idx]
-
 
         # Decode and append token
         print(word_idx)

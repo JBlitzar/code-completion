@@ -2,7 +2,7 @@ import os
 
 os.system(f"caffeinate -is -w {os.getpid()} &")
 
-#from architecture import DecoderTransformer
+# from architecture import DecoderTransformer
 from builtin_architecture import make_model
 from dataset import get_train_dataset, get_test_dataset, get_dataloader
 import torch
@@ -11,8 +11,6 @@ from logger import init_logger
 import torchvision
 from trainingmanager import TrainingManager
 import torch.nn as nn
-
-
 
 
 EXPERIMENT_DIRECTORY = "runs/code-decoder-v12-dummy"
@@ -25,7 +23,9 @@ dataloader = get_dataloader(get_train_dataset())
 testloader = get_dataloader(get_test_dataset())
 
 
-net = make_model()#nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)#DecoderTransformer(vocab_size=199, num_blocks=1)
+net = (
+    make_model()
+)  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)#DecoderTransformer(vocab_size=199, num_blocks=1)
 net.to(device)
 
 
@@ -50,4 +50,4 @@ for batch, attn_mask in dataloader:
 
 
 trainer.train()
-#os.system("bash cleanup.sh")
+# os.system("bash cleanup.sh")

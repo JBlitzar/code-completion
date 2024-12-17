@@ -3,7 +3,8 @@ import torch
 import math
 import torch.nn.functional as F
 
-#Shamelessly ripped from https://github.com/pytorch/examples/blob/main/word_language_model/model.py
+# Shamelessly ripped from https://github.com/pytorch/examples/blob/main/word_language_model/model.py
+
 
 class BuiltinPositionalEncoding(nn.Module):
     r"""Inject some information about the relative or absolute position of the tokens in the sequence.
@@ -27,11 +28,13 @@ class BuiltinPositionalEncoding(nn.Module):
 
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        div_term = torch.exp(
+            torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model)
+        )
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
         pe = pe.unsqueeze(0).transpose(0, 1)
-        self.register_buffer('pe', pe)
+        self.register_buffer("pe", pe)
 
     def forward(self, x):
         r"""Inputs of forward function
@@ -44,14 +47,18 @@ class BuiltinPositionalEncoding(nn.Module):
             >>> output = pos_encoder(x)
         """
 
-        x = x + self.pe[:x.size(0), :]
+        x = x + self.pe[: x.size(0), :]
         return self.dropout(x)
+
+
 class BuiltinTransformerModel(nn.Transformer):
     """Container module with an encoder, a recurrent or transformer module, and a decoder."""
 
     def __init__(self, ntoken, ninp, nhead, nhid, nlayers, dropout=0.5):
-        super(BuiltinTransformerModel, self).__init__(d_model=ninp, nhead=nhead, dim_feedforward=nhid, num_encoder_layers=nlayers)
-        self.model_type = 'Transformer'
+        super(BuiltinTransformerModel, self).__init__(
+            d_model=ninp, nhead=nhead, dim_feedforward=nhid, num_encoder_layers=nlayers
+        )
+        self.model_type = "Transformer"
         self.src_mask = None
         self.pos_encoder = BuiltinPositionalEncoding(ninp, dropout)
 
@@ -62,7 +69,7 @@ class BuiltinTransformerModel(nn.Transformer):
         self.init_weights()
 
     def _generate_square_subsequent_mask(self, sz):
-        return torch.log(torch.tril(torch.ones(sz,sz)))
+        return torch.log(torch.tril(torch.ones(sz, sz)))
 
     def init_weights(self):
         initrange = 0.1
@@ -71,10 +78,10 @@ class BuiltinTransformerModel(nn.Transformer):
         nn.init.uniform_(self.decoder.weight, -initrange, initrange)
 
     def forward(self, src, has_mask=True, transpose=True):
-        #pov when goofy errors
+        # pov when goofy errors
         # maybe fixes?
         if transpose:
-            src = src.transpose(0,1)
+            src = src.transpose(0, 1)
 
         if has_mask:
             device = src.device
@@ -89,16 +96,18 @@ class BuiltinTransformerModel(nn.Transformer):
         output = self.encoder(src, mask=self.src_mask)
         output = self.decoder(output)
 
-
         return F.log_softmax(output, dim=-1)
-    
+
+
 def make_model():
     vocab_size = 60
     embed_dim = 128
     heads = 2
-    ff_dim=128
+    ff_dim = 128
     layers = 2
-    drop=0
+    drop = 0
 
-    xformer_real = BuiltinTransformerModel(vocab_size, embed_dim, heads, ff_dim,layers, drop)#nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
+    xformer_real = BuiltinTransformerModel(
+        vocab_size, embed_dim, heads, ff_dim, layers, drop
+    )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
     return xformer_real

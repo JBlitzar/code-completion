@@ -214,8 +214,6 @@ class TrainingManager:
         # Different for every model
         batch, attn_mask = data
 
-       
-
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
@@ -224,17 +222,18 @@ class TrainingManager:
         # print(labels)
         # print("data^")
 
-        
+        # TODO: change later
+        results = self.net(batch, transpose=True)  # , padding_mask=attn_mask[:, :-1])
 
-        #TODO: change later
-        results = self.net(batch, transpose=True)#, padding_mask=attn_mask[:, :-1])
-
-        results = results.transpose(0, 1) # average bug
+        results = results.transpose(0, 1)  # average bug
 
         loss = self.criterion(results.reshape(-1, results.size(-1)), labels.reshape(-1))
 
-        #TODO remove this maybe
-        acc = torch.sum(torch.argmax(results.reshape(-1, results.size(-1)), dim=1) == labels.reshape(-1)) / len(labels.reshape(-1))
+        # TODO remove this maybe
+        acc = torch.sum(
+            torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
+            == labels.reshape(-1)
+        ) / len(labels.reshape(-1))
 
         self.tracker.add("Acc/trainstep", acc.item())
 
@@ -258,7 +257,7 @@ class TrainingManager:
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
-        results = self.net(batch)#, padding_mask=attn_mask[:, :-1])
+        results = self.net(batch)  # , padding_mask=attn_mask[:, :-1])
 
         loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
 
