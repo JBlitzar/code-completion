@@ -1,5 +1,7 @@
 # code-completion
 
+# Take a look at [notes.md](https://github.com/JBlitzar/code-completion/blob/main/NOTES.md)
+
 Code completion with transformers
 
 - https://arxiv.org/pdf/2402.16197
