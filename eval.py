@@ -28,19 +28,7 @@ for name, param in net.named_parameters():
 for name, param in net.named_parameters():
     if param.grad is not None and torch.isnan(param.grad).any():
         print(f"NaN found in gradients of {name}")
-
-input = torch.randint(199, (1, 1), dtype=torch.long).to(device)
-
-T, _ = get_train_dataset()[0]
-
-input = T.unsqueeze(0)[:, :-1].contiguous()
-
-print(input)
-print(dataset.manager.decode(input))
-print("inp^")
-
-print(input)
-
+        
 def evaluate(model, start_sequence, amt=1, temperature=0.1, window_size=10):
     model.eval()
     generated_sequence = start_sequence.clone()
@@ -63,6 +51,5 @@ def evaluate(model, start_sequence, amt=1, temperature=0.1, window_size=10):
             generated_sequence = torch.cat((generated_sequence, next_token), dim=1)
 
     return generated_sequence
-print(evaluate(net, input))
+print(evaluate(net, torch.tensor([0, 1, 2, 3, 4, 5, 6], dtype=torch.int32).unsqueeze(0)))
 exit()
-# 
