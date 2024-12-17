@@ -372,6 +372,36 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     pass  # Should be fine, ends up being blank lines
 
 
+
+class DummySequentialDataManager:
+    def __init__(self, root_dir, vocab_size=5000):
+        print("init")
+        self.root_dir = root_dir
+        self.vocab_size = vocab_size
+        with open(os.path.join(root_dir, "data/corpus_processed.txt"), "w+") as f:
+            f.write("dummy")
+       
+
+
+    def encode(self, text: str):
+        return [list(range(50))]
+
+    def decode(self, ids):
+        l = ids
+        if isinstance(l, torch.Tensor):
+            l = ids.tolist()
+        if isinstance(l, int):
+            l = [l]
+
+        return " ".join([str(id) for id in l])
+
+    @staticmethod
+    def attention_mask(encoded_sequence, mask_token_ids=[]):
+        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int)
+        # print(mask_token_tensor)
+        # print(encoded_sequence)
+        return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
+
 class TextCorpusDataset(Dataset):
     def __init__(
         self,
@@ -379,12 +409,15 @@ class TextCorpusDataset(Dataset):
         train=False,
         max_length=512,
         vocab_size=10000,
+        IS_DUMMY=False,
         IS_CODE=False,
         IS_CUSTOM=False,
     ):
         print(root_dir)
         self.root = root_dir
-        if IS_CODE:
+        if IS_DUMMY:
+            self.manager = DummySequentialDataManager(root_dir=root_dir)
+        elif IS_CODE:
             if IS_CUSTOM:
                 self.manager = CodeCustomTokenizerManager(root_dir=root_dir)
             else:
@@ -453,21 +486,23 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        "./smaller-er-test-data"
+        "./dummy-data-dir"
+        #"./smaller-er-test-data"
         #"./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
         #"~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=60,
-    IS_CODE=True,  # Remember to change!
+    #IS_CODE=True,  # Remember to change!
     #IS_CUSTOM=True,
-    max_length=50,
+    IS_DUMMY=True,
+    max_length=10,
 )
 dset_size = int(len(dataset))
 train_size = int(dset_size - 2)#int(0.8 * dset_size)
 test_size = 2#int(dset_size - train_size)
 if test_size == 2:
-    print("alert! test size is 1. Change this back please.")
+    print("alert! test size is 2 or whatever. Change this back please.")
 
 train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]

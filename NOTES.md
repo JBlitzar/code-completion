@@ -418,3 +418,19 @@ divide(num1,izzbuzz(n): ! 0:y
   ```
 
   - Yeah.
+
+- Dec 16 - All right, so here's what we are going to do. - Lets set up a "sequential" dummy dataset that literally loads numbers 1,2,3,4,5, etc _as tokens_.
+  - Set up.
+  - Here's what batches are looking like before they get passed into the model:
+    `tensor([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9],
+    [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    [40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
+    [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]], device='mps:0',
+    dtype=torch.int32)
+`
+  - Cool. Looks right. Shape is [5,10], what it should be I think. Labels _should_ indeed be like that.
+  - Whatever that did, accuracy is back in the high nineties.
+    - 99%.
+  - `results = results.transpose(0, 1) # average bug` goes into the hall of fame
+  - Now lets pick apart eval.py.

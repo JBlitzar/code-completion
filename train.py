@@ -15,7 +15,7 @@ import torch.nn as nn
 
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v11-vanilla-alphabet"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v12-dummy"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
