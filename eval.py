@@ -55,12 +55,15 @@ def evaluate(model, start_sequence, max_len=20, temperature=1.0):
             logits = output[-1, :, :]
             logits = logits / temperature
             probs = torch.nn.functional.softmax(logits, dim=-1)
+
+            output = output.transpose(0,1)
+            print(f"ARGMAZX: {torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]}")
             next_token = torch.multinomial(probs, 1)
             next_token = next_token.transpose(0, 1)
-            generated_sequence = torch.cat((generated_sequence, next_token), dim=0)
+            #next_token = next_token.unsqueeze(0)
+            generated_sequence = torch.cat((generated_sequence, next_token), dim=1)
 
     return generated_sequence
-
 print(evaluate(net, input))
 exit()
 with open("output.txt", 'w') as outf:
