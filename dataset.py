@@ -136,7 +136,7 @@ class CodeBPEModelManager(BPEModelManager):
             data=processed_path,
             vocab_size=self.vocab_size,
             model=self.model_path,
-            coverage=1#0.995,
+            coverage=1,  # 0.995,
         )
 
     def format_code(self, code):
@@ -372,7 +372,6 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     pass  # Should be fine, ends up being blank lines
 
 
-
 class DummySequentialDataManager:
     def __init__(self, root_dir, vocab_size=5000):
         print("init")
@@ -380,8 +379,6 @@ class DummySequentialDataManager:
         self.vocab_size = vocab_size
         with open(os.path.join(root_dir, "data/corpus_processed.txt"), "w+") as f:
             f.write("dummy")
-       
-
 
     def encode(self, text: str):
         return [list(range(50))]
@@ -402,6 +399,7 @@ class DummySequentialDataManager:
         # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
 
+
 class TextCorpusDataset(Dataset):
     def __init__(
         self,
@@ -412,9 +410,15 @@ class TextCorpusDataset(Dataset):
         IS_DUMMY=False,
         IS_CODE=False,
         IS_CUSTOM=False,
+        sliding_window=False,
+        stride=1,
     ):
         print(root_dir)
         self.root = root_dir
+        self.sliding_window = sliding_window
+        self.window_size = max_length
+        self.stride = stride
+
         if IS_DUMMY:
             self.manager = DummySequentialDataManager(root_dir=root_dir)
         elif IS_CODE:
@@ -426,8 +430,8 @@ class TextCorpusDataset(Dataset):
                 )
         else:
             self.manager = BPEModelManager(root_dir=root_dir, vocab_size=vocab_size)
-        self.max_length = max_length
 
+        self.max_length = max_length
         self.cache_file = os.path.join(root_dir, "encoded_chunked.pt")
 
         start_t = time.time()
@@ -459,27 +463,38 @@ class TextCorpusDataset(Dataset):
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
     def _chunk_and_save(self, encoded):
-        encoded = encoded[0]# Changed this because encoded was shape [1,n]. If giving shape errors, remove this or something
+        encoded = encoded[
+            0
+        ]  # Changed this because encoded was shape [1,n]. If giving shape errors, remove this or something
         chunked_data = [
             torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
-            for i in trange(0, len(encoded), self.max_length, leave=False) 
+            for i in trange(0, len(encoded), self.max_length, leave=False)
         ]
 
-        # me when the last item is not necesarily of length self.max_length
-        padded_chunk = torch.zeros(self.max_length, dtype=torch.int)#.unsqueeze(0)
-        padded_chunk[:len(chunked_data[-1])] = chunked_data[
-            -1
-        ]  # silly zero fill bc im *optimized* like that
+        # me when the last item is not necessarily of length self.max_length
+        padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
+        padded_chunk[: len(chunked_data[-1])] = chunked_data[-1]
         chunked_data[-1] = padded_chunk
 
         self.chunks = torch.stack(chunked_data)
         torch.save(self.chunks, self.cache_file)
+
+    def _sliding_window(self, sequence, window_size, stride):
+        windows = []
+        for i in range(0, len(sequence) - window_size + 1, stride):
+            windows.append(sequence[i : i + window_size])
+        return torch.stack(windows)
 
     def __len__(self):
         return len(self.chunks)
 
     def __getitem__(self, idx):
         seq = self.chunks[idx]
+
+        if self.sliding_window:
+            # Apply sliding window if enabled
+            seq = self._sliding_window(seq, self.window_size, self.stride)
+
         return seq, self.manager.attention_mask(seq)
 
 
@@ -487,20 +502,20 @@ class TextCorpusDataset(Dataset):
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
         "./dummy-data-dir"
-        #"./smaller-er-test-data"
-        #"./smaller-test-data"
+        # "./smaller-er-test-data"
+        # "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
-        #"~/torch_datasets/github-python/corpus"
+        # "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=60,
-    #IS_CODE=True,  # Remember to change!
-    #IS_CUSTOM=True,
+    # IS_CODE=True,  # Remember to change!
+    # IS_CUSTOM=True,
     IS_DUMMY=True,
     max_length=10,
 )
 dset_size = int(len(dataset))
-train_size = int(dset_size - 2)#int(0.8 * dset_size)
-test_size = 2#int(dset_size - train_size)
+train_size = int(dset_size - 2)  # int(0.8 * dset_size)
+test_size = 2  # int(dset_size - train_size)
 if test_size == 2:
     print("alert! test size is 2 or whatever. Change this back please.")
 
@@ -508,7 +523,7 @@ train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]
 )
 
-train_dataset = dataset # TODO change
+train_dataset = dataset  # TODO change
 
 
 def get_train_dataset():
@@ -529,8 +544,7 @@ if __name__ == "__main__":
     d = get_train_dataset()
     print("Number of samples: ", len(d))
     for a, b in d:
-        #a, b = d[-1]
+        # a, b = d[-1]
         manager = dataset.manager
         print(manager.decode(a))
         print()
-
