@@ -435,3 +435,4 @@ divide(num1,izzbuzz(n): ! 0:y
   - `results = results.transpose(0, 1) # average bug` goes into the hall of fame
   - Now lets pick apart eval.py.
   - So I got it to work after some pain and reshaping. Refactored eval to be in a function, and just did simple multinomial. It works with next token, and I'm assuming that its just so darn overfit that other stuff doesnt really work.
+  - This is cool, lets end on a win for now.
