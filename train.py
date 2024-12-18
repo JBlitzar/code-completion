@@ -13,7 +13,7 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v12-dummy"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v14-tester"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -35,7 +35,7 @@ trainer = TrainingManager(
     dataloader=dataloader,
     device=device,
     trainstep_checkin_interval=100,
-    epochs=3000,
+    epochs=500,
     val_dataloader=testloader,
 )
 

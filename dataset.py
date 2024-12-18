@@ -239,7 +239,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
     def __init__(self, root_dir, vocab_size=5000):
         self.root_dir = root_dir
 
-        self.token_to_id = {}
+        self.token_to_id = {"<PAD>": 0}
         print("This is CodeCustomTokenizerManager, vocab size will be disregarded.")
 
         vocab_path = os.path.join(self.root_dir, "custom_tokens_vocab.txt")
@@ -263,6 +263,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         for token in processed_text:
             if token not in self.token_to_id:
+                if len(self.token_to_id) == 0:
+                    self.token_to_id =  {"<PAD>": 0} # TODO: bad practice or something
 
                 self.token_to_id[token] = len(self.token_to_id)
 
@@ -371,6 +373,13 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     # print("^^ is error")
                     pass  # Should be fine, ends up being blank lines
 
+    @staticmethod
+    def attention_mask(encoded_sequence, mask_token_ids=[0]):
+        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int)
+        # print(mask_token_tensor)
+        # print(encoded_sequence)
+        return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
+
 
 class DummySequentialDataManager:
     def __init__(self, root_dir, vocab_size=5000):
@@ -463,9 +472,9 @@ class TextCorpusDataset(Dataset):
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
     def _chunk_and_save(self, encoded):
-        encoded = encoded[
-            0
-        ]  # Changed this because encoded was shape [1,n]. If giving shape errors, remove this or something
+        # encoded = encoded[
+        #     0
+        # ]  # Changed this because encoded was shape [1,n]. If giving shape errors, remove this or something
         chunked_data = [
             torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
             for i in trange(0, len(encoded), self.max_length, leave=False)
@@ -501,17 +510,17 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        "./dummy-data-dir"
+        #"./dummy-data-dir"
         # "./smaller-er-test-data"
-        # "./smaller-test-data"
+        "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
         # "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=60,
-    # IS_CODE=True,  # Remember to change!
-    # IS_CUSTOM=True,
-    IS_DUMMY=True,
-    max_length=10,
+    IS_CODE=True,  # Remember to change!
+    IS_CUSTOM=True,
+    #IS_DUMMY=True,
+    max_length=20,
 )
 dset_size = int(len(dataset))
 train_size = int(dset_size - 2)  # int(0.8 * dset_size)
@@ -547,4 +556,4 @@ if __name__ == "__main__":
         # a, b = d[-1]
         manager = dataset.manager
         print(manager.decode(a))
-        print()
+        print("--- sep batch --- ")

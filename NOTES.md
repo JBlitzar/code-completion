@@ -436,3 +436,12 @@ divide(num1,izzbuzz(n): ! 0:y
   - Now lets pick apart eval.py.
   - So I got it to work after some pain and reshaping. Refactored eval to be in a function, and just did simple multinomial. It works with next token, and I'm assuming that its just so darn overfit that other stuff doesnt really work.
   - This is cool, lets end on a win for now.
+- Dec 17
+  - Scaling back up to smaller (fizzbuzz) data
+  - Small data tweaks, used custom tokenizer, 96% acc 500 epochs.
+  - switched to argmax, got `import numpy <NEWLINE> <NEWLINE> <NEWLINE> return <NEWLINE> return <NEWLINE> return " <NEWLINE>` and yet 96% acc???
+  - Nick thoughts
+    - Training _works._ Works on numerical data, can work on simple tokenized code.
+    - Eval and generation is the issue.
+    - Reccomend: take some time to go through eval.py, what is it that works in acc on training that doesnt work in eval?
+    -

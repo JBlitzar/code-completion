@@ -8,7 +8,7 @@ import time
 from dataset import dataset, get_train_dataset
 import torch.nn.functional as F
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v13-rescaling-smaller-retrained"#"runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -31,31 +31,58 @@ for name, param in net.named_parameters():
         print(f"NaN found in gradients of {name}")
 
 
-def evaluate(model, start_sequence, amt=1, temperature=0.1, window_size=10):
+def evaluate(model, start_sequence, manager, amt=10, temperature=0.1, window_size=10, argmax=True, k=3):
     model.eval()
     generated_sequence = start_sequence.clone()
-    batch_size = start_sequence.size(1)
-    device = next(model.parameters()).device
     generated_sequence = generated_sequence.to(device)
 
     with torch.no_grad():
         for _ in range(amt):
-            input_sequence = generated_sequence[-window_size:]
+            input_sequence = generated_sequence[-window_size:] # last window_size amount of tokens
+
+
             output = model(input_sequence, transpose=True)
-            logits = output[-1, :, :]
-            logits = logits / temperature
-            probs = torch.nn.functional.softmax(logits, dim=-1)
-            output = output.transpose(0, 1)
+            
+            
             # print(f"ARGMAZX: {torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]}")
             # print(probs)
-            next_token = torch.multinomial(probs, 1)
-            next_token = next_token.transpose(0, 1)
+            if argmax:
+                output = output.transpose(0,1)
+                next_token = torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1].unsqueeze(0).unsqueeze(0)
+                #print(next_token)
+                
+            else:
+                logits = output[-1, :, :]
+
+
+                output = output.transpose(0, 1)
+
+                logits = logits / temperature
+
+                # probs = torch.nn.functional.softmax(logits, dim=-1)
+                # next_token = torch.multinomial(probs, 1)
+                # next_token = next_token.transpose(0, 1)
+
+
+                topk = torch.topk(logits, k=k)
+                values, indeces = topk
+                probs = torch.nn.functional.softmax(values, dim=-1)
+
+                next_token = torch.multinomial(probs, 1)
+                next_token = next_token.transpose(0, 1)
+
+
             generated_sequence = torch.cat((generated_sequence, next_token), dim=1)
+    final = manager.decode(generated_sequence.squeeze(0))
+    return final
 
-    return generated_sequence
+inp, mask = dataset[0]
 
-
+inp = inp[:-1]
+print(inp)
+print(dataset.manager.decode(inp))
+print("that's inp I guess ^^")
 print(
-    evaluate(net, torch.tensor([0, 1, 2, 3, 4, 5, 6], dtype=torch.int32).unsqueeze(0))
+    evaluate(net, inp.unsqueeze(0), dataset.manager, argmax=False)
 )
 exit()
