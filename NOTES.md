@@ -445,3 +445,8 @@ divide(num1,izzbuzz(n): ! 0:y
     - Eval and generation is the issue.
     - Reccomend: take some time to go through eval.py, what is it that works in acc on training that doesnt work in eval?
     -
+- Dec 18
+  - Now its only generating `<PAD>`
+  - So we made `tester_exactly_like_trainingmanager_please_please_work` and ran the same metric and acc is only 0.4013. Far cry from 0.96
+  - OH NAR
+  - We were loading `best.pt` from experiment folder, but that runs on val loss. Since I trashed the val dataset and it only overfits on train, best val loss was not best train loss. Ok acc is at 0.9934, but now we figure out why it doesnt work.
