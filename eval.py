@@ -87,12 +87,44 @@ def tester_exactly_like_trainingmanager_please_please_work(model, rawbatch):
             == labels.reshape(-1)
         ) / len(labels.reshape(-1)))
     return torch.argmax(results.reshape(-1, results.size(-1)), dim=1), labels.reshape(-1)
+
+def tester_exactly_like_trainingmanager_only_last_please_work(model, rawbatch):
+    labels = rawbatch[:, 1:].contiguous()
+    batch = rawbatch[:, :-1].contiguous()
+
+    batch = batch[-1].unsqueeze(0)
+    labels = labels[-1].unsqueeze(0) # works bc my data is initially batch-first
+
+    results = model(batch, transpose=True)
+    results = results.transpose(0, 1)
+    print(torch.sum(
+            torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
+            == labels.reshape(-1)
+        ) / len(labels.reshape(-1)))
+    return torch.argmax(results.reshape(-1, results.size(-1)), dim=1), labels.reshape(-1)
+
+def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
+    seq = seq.unsqueeze(0)
+
+    results = model(batch, transpose=True)
+    results = results.transpose(0, 1)
+    
+    return torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]
+
 loader = get_dataloader(get_train_dataset())
 for data in loader:
     batch, attn_mask = data
 
     print(tester_exactly_like_trainingmanager_please_please_work(net, rawbatch=batch))
     print("pretty please")
+
+    print(tester_exactly_like_trainingmanager_only_last_please_work(net, rawbatch=batch))
+    print("please please please")
+
+
+    print(tester_exactly_like_trainingmanager_just_next_given_seq_pls(net, seq=batch[:,:-1].contiguous()[-1]))
+    print(f"Answer was {batch[:,1:].contiguous()[-1][-1]}")
+    print("please please please")
 
     labels = batch[:, 1:].contiguous()
     batch = batch[:, :-1].contiguous()
