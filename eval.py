@@ -126,6 +126,10 @@ for data in loader:
     print(f"Answer was {batch[:,1:].contiguous()[-1][-1]}")
     print("please please please")
 
+    print(tester_exactly_like_trainingmanager_just_next_given_seq_pls(net, seq=batch[:,:-1].contiguous()[-1][:10]))
+    print(f"Answer was {batch[:,1:].contiguous()[-1][10]}")
+    print("please please please")
+
     labels = batch[:, 1:].contiguous()
     batch = batch[:, :-1].contiguous()
 
