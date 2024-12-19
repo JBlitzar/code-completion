@@ -8,7 +8,7 @@ import time
 from dataset import dataset, get_train_dataset, get_dataloader
 import torch.nn.functional as F
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v13-rescaling-smaller-retrained"#"runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -19,7 +19,9 @@ net = make_model()
 net.to(device)
 
 net.load_state_dict(
-    torch.load(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True)
+    torch.load(
+        os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
+    )
 )
 
 
@@ -31,29 +33,39 @@ for name, param in net.named_parameters():
         print(f"NaN found in gradients of {name}")
 
 
-def evaluate(model, start_sequence, manager, amt=10, temperature=0.1, window_size=10, argmax=True, k=3):
-    #model.eval()
+def evaluate(
+    model,
+    start_sequence,
+    manager,
+    amt=10,
+    temperature=0.1,
+    window_size=10,
+    argmax=True,
+    k=3,
+):
+    # model.eval()
     generated_sequence = start_sequence.clone()
     generated_sequence = generated_sequence.to(device)
 
     with torch.no_grad():
         for _ in range(amt):
-            input_sequence = generated_sequence#[-window_size:] # last window_size amount of tokens
-
+            input_sequence = generated_sequence  # [-window_size:] # last window_size amount of tokens
 
             output = model(input_sequence, transpose=True)
-            
-            
+
             # print(f"ARGMAZX: {torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]}")
             # print(probs)
             if argmax:
-                output = output.transpose(0,1)
-                next_token = torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1].unsqueeze(0).unsqueeze(0)
-                #print(next_token)
-                
+                output = output.transpose(0, 1)
+                next_token = (
+                    torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]
+                    .unsqueeze(0)
+                    .unsqueeze(0)
+                )
+                # print(next_token)
+
             else:
                 logits = output[-1, :, :]
-
 
                 output = output.transpose(0, 1)
 
@@ -63,14 +75,12 @@ def evaluate(model, start_sequence, manager, amt=10, temperature=0.1, window_siz
                 # next_token = torch.multinomial(probs, 1)
                 # next_token = next_token.transpose(0, 1)
 
-
                 topk = torch.topk(logits, k=k)
                 values, indeces = topk
                 probs = torch.nn.functional.softmax(values, dim=-1)
 
                 next_token = torch.multinomial(probs, 1)
                 next_token = next_token.transpose(0, 1)
-
 
             generated_sequence = torch.cat((generated_sequence, next_token), dim=1)
     final = manager.decode(generated_sequence.squeeze(0))
@@ -82,34 +92,47 @@ def tester_exactly_like_trainingmanager_please_please_work(model, rawbatch):
     batch = rawbatch[:, :-1].contiguous()
     results = model(batch, transpose=True)
     results = results.transpose(0, 1)
-    print(torch.sum(
+    print(
+        torch.sum(
             torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
             == labels.reshape(-1)
-        ) / len(labels.reshape(-1)))
-    return torch.argmax(results.reshape(-1, results.size(-1)), dim=1), labels.reshape(-1)
+        )
+        / len(labels.reshape(-1))
+    )
+    return torch.argmax(results.reshape(-1, results.size(-1)), dim=1), labels.reshape(
+        -1
+    )
+
 
 def tester_exactly_like_trainingmanager_only_last_please_work(model, rawbatch):
     labels = rawbatch[:, 1:].contiguous()
     batch = rawbatch[:, :-1].contiguous()
 
     batch = batch[-1].unsqueeze(0)
-    labels = labels[-1].unsqueeze(0) # works bc my data is initially batch-first
+    labels = labels[-1].unsqueeze(0)  # works bc my data is initially batch-first
 
     results = model(batch, transpose=True)
     results = results.transpose(0, 1)
-    print(torch.sum(
+    print(
+        torch.sum(
             torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
             == labels.reshape(-1)
-        ) / len(labels.reshape(-1)))
-    return torch.argmax(results.reshape(-1, results.size(-1)), dim=1), labels.reshape(-1)
+        )
+        / len(labels.reshape(-1))
+    )
+    return torch.argmax(results.reshape(-1, results.size(-1)), dim=1), labels.reshape(
+        -1
+    )
+
 
 def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
     seq = seq.unsqueeze(0)
 
     results = model(batch, transpose=True)
     results = results.transpose(0, 1)
-    
+
     return torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]
+
 
 loader = get_dataloader(get_train_dataset())
 for data in loader:
@@ -118,15 +141,24 @@ for data in loader:
     print(tester_exactly_like_trainingmanager_please_please_work(net, rawbatch=batch))
     print("pretty please")
 
-    print(tester_exactly_like_trainingmanager_only_last_please_work(net, rawbatch=batch))
+    print(
+        tester_exactly_like_trainingmanager_only_last_please_work(net, rawbatch=batch)
+    )
     print("please please please")
 
-
-    print(tester_exactly_like_trainingmanager_just_next_given_seq_pls(net, seq=batch[:,:-1].contiguous()[-1]))
+    print(
+        tester_exactly_like_trainingmanager_just_next_given_seq_pls(
+            net, seq=batch[:, :-1].contiguous()[-1]
+        )
+    )
     print(f"Answer was {batch[:,1:].contiguous()[-1][-1]}")
     print("please please please")
 
-    print(tester_exactly_like_trainingmanager_just_next_given_seq_pls(net, seq=batch[:,:-1].contiguous()[-1][:10]))
+    print(
+        tester_exactly_like_trainingmanager_just_next_given_seq_pls(
+            net, seq=batch[:, :-1].contiguous()[-1][:10]
+        )
+    )
     print(f"Answer was {batch[:,1:].contiguous()[-1][10]}")
     print("please please please")
 
@@ -135,7 +167,7 @@ for data in loader:
 
     batch = batch[0]
     labels = labels[0]
-    
+
     # inp, mask = dataset[0]
 
     # inp = inp[:-1]
@@ -144,7 +176,5 @@ for data in loader:
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
 
-    print(
-        evaluate(net, batch.unsqueeze(0), dataset.manager, argmax=False)
-    )
+    print(evaluate(net, batch.unsqueeze(0), dataset.manager, argmax=False))
     exit()

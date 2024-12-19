@@ -235,9 +235,10 @@ class TrainingManager:
             == labels.reshape(-1)
         ) / len(labels.reshape(-1))
 
-
         print(acc)
-        print(f"Next pred: {torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]}, next real: {labels.reshape(-1)[-1]} ")
+        print(
+            f"Next pred: {torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]}, next real: {labels.reshape(-1)[-1]} "
+        )
 
         self.tracker.add("Acc/trainstep", acc.item())
 

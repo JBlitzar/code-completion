@@ -264,7 +264,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         for token in processed_text:
             if token not in self.token_to_id:
                 if len(self.token_to_id) == 0:
-                    self.token_to_id =  {"<PAD>": 0} # TODO: bad practice or something
+                    self.token_to_id = {"<PAD>": 0}  # TODO: bad practice or something
 
                 self.token_to_id[token] = len(self.token_to_id)
 
@@ -510,7 +510,7 @@ class TextCorpusDataset(Dataset):
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
-        #"./dummy-data-dir"
+        # "./dummy-data-dir"
         # "./smaller-er-test-data"
         "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
@@ -519,7 +519,7 @@ dataset = TextCorpusDataset(
     vocab_size=60,
     IS_CODE=True,  # Remember to change!
     IS_CUSTOM=True,
-    #IS_DUMMY=True,
+    # IS_DUMMY=True,
     max_length=20,
 )
 dset_size = int(len(dataset))
