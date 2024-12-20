@@ -51,7 +51,7 @@ def evaluate(
             next_token = torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1].unsqueeze(0)
 
             generated_sequence = torch.cat(
-                (generated_sequence, next_token.unsqueeze(0)), dim=0
+                (generated_sequence, next_token.unsqueeze(0)), dim=1
             )
 
     return generated_sequence
@@ -145,6 +145,7 @@ for data in loader:
     print(dataset.manager.decode(batch))
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
-
-    print(evaluate(net, batch.unsqueeze(0)))
+    result = evaluate(net, batch.unsqueeze(0))
+    print(result)
+    print(dataset.manager.decode(result[0]))
     exit()
