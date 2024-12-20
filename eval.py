@@ -36,55 +36,25 @@ for name, param in net.named_parameters():
 def evaluate(
     model,
     start_sequence,
-    manager,
     amt=10,
-    temperature=0.1,
-    window_size=10,
-    argmax=True,
-    k=3,
 ):
-    # model.eval()
     generated_sequence = start_sequence.clone()
     generated_sequence = generated_sequence.to(device)
 
+    model.eval()
     with torch.no_grad():
         for _ in range(amt):
-            input_sequence = generated_sequence  # [-window_size:] # last window_size amount of tokens
+            seq = generated_sequence
+            results = model(seq, transpose=True)
+            results = results.transpose(0, 1)
 
-            output = model(input_sequence, transpose=True)
+            next_token = torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1].unsqueeze(0)
 
-            # print(f"ARGMAZX: {torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]}")
-            # print(probs)
-            if argmax:
-                output = output.transpose(0, 1)
-                next_token = (
-                    torch.argmax(output.reshape(-1, output.size(-1)), dim=1)[-1]
-                    .unsqueeze(0)
-                    .unsqueeze(0)
-                )
-                # print(next_token)
+            generated_sequence = torch.cat(
+                (generated_sequence, next_token.unsqueeze(0)), dim=0
+            )
 
-            else:
-                logits = output[-1, :, :]
-
-                output = output.transpose(0, 1)
-
-                logits = logits / temperature
-
-                # probs = torch.nn.functional.softmax(logits, dim=-1)
-                # next_token = torch.multinomial(probs, 1)
-                # next_token = next_token.transpose(0, 1)
-
-                topk = torch.topk(logits, k=k)
-                values, indeces = topk
-                probs = torch.nn.functional.softmax(values, dim=-1)
-
-                next_token = torch.multinomial(probs, 1)
-                next_token = next_token.transpose(0, 1)
-
-            generated_sequence = torch.cat((generated_sequence, next_token), dim=1)
-    final = manager.decode(generated_sequence.squeeze(0))
-    return final
+    return generated_sequence
 
 
 def tester_exactly_like_trainingmanager_please_please_work(model, rawbatch):
@@ -176,5 +146,5 @@ for data in loader:
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
 
-    print(evaluate(net, batch.unsqueeze(0), dataset.manager, argmax=False))
+    print(evaluate(net, batch.unsqueeze(0)))
     exit()
