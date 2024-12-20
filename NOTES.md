@@ -459,3 +459,51 @@ divide(num1,izzbuzz(n): ! 0:y
   - Now we have `tester_exactly_like_trainingmanager_just_next_given_seq_pls`
     - which works a bit less well
   - Its time to commit, push, and revisit.
+
+- Dec 19
+
+  - Evaluation works on small small code dataset
+  - Full output, clean later.
+
+    ```python
+    tensor(0.9868)
+    (tensor([26, 25, 12,  5,  5,  6, 27,  8, 28, 12, 13,  5, 29, 28, 30, 31, 32, 32,
+            33, 35,  6, 16,  8,  9, 10, 11, 12, 13,  5, 14,  9, 17, 11,  5,  5,  6,
+            18,  8,  5, 14, 25, 34, 25,  5, 35, 28, 30, 36, 32, 32, 33, 13,  5, 14,
+            25, 37, 25, 35,  9, 21, 11,  5,  5,  6, 22, 23, 24,  8, 12, 13,  5, 22,
+            8, 25, 23, 10, 28, 12,  5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+            0,  0,  0,  0,  0, 35, 28, 30, 38, 32, 32, 33, 13,  5, 14, 25, 27, 25,
+            5, 39, 13,  5, 14, 40,  2,  3,  4,  5,  5,  5,  6,  7,  8,  9, 10, 11,
+            12, 13,  5, 14,  9, 15, 11, 10, 11, 12, 13,  5, 14,  9, 19, 11,  5,  5,
+            6, 20,  8,  9, 10, 11, 12, 13]), tensor([26, 25, 12,  5,  5,  6, 27,  8, 28, 12, 13,  5, 29, 28, 30, 31, 32, 32,
+            33,  5,  6, 16,  8,  9, 10, 11, 12, 13,  5, 14,  9, 17, 11,  5,  5,  6,
+            18,  8,  5, 14, 25, 34, 25,  5, 35, 28, 30, 36, 32, 32, 33, 13,  5, 14,
+            25, 37, 25, 14,  9, 21, 11,  5,  5,  6, 22, 23, 24,  8, 12, 13,  5, 22,
+            8, 25, 23, 10, 28, 12,  5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+            0,  0,  0,  0,  0, 35, 28, 30, 38, 32, 32, 33, 13,  5, 14, 25, 27, 25,
+            5, 39, 13,  5, 14, 40,  2,  3,  4,  5,  5,  5,  6,  7,  8,  9, 10, 11,
+            12, 13,  5, 14,  9, 15, 11, 10, 11, 12, 13,  5, 14,  9, 19, 11,  5,  5,
+            6, 20,  8,  9, 10, 11, 12, 13], dtype=torch.int32))
+    pretty please
+    tensor(1.)
+    (tensor([10, 11, 12, 13,  5, 14,  9, 19, 11,  5,  5,  6, 20,  8,  9, 10, 11, 12,
+            13]), tensor([10, 11, 12, 13,  5, 14,  9, 19, 11,  5,  5,  6, 20,  8,  9, 10, 11, 12,
+            13], dtype=torch.int32))
+    please please please
+    tensor(5)
+    Answer was 13
+    please please please
+    tensor(5)
+    Answer was 5
+    please please please
+    tensor([24, 26, 25, 12,  5,  5,  6, 27,  8, 28, 12, 13,  5, 29, 28, 30, 31, 32,
+            32], dtype=torch.int32)
+    world ! " ) <NEWLINE> <NEWLINE> def fizzbuzz ( n ) : <NEWLINE> if n % 3 = =
+    ! " ) <NEWLINE> <NEWLINE> def fizzbuzz ( n ) : <NEWLINE> if n % 3 = = 0
+    that's inp I guess ^^
+    tensor([[24, 26, 25, 12,  5,  5,  6, 27,  8, 28, 12, 13,  5, 29, 28, 30, 31, 32,
+            32, 33, 13,  5, 14, 40,  5, 14, 25, 37, 25]])
+    world ! " ) <NEWLINE> <NEWLINE> def fizzbuzz ( n ) : <NEWLINE> if n % 3 = = 0 : <NEWLINE> return str <NEWLINE> return " buzz "
+    ```
+
+  - ye.
