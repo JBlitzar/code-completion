@@ -446,14 +446,15 @@ divide(num1,izzbuzz(n): ! 0:y
     - Reccomend: take some time to go through eval.py, what is it that works in acc on training that doesnt work in eval?
     -
 - Dec 18
+
   - Now its only generating `<PAD>`
   - So we made `tester_exactly_like_trainingmanager_please_please_work` and ran the same metric and acc is only 0.4013. Far cry from 0.96
   - OH NAR
   - We were loading `best.pt` from experiment folder, but that runs on val loss. Since I trashed the val dataset and it only overfits on train, best val loss was not best train loss. Ok acc is at 0.9934, but now we figure out why it doesnt work.
     - "question everything from line 40-60" the bug on line 23:
-    - Guys I think including "please please work" in the function name made it work
   - This is what happens when your code has too many moving parts. You forget stuff.
   - alr we have the `tester_exactly_like_trainingmanager_only_last_please_work`
+    - Guys I think including "please please work" in the function name made it work
     - which also works.
   - Now we have `tester_exactly_like_trainingmanager_just_next_given_seq_pls`
     - which works a bit less well
