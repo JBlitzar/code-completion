@@ -506,11 +506,11 @@ dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
         # "./dummy-data-dir"
         # "./smaller-er-test-data"
-        "./smaller-test-data"
-        # "~/torch_datasets/github-python/all_trains_subset_corpus"
+        #"./smaller-test-data"
+        "~/torch_datasets/github-python/all_trains_subset_corpus"
         # "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=60,
+    vocab_size=4306,
     IS_CODE=True,  # Remember to change!
     IS_CUSTOM=True,
     # IS_DUMMY=True,

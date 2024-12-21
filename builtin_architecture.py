@@ -99,12 +99,24 @@ class BuiltinTransformerModel(nn.Transformer):
         return F.log_softmax(output, dim=-1)
 
 
+# def make_model():
+#     vocab_size = 60
+#     embed_dim = 128
+#     heads = 2
+#     ff_dim = 128
+#     layers = 2
+#     drop = 0
+
+#     xformer_real = BuiltinTransformerModel(
+#         vocab_size, embed_dim, heads, ff_dim, layers, drop
+#     )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
+#     return xformer_real
 def make_model():
-    vocab_size = 60
-    embed_dim = 128
-    heads = 2
-    ff_dim = 128
-    layers = 2
+    vocab_size = 4306
+    embed_dim = 512
+    heads = 8
+    ff_dim = 512
+    layers = 6
     drop = 0
 
     xformer_real = BuiltinTransformerModel(
