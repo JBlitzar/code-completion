@@ -510,3 +510,5 @@ divide(num1,izzbuzz(n): ! 0:y
 
 - Dec 20
   - Tried out sliding window, works really well.
+  - Tried to upscale, didnt work
+    - Gonna BPE instead maybe.

@@ -94,7 +94,7 @@ class CodeBPEModelManager(BPEModelManager):
         for key, value in CodeBPEModelManager.mapping_dict.items():
             processed_text = processed_text.replace(key, value)
 
-        return self.bpe.encode([processed_text], output_type=yttm.OutputType.ID)
+        return self.bpe.encode([processed_text], output_type=yttm.OutputType.ID)[0]
 
     def decode(self, ids):
         # print(ids)
@@ -136,7 +136,7 @@ class CodeBPEModelManager(BPEModelManager):
             data=processed_path,
             vocab_size=self.vocab_size,
             model=self.model_path,
-            coverage=1,  # 0.995,
+            coverage=0.995,
         )
 
     def format_code(self, code):
@@ -512,9 +512,9 @@ dataset = TextCorpusDataset(
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=4306,
     IS_CODE=True,  # Remember to change!
-    IS_CUSTOM=True,
+    #IS_CUSTOM=True,
     # IS_DUMMY=True,
-    max_length=20,
+    max_length=50,
     sliding_window=True
 )
 dset_size = int(len(dataset))
