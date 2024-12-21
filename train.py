@@ -13,7 +13,7 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v14-tester"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v15-sliding"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"

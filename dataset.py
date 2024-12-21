@@ -420,13 +420,11 @@ class TextCorpusDataset(Dataset):
         IS_CODE=False,
         IS_CUSTOM=False,
         sliding_window=False,
-        stride=1,
     ):
         print(root_dir)
         self.root = root_dir
         self.sliding_window = sliding_window
         self.window_size = max_length
-        self.stride = stride
 
         if IS_DUMMY:
             self.manager = DummySequentialDataManager(root_dir=root_dir)
@@ -472,18 +470,19 @@ class TextCorpusDataset(Dataset):
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
     def _chunk_and_save(self, encoded):
-        # encoded = encoded[
-        #     0
-        # ]  # Changed this because encoded was shape [1,n]. If giving shape errors, remove this or something
-        chunked_data = [
-            torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
-            for i in trange(0, len(encoded), self.max_length, leave=False)
-        ]
+        chunked_data = []
+        if self.sliding_window:
+            print("sliding!")
+            for i in trange(0, len(encoded) - self.window_size + 1, 1, leave=False):
+                chunked_data.append(torch.tensor(encoded[i : i + self.window_size], dtype=torch.int))
+        else:
+            for i in trange(0, len(encoded), self.max_length, leave=False):
+                chunked_data.append(torch.tensor(encoded[i : i + self.max_length], dtype=torch.int))
 
-        # me when the last item is not necessarily of length self.max_length
-        padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
-        padded_chunk[: len(chunked_data[-1])] = chunked_data[-1]
-        chunked_data[-1] = padded_chunk
+            # me when the last item is not necessarily of length self.max_length
+            padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
+            padded_chunk[: len(chunked_data[-1])] = chunked_data[-1]
+            chunked_data[-1] = padded_chunk
 
         self.chunks = torch.stack(chunked_data)
         torch.save(self.chunks, self.cache_file)
@@ -499,11 +498,6 @@ class TextCorpusDataset(Dataset):
 
     def __getitem__(self, idx):
         seq = self.chunks[idx]
-
-        if self.sliding_window:
-            # Apply sliding window if enabled
-            seq = self._sliding_window(seq, self.window_size, self.stride)
-
         return seq, self.manager.attention_mask(seq)
 
 
@@ -521,6 +515,7 @@ dataset = TextCorpusDataset(
     IS_CUSTOM=True,
     # IS_DUMMY=True,
     max_length=20,
+    sliding_window=True
 )
 dset_size = int(len(dataset))
 train_size = int(dset_size - 2)  # int(0.8 * dset_size)
@@ -556,4 +551,5 @@ if __name__ == "__main__":
         # a, b = d[-1]
         manager = dataset.manager
         print(manager.decode(a))
+        #print(a)
         print("--- sep batch --- ")
