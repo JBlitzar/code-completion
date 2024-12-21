@@ -192,10 +192,10 @@ class TrainingManager:
             epoch,
         )
 
-        log_data(
-            {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
-            epoch,
-        )
+        # log_data(
+        #     {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
+        #     epoch,
+        # )
         #print(self.tracker.average("Acc/trainstep"))
 
         self.tracker.reset("Acc/epoch")

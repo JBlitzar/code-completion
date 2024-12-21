@@ -8,7 +8,7 @@ import time
 from dataset import dataset, get_train_dataset, get_dataloader
 import torch.nn.functional as F
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v16-upscaled"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -17,7 +17,7 @@ device = "cpu"
 # net = DecoderTransformer(vocab_size=199, num_blocks=1)
 net = make_model()
 net.to(device)
-
+print( os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"))
 net.load_state_dict(
     torch.load(
         os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
