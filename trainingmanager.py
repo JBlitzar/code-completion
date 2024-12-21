@@ -196,7 +196,7 @@ class TrainingManager:
             {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
             epoch,
         )
-        print(self.tracker.average("Acc/trainstep"))
+        #print(self.tracker.average("Acc/trainstep"))
 
         self.tracker.reset("Acc/epoch")
 
@@ -235,10 +235,10 @@ class TrainingManager:
             == labels.reshape(-1)
         ) / len(labels.reshape(-1))
 
-        print(acc)
-        print(
-            f"Next pred: {torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]}, next real: {labels.reshape(-1)[-1]} "
-        )
+        # print(acc)
+        # print(
+        #     f"Next pred: {torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]}, next real: {labels.reshape(-1)[-1]} "
+        # )
 
         self.tracker.add("Acc/trainstep", acc.item())
 

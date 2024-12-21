@@ -2,6 +2,11 @@
 corpus.zip
 *.pt
 *.old
+
+!smaller-test-data/encoded_chunked.pt
+!runs/code-decoder-v15-sliding/ckpt/best.pt
+!runs/code-decoder-v15-sliding/ckpt/latest.pt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

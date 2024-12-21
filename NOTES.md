@@ -507,3 +507,6 @@ divide(num1,izzbuzz(n): ! 0:y
     ```
 
   - ye.
+
+- Dec 20
+  - Tried out sliding window, works really well.
