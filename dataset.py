@@ -518,8 +518,8 @@ dataset = TextCorpusDataset(
     sliding_window=True
 )
 dset_size = int(len(dataset))
-train_size = int(dset_size - 2)  # int(0.8 * dset_size)
-test_size = 2  # int(dset_size - train_size)
+train_size = int(0.8 * dset_size) # int(dset_size - 2)
+test_size = int(dset_size - train_size)
 if test_size == 2:
     print("alert! test size is 2 or whatever. Change this back please.")
 
@@ -527,7 +527,7 @@ train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]
 )
 
-train_dataset = dataset  # TODO change
+#train_dataset = dataset  # TODO change
 
 
 def get_train_dataset():
