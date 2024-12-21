@@ -39,6 +39,7 @@ trainer = TrainingManager(
     val_dataloader=testloader,
 )
 
+# trainer.profile_trainstep()
 
 for batch, attn_mask in dataloader:
     init_logger(

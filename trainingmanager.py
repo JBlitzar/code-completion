@@ -3,7 +3,7 @@ import torch
 from logger import log_data, init_logger, log_img
 import torch.nn as nn
 from tqdm import tqdm, trange
-
+from torch.profiler import profile, record_function, ProfilerActivity
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -333,3 +333,15 @@ class TrainingManager:
         for module in self.net.modules():
             module.register_forward_hook(forward_hook)
         self.val_loop(self.val_dataloader)
+
+    def profile_trainstep(self):
+        
+        self.net.train()
+        data = next(iter(self.dataloader))
+
+        #https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html
+        with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
+            with record_function("train_step"):
+                self.trainstep(data)
+        
+        print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))

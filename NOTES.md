@@ -512,3 +512,24 @@ divide(num1,izzbuzz(n): ! 0:y
   - Tried out sliding window, works really well.
   - Tried to upscale, didnt work
     - Gonna BPE instead maybe.
+    - also crank up batch size so faster
+    - except that was slower so it was the same speed
+
+```
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg    # of Calls
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------
+                                             train_step        13.67%      63.885ms        87.14%     407.336ms     407.336ms             1
+                               Optimizer.step#Adam.step         0.36%       1.674ms        16.75%      78.287ms      78.287ms             1
+                     aten::scaled_dot_product_attention         0.00%      15.125us        10.99%      51.394ms       8.566ms             6
+               aten::_scaled_dot_product_attention_math         0.02%      87.170us        10.99%      51.379ms       8.563ms             6
+                               aten::cross_entropy_loss         0.01%      65.377us         8.42%      39.360ms      39.360ms             1
+                                        aten::embedding         0.01%      30.419us         7.22%      33.771ms      33.771ms             1
+                                     aten::index_select         7.21%      33.701ms         7.21%      33.704ms      33.704ms             1
+                                             aten::item         0.03%     145.810us         6.63%      31.006ms      83.799us           370
+                              aten::_local_scalar_dense         6.60%      30.843ms         6.60%      30.860ms      83.405us           370
+                                       aten::is_nonzero         0.00%       1.875us         5.94%      27.783ms      27.783ms             1
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------
+Self CPU time total: 467.476ms
+
+```

@@ -13,6 +13,10 @@ import time
 from tqdm import trange
 
 
+# Device for dataloading and dataloading only. Dataloading on MPS was slower
+
+DEVICE = "cpu"#"mps" if torch.backends.mps.is_available() else "cpu"
+
 class BPEModelManager:
     def __init__(self, root_dir, vocab_size=5000):
         self.root_dir = root_dir
@@ -65,7 +69,7 @@ class BPEModelManager:
 
     @staticmethod
     def attention_mask(encoded_sequence, mask_token_ids=[0, 1, 2, 3]):
-        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int)
+        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int).to(encoded_sequence.device)
         # print(mask_token_tensor)
         # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
@@ -403,7 +407,7 @@ class DummySequentialDataManager:
 
     @staticmethod
     def attention_mask(encoded_sequence, mask_token_ids=[]):
-        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int)
+        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int).to(encoded_sequence.device)
         # print(mask_token_tensor)
         # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
@@ -469,6 +473,11 @@ class TextCorpusDataset(Dataset):
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
+
+        #TODO: more "optimization"
+        self.chunks = self.chunks.to(DEVICE)
+        self.dummy = torch.tensor([1],device=DEVICE)
+
     def _chunk_and_save(self, encoded):
         chunked_data = []
         if self.sliding_window:
@@ -496,9 +505,9 @@ class TextCorpusDataset(Dataset):
     def __len__(self):
         return len(self.chunks)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx): #TODO: optimized, but change it back if it doesn't work
         seq = self.chunks[idx]
-        return seq, self.manager.attention_mask(seq)
+        return seq, self.dummy  #self.manager.attention_mask(seq)
 
 
 # print("Running....")
@@ -539,7 +548,7 @@ def get_test_dataset():
     return test_dataset
 
 
-def get_dataloader(dataset, batch_size=128):
+def get_dataloader(dataset, batch_size=256):
 
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
