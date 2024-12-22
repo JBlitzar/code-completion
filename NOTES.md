@@ -537,3 +537,43 @@ divide(num1,izzbuzz(n): ! 0:y
     ```
 
     - Just going to let it train and hope that something terrible doesnt happen. Well, that's why we save best.pt, innit?
+
+- Dec 22
+  - Training didnt go well, I stopped it like thirty minutes later.
+  - Seems like its spamming token 81
+
+```
+tensor([ 166, 2077,  109,   28,   20,  614, 2301,  917,   32,  755,   32, 3654,
+         293,  723, 3034,  978,   88,   88,   81,  166, 2077,  109,   28,   20,
+         614, 2301,  917,   32,  755,   15, 3654,  293,  723, 3034,  978,   88,
+          88,   81,  166, 2077,  109,   28,   20,  614, 2301,  917,   32,  755,
+          15], dtype=torch.int32)
+def write_flat(f, name, ar, np.array([0, 0, 0])))
+
+      def write_flat(f, name, arr np.array([0, 0, 0])))
+
+      def write_flat(f, name, arr
+batch ^ labels v
+write_flat(f, name, ar, np.array([0, 0, 0])))
+
+      def write_flat(f, name, arr np.array([0, 0, 0])))
+
+      def write_flat(f, name, arr):
+that's inp I guess ^^
+tensor([[ 166, 2077,  109,   28,   20,  614, 2301,  917,   32,  755,   32, 3654,
+          293,  723, 3034,  978,   88,   88,   81,  166, 2077,  109,   28,   20,
+          614, 2301,  917,   32,  755,   15, 3654,  293,  723, 3034,  978,   88,
+           88,   81,  166, 2077,  109,   28,   20,  614, 2301,  917,   32,  755,
+           15,   81,   81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+           81,   81,   81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+           81,   81,   81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+           81,   81,   81,   81,   81]])
+def write_flat(f, name, ar, np.array([0, 0, 0])))
+
+      def write_flat(f, name, arr np.array([0, 0, 0])))
+
+      def write_flat(f, name, arr
+```
+
+    - What is 81?
+        - "<INDENT>".

@@ -115,6 +115,9 @@ class CodeBPEModelManager(BPEModelManager):
             result = result.replace(value.strip(), key)  # value, key
 
         return result
+    
+    def raw_decode(self, id: int):
+        return self.bpe.decode([id])[0]
 
     def _train_bpe_model(self):
         print("Training (1)....")
