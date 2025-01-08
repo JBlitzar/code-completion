@@ -4,7 +4,7 @@ from logger import log_data, init_logger, log_img
 import torch.nn as nn
 from tqdm import tqdm, trange
 from torch.profiler import profile, record_function, ProfilerActivity
-
+import gc
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
@@ -160,7 +160,7 @@ class TrainingManager:
             {"Loss/Trainstep": self.tracker.average("Loss/trainstep")},
             epoch * dataloader_len + step,
         )
-        print(f"Look at me! I'm logging accuracy! this is trainloop checkin. {self.tracker.average('Acc/trainstep')}")
+        #print(f"Look at me! I'm logging accuracy! this is trainloop checkin. {self.tracker.average('Acc/trainstep')}")
         log_data(
             {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
             epoch * dataloader_len + step,
@@ -320,6 +320,10 @@ class TrainingManager:
                 continue
 
             self.epoch(e, self.dataloader, self.val_dataloader)
+
+        print("All done!")
+        gc.collect()
+        os.system("""osascript -e 'display notification "Training complete" with title "Training Complete"'""")
 
     def nan_debug(self):
         torch.autograd.set_detect_anomaly(True)
