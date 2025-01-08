@@ -368,6 +368,9 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     result += " "
 
         return result
+    
+    def raw_decode(self, id: int):
+        return self.token_to_id[id]
 
     def format_code(self, code):
         try:
