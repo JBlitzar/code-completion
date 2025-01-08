@@ -554,7 +554,7 @@ dataset = TextCorpusDataset(
     IS_CUSTOM=True,
     # IS_DUMMY=True,
     max_length=100,
-    sliding_window=False
+    sliding_window=True
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)# int(dset_size - 2)

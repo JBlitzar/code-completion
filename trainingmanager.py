@@ -160,7 +160,7 @@ class TrainingManager:
             {"Loss/Trainstep": self.tracker.average("Loss/trainstep")},
             epoch * dataloader_len + step,
         )
-
+        print(f"Look at me! I'm logging accuracy! this is trainloop checkin. {self.tracker.average('Acc/trainstep')}")
         log_data(
             {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
             epoch * dataloader_len + step,
