@@ -577,3 +577,55 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 
     - What is 81?
         - "<INDENT>".
+
+- Jan 7
+
+  - Revisiting after a break with Nick.
+  - It works on fizzbuzz, which is a major win! - Scaling to more data with BPE, it struggles to learn. - Nick thoughts: Many things change. - Interesting idea to test BPE on fizzbuzz data - BPE is messing up
+
+    ````
+        --- sep batch ---
+
+            if n % 3 == 0:
+                NEWLINE>      if n % 3 == 0:
+                r
+
+        --- sep batch ---
+        DENT> elif n % 15 == 0:
+        <INz"
+        elif n % 15 == 0:
+        <IND"
+        <INDE
+        --- sep batch ---
+        def subtract(num1, num2):
+        um2
+        ```
+
+    def subtract(num1, num2):
+    <m2
+
+    d
+    --- sep batch ---
+
+    ````
+
+    - Search the literature for what others use for tokenization.
+    - Code custom tokenization seems good and not buggy and retaining information.
+      - If our issue is too many tokens, just make tokens not in the top 99% of usage or whatever thrown away
+      - if it throws away all variable names, revisit.
+      - lets code it up
+      - basically just did that. Used np.percentile, lowercase bug in that you need to split by caps before doing case normalization
+    - Perhaps train it up
+      - Nick says mod architecture: Don't jump _too much._
+      - Not much was removed. 4306 tokens.
+      - This code isn't actually very complex.
+      - Current config:
+        ```
+        vocab_size = 4306
+        embed_dim = 256
+        heads = 4
+        ff_dim = 256
+        layers = 4
+        drop = 0
+        ```
+      -

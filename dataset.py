@@ -11,6 +11,7 @@ import youtokentome as yttm
 import re
 import time
 from tqdm import trange
+import numpy as np
 
 
 # Device for dataloading and dataloading only. Dataloading on MPS was slower
@@ -143,7 +144,8 @@ class CodeBPEModelManager(BPEModelManager):
             data=processed_path,
             vocab_size=self.vocab_size,
             model=self.model_path,
-            coverage=0.995,
+            coverage=1,
+            #coverage=0.995, # TODO: revert if you want
         )
 
     def format_code(self, code):
@@ -243,18 +245,24 @@ class CodeCustomTokenizerManager(BPEModelManager):
         '"',
     ]
 
-    def __init__(self, root_dir, vocab_size=5000):
+    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.995):
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
         print("This is CodeCustomTokenizerManager, vocab size will be disregarded.")
 
+        print(f"Cutoff threshold: {cutoff_thresh}")
+        self.cutoff_thresh = cutoff_thresh
+
         vocab_path = os.path.join(self.root_dir, "custom_tokens_vocab.txt")
         try:
             self.load_vocab(vocab_path)
         except FileNotFoundError:
+            print("Making vocab!")
             self.make_vocab()
             self.save_vocab(vocab_path)
+
+        print(f"Vocab size: {len(self.token_to_id)}")
 
     def make_vocab(self):
         data_path = os.path.join(self.root_dir, "data/corpus.txt")
@@ -280,7 +288,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
     def preprocess_text(self, code):
         print("Preprocessing text...", code[:20])
 
-        code = code.lower()
+        
         # print(code[:100])
 
         # comments
@@ -305,14 +313,33 @@ class CodeCustomTokenizerManager(BPEModelManager):
         # Split identifiers by spaces, underscores, or capitalization
         def split_token(token):
             result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
-            return result.split("_")
+            return [a.lower() for a in result.split("_")] # It works
 
         code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
+
+        
 
         tokens = []
         for token in code.split(" "):
             if token.strip():
                 tokens.extend(split_token(token))
+        token_freqs = {"<PAD>": 0}
+        for token in [tok for tok in tokens if tok.strip()]:
+            if token not in token_freqs:
+                token_freqs[token] = 1
+            else:
+                token_freqs[token] += 1
+
+        # use cutoff thresh to replace tokens with UNK
+        cutoff_amt = np.percentile(list(token_freqs.values()), (1-self.cutoff_thresh) * 100)
+        for i, (token, freq) in enumerate(token_freqs.items()):
+            if freq < cutoff_amt and token != "<PAD>":
+                print(f"Replacing token with UNK: {tokens[i]}")
+                tokens[i] = "<UNK>" # TODO: make sure this works
+
+
+
+            
 
         print(tokens[500:700])
 
@@ -522,15 +549,15 @@ dataset = TextCorpusDataset(
         "~/torch_datasets/github-python/all_trains_subset_corpus"
         # "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=4306,
+    vocab_size=2000,
     IS_CODE=True,  # Remember to change!
-    #IS_CUSTOM=True,
+    IS_CUSTOM=True,
     # IS_DUMMY=True,
-    max_length=50,
-    sliding_window=True
+    max_length=100,
+    sliding_window=False
 )
 dset_size = int(len(dataset))
-train_size = int(0.8 * dset_size) # int(dset_size - 2)
+train_size = int(0.8 * dset_size)# int(dset_size - 2)
 test_size = int(dset_size - train_size)
 if test_size == 2:
     print("alert! test size is 2 or whatever. Change this back please.")
@@ -565,3 +592,6 @@ if __name__ == "__main__":
         print(manager.decode(a))
         #print(a)
         print("--- sep batch --- ")
+
+        print(f"Number of tokens used: {len(dataset.manager.token_to_id)}")
+        break # lazy
