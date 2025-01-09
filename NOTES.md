@@ -647,3 +647,6 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   ( i ) ] , stderr = fnull ) <newline> <newline> def process arguments ( argv ) : <newline> if len ( argv ) ! = 2 : <newline> help ( ) <newline> else : <newline> iteration num = argv [ 1 ] <newline> <newline> return iteration num <newline> <newline> def help ( ) : <newline> print ( ' usage
   ```
   - So what are next steps? Maybe try it out on the big boy dataset?
+  - Implemented stride with sliding window because otherwise its 27,365,313 samples.
+    - Stride of 10 to a much more managable 2m.
+    - unfortunately, a vocab size of 186906 is too much. Change thresh to 0.99 instead of 0.995 perhaps?

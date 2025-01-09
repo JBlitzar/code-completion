@@ -245,7 +245,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         '"',
     ]
 
-    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.995):
+    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.9):
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
@@ -554,15 +554,16 @@ dataset = TextCorpusDataset(
         # "./dummy-data-dir"
         # "./smaller-er-test-data"
         #"./smaller-test-data"
-        "~/torch_datasets/github-python/all_trains_subset_corpus"
-        # "~/torch_datasets/github-python/corpus"
+        #"~/torch_datasets/github-python/all_trains_subset_corpus"
+        "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=2000,
     IS_CODE=True,  # Remember to change!
     IS_CUSTOM=True,
     # IS_DUMMY=True,
-    max_length=100,
-    sliding_window=True
+    max_length=256,
+    sliding_window=True,
+    stride=10
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)# int(dset_size - 2)
