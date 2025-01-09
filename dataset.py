@@ -459,11 +459,13 @@ class TextCorpusDataset(Dataset):
         IS_CODE=False,
         IS_CUSTOM=False,
         sliding_window=False,
+        stride=1,
     ):
         print(root_dir)
         self.root = root_dir
         self.sliding_window = sliding_window
         self.window_size = max_length
+        self.stride = stride
 
         if IS_DUMMY:
             self.manager = DummySequentialDataManager(root_dir=root_dir)
@@ -517,7 +519,7 @@ class TextCorpusDataset(Dataset):
         chunked_data = []
         if self.sliding_window:
             print("sliding!")
-            for i in trange(0, len(encoded) - self.window_size + 1, 1, leave=False):
+            for i in trange(0, len(encoded) - self.window_size + 1, self.stride, leave=False):
                 chunked_data.append(torch.tensor(encoded[i : i + self.window_size], dtype=torch.int))
         else:
             for i in trange(0, len(encoded), self.max_length, leave=False):
@@ -531,11 +533,12 @@ class TextCorpusDataset(Dataset):
         self.chunks = torch.stack(chunked_data)
         torch.save(self.chunks, self.cache_file)
 
-    def _sliding_window(self, sequence, window_size, stride):
-        windows = []
-        for i in range(0, len(sequence) - window_size + 1, stride):
-            windows.append(sequence[i : i + window_size])
-        return torch.stack(windows)
+    # unused
+    # def _sliding_window(self, sequence, window_size, stride):
+    #     windows = []
+    #     for i in range(0, len(sequence) - window_size + 1, stride):
+    #         windows.append(sequence[i : i + window_size])
+    #     return torch.stack(windows)
 
     def __len__(self):
         return len(self.chunks)
