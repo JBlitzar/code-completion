@@ -370,7 +370,9 @@ class CodeCustomTokenizerManager(BPEModelManager):
         return result
     
     def raw_decode(self, id: int):
-        return self.token_to_id[id]
+        for token, id_iterator in self.token_to_id.items():
+                if id_iterator == id:
+                    return token
 
     def format_code(self, code):
         try:

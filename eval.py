@@ -138,6 +138,10 @@ for data in loader:
     batch = batch[0]
     labels = labels[0]
 
+    batch = batch[:20]
+    labels = labels[:20]
+    print("Getting first 20 tokens for batch and labels")
+
     # inp, mask = dataset[0]
 
     # inp = inp[:-1]
@@ -150,6 +154,6 @@ for data in loader:
     print(result)
     print(dataset.manager.decode(result[0]))
 
-    print(dataset.manager.raw_decode(81))
+    #print(dataset.manager.raw_decode(81))
 
     break

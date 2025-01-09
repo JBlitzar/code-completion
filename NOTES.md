@@ -628,4 +628,22 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
         layers = 4
         drop = 0
         ```
-      -
+
+- Jan 8
+  - Here's results from eval, looking pretty good!
+  ```
+  Getting first 20 tokens for batch and labels
+  tensor([  18,  167,   19,   38,   22, 2312,   24, 2386,   19,    3,    3,   14,
+         421,  527,   18, 2283,   19,   20,    3,   59], dtype=torch.int32)
+  ( i ) ] , stderr = fnull ) <newline> <newline> def process arguments ( argv ) : <newline> if
+  batch ^ labels v
+  i ) ] , stderr = fnull ) <newline> <newline> def process arguments ( argv ) : <newline> if len
+  that's inp I guess ^^
+  tensor([[  18,  167,   19,   38,   22, 2312,   24, 2386,   19,    3,    3,   14,
+          421,  527,   18, 2283,   19,   20,    3,   59,   52,   18, 2283,   19,
+          249,   24,  119,   20,    3,  316,   18,   19,    3,   86,   20,    3,
+         2181,  162,   24, 2283,   37,   39,   38,    3,    3,   40, 2181,  162,
+            3,    3,   14,  316,   18,   19,   20,    3,   87,   18,   45, 2300]])
+  ( i ) ] , stderr = fnull ) <newline> <newline> def process arguments ( argv ) : <newline> if len ( argv ) ! = 2 : <newline> help ( ) <newline> else : <newline> iteration num = argv [ 1 ] <newline> <newline> return iteration num <newline> <newline> def help ( ) : <newline> print ( ' usage
+  ```
+  - So what are next steps?
