@@ -646,4 +646,4 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
             3,    3,   14,  316,   18,   19,   20,    3,   87,   18,   45, 2300]])
   ( i ) ] , stderr = fnull ) <newline> <newline> def process arguments ( argv ) : <newline> if len ( argv ) ! = 2 : <newline> help ( ) <newline> else : <newline> iteration num = argv [ 1 ] <newline> <newline> return iteration num <newline> <newline> def help ( ) : <newline> print ( ' usage
   ```
-  - So what are next steps?
+  - So what are next steps? Maybe try it out on the big boy dataset?
