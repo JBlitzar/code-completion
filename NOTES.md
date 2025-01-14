@@ -650,3 +650,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Implemented stride with sliding window because otherwise its 27,365,313 samples.
     - Stride of 10 to a much more managable 2m.
     - unfortunately, a vocab size of 186906 is too much. Change thresh to 0.99 instead of 0.995 perhaps?
+    - weird. Changing cutoff to 0.1 makes 186278 tokens, still a lot.
+    - I split by hyphen, also figured out how to cope with hex.
