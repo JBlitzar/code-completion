@@ -13,7 +13,7 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v18-allTrains-customTokenizer"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v19-bigset-5k"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
