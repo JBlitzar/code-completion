@@ -650,8 +650,34 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Implemented stride with sliding window because otherwise its 27,365,313 samples.
     - Stride of 10 to a much more managable 2m.
     - unfortunately, a vocab size of 186906 is too much. Change thresh to 0.99 instead of 0.995 perhaps?
-    - weird. Changing cutoff to 0.1 makes 186278 tokens, still a lot.
-    - I split by hyphen, also figured out how to cope with hex.
-    - Too many tokens, just strict count instead of trying to do percentages. There's some UNK, but that's life.
-    - `<newline> def <UNK> _ tv _ fn ( x , measurement = none ) : <newline> with torch . no _ grad ( ) : <newline> <UNK> = _ at ( measurement ) <newline> x , x _ mean = cs _ <UNK> ( x , <UNK> , niter = 1 ) <newline> return x , x _ mean <newline> return <UNK> _ tv _ fn <newline> <newline> predictor _ denoise _ update _ fn = get _ update _ fn ( predictor _ update _ fn ) <newline> corrector _ denoise _ update _ fn = get _ update _ fn ( corrector _ update _ fn ) <newline> mc _ update _ fn = get _ <UNK> _ tv _ fn ( ) <newline> <newline> def pc _ <UNK> ( model , data , measurement = none ) : <newline> with torch . no _ grad ( ) : <newline> x = sde . prior _ sampling ( data . shape ) . to ( data . device ) <newline> <newline> ones = torch . ones _ like ( x ) . to ( data . device ) <newline> norm _ const = _ at ( _ a ( ones ) ) <newline> timesteps = torch . linspace ( sde . t , eps , sde . n ) <newline> for i in tqdm ( range ( sde . n ) ) : <newline> t = timesteps [ i ] <newline> <newline> x _ batch = <UNK> ( x , 1 2 ) <newline> `
-    - Looking pretty good.
+- Jan 13
+  - weird. Changing cutoff to 0.1 makes 186278 tokens, still a lot.
+  - I split by hyphen, also figured out how to cope with hex.
+  - Too many tokens, just strict count instead of trying to do percentages. There's some UNK, but that's life.
+  - `<newline> def <UNK> _ tv _ fn ( x , measurement = none ) : <newline> with torch . no _ grad ( ) : <newline> <UNK> = _ at ( measurement ) <newline> x , x _ mean = cs _ <UNK> ( x , <UNK> , niter = 1 ) <newline> return x , x _ mean <newline> return <UNK> _ tv _ fn <newline> <newline> predictor _ denoise _ update _ fn = get _ update _ fn ( predictor _ update _ fn ) <newline> corrector _ denoise _ update _ fn = get _ update _ fn ( corrector _ update _ fn ) <newline> mc _ update _ fn = get _ <UNK> _ tv _ fn ( ) <newline> <newline> def pc _ <UNK> ( model , data , measurement = none ) : <newline> with torch . no _ grad ( ) : <newline> x = sde . prior _ sampling ( data . shape ) . to ( data . device ) <newline> <newline> ones = torch . ones _ like ( x ) . to ( data . device ) <newline> norm _ const = _ at ( _ a ( ones ) ) <newline> timesteps = torch . linspace ( sde . t , eps , sde . n ) <newline> for i in tqdm ( range ( sde . n ) ) : <newline> t = timesteps [ i ] <newline> <newline> x _ batch = <UNK> ( x , 1 2 ) <newline> `
+  - 0345793 -> tokenizes each number
+  -
+  - Looking pretty good, going to train
+- Jan 14
+  - 60% acc, not-good val loss again. Cranking up model size might do it.
+  - Trying eval. Just figured out that vocab size was misconfigured.
+  - maybe try with a big vocab size?
+  - Maybe 153k is feasible, just takes a while.
+  - Lesson: Try something out before assuming, "your computer can handle a lot more than you'd think"
+  - It produced recognizable code. First hurdle: it trains. Is it overfitting? Is it generalizable?
+  - We've gone through a lot. Almost hyperparameter tune. A big challenge because it takes a while to train. How to downscale and get the perf you are looking for?
+    - model size is important, optimizer is important.
+  - Metrics: lots of different things to see if your model is training well, lots of trade offs. Loss is good, Accuracy is kind of good (used for debugging).
+  - If it does work, start evaluating it. Is it generalizing or memorizing? Use f1 score perhaps. Also see if code fragments are copied and pasted. (check-memorization). Consider hyperparameter tuning, try scaling down or something? Will take a while.
+  - What if it doesn't work?
+    - No bug, at least it can learn.
+    - If it's just memorizing, then we need to generalize. Train loss _and_ val loss need to go down
+    - Does that mean that the model is too big? Could mean not enough data. Too restrictive with data collection? I need updated code.
+    - Experimented with many datasets: Code datasets, sequential numbers.
+    - Perhaps go back to the old dataset (only train.py). Stop training this, it won't do much. idk -nick
+    - Add in scheduler maybe. But it won't work unless you have more metrics more frequently.
+  - ⭐Action items
+    - Maybe let it run, maybe stop it. Nick says stop it. Incremental testing all the way.
+    - ⭐ Experiment from train.py dataset. From there, check for overfitting. Hyperparam tune. Smallest model possible.
+      - Model size first, then all other hyperparams. Consider adding f1 score. Isolated envs.
+      - Some libraries you need that are unupdated. Learn the hard way that it's nice to have isolated envs. Maybe? I'm not sure.

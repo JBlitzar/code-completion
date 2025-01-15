@@ -260,7 +260,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
     ]
 
-    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.1, use_vocab_size_instead=True): # keep 90% with thresh 0.1
+    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.1, use_vocab_size_instead=False): # keep 90% with thresh 0.1
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
@@ -619,7 +619,7 @@ dataset = TextCorpusDataset(
     # IS_DUMMY=True,
     max_length=256,
     sliding_window=True,
-    stride=10
+    stride=128
 )
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)# int(dset_size - 2)
@@ -643,7 +643,7 @@ def get_test_dataset():
     return test_dataset
 
 
-def get_dataloader(dataset, batch_size=256):
+def get_dataloader(dataset, batch_size=16):
 
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 

@@ -75,6 +75,7 @@ class TrainingManager:
         self.optimizer = torch.optim.Adam(self.net.parameters(), lr=learning_rate)
 
         # No clue what this does. Maybe its good
+        # initialized and never used.
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer=self.optimizer, factor=0.9, patience=10
         )
@@ -93,6 +94,8 @@ class TrainingManager:
 
             os.makedirs(self.dir, exist_ok=True)
             os.makedirs(os.path.join(self.dir, "ckpt"), exist_ok=True)
+
+        print(f"{self.get_param_count()} parameters.")
 
     def hasnan(self):
         for _, param in self.net.named_parameters():
@@ -337,6 +340,9 @@ class TrainingManager:
         for module in self.net.modules():
             module.register_forward_hook(forward_hook)
         self.val_loop(self.val_dataloader)
+
+    def get_param_count(self):
+        return sum(p.numel() for p in self.net.parameters())
 
     def profile_trainstep(self):
         
