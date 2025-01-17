@@ -659,6 +659,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   -
   - Looking pretty good, going to train
 - Jan 14
+
   - 60% acc, not-good val loss again. Cranking up model size might do it.
   - Trying eval. Just figured out that vocab size was misconfigured.
   - maybe try with a big vocab size?
@@ -681,3 +682,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - ⭐ Experiment from train.py dataset. From there, check for overfitting. Hyperparam tune. Smallest model possible.
       - Model size first, then all other hyperparams. Consider adding f1 score. Isolated envs.
       - Some libraries you need that are unupdated. Learn the hard way that it's nice to have isolated envs. Maybe? I'm not sure.
+
+- Jan 16
+  - Running it on the small set, loss down, acc up, val loss up. the classic.
+  - Train loss down to 2, val loss up to 9
