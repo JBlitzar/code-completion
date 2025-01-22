@@ -684,5 +684,39 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
       - Some libraries you need that are unupdated. Learn the hard way that it's nice to have isolated envs. Maybe? I'm not sure.
 
 - Jan 16
+
   - Running it on the small set, loss down, acc up, val loss up. the classic.
   - Train loss down to 2, val loss up to 9
+
+- Jan 21
+  - It's overfit, ran check-memorization with output from eval. Val loss is much higher than train loss
+  - <img src="readme-imgs/val-loss-v21.png" width="600px">
+  - So it's overfitting right away. Strange?
+  - List of things to mitigate overfitting. It's working in terms of overfitting, which is good. Dataset splitting is truly random, which is good.
+    - ⭐Is it actually overparamaterized? Usually mitigates overfitting
+    - X Data augmentation? Very hard with code dataset.
+    - ~X Tweaking parameters or something?
+    - (?) Discrepancy btwn train and test dataset, but we think this is not true.
+      - Often a headache. Good to double check etc. It's the most obvious one, but it's bad if you get it wrong
+    - ⭐Regularization (dropout, gradient clipping)
+    - X Early stopping? but not because val loss is never good
+  - Which to pursue first? regularization or changing model size.
+  - going to builtin_architecture to tune.
+    - So these params (halved) still caused overfitting. `vocab_size = 3646     embed_dim = 128     heads = 2     ff_dim = 128     layers = 4     drop = 0`
+    - Even more extreme reduction and still no results. `vocab_size = 3646     embed_dim = 64     heads = 2     ff_dim = 64     layers = 2     drop = 0`
+    - Smaller model size isn't helping.
+  - Trying dropout at 0.3, crossing our fingers that no numerical instability. Dropout isn't working. Loss still going up on val.
+  - Decrease window size? Smaller context -> more similarity between train and test.
+  - Because of sliding window. train data is expressed in test. The discrepancy is therefore extremely worrying.
+  - testing out by making test dataset = train dataset.
+  - okay so val loss still went up, which means that our data pipeline is at fault
+  - 3 lines in line 269. **So it's _actually_ the same bug as before when it wasn't transposed, but this time I forgot to copy over the changes to valstep**
+    - So I guess have dataloaders that are different now and see what happens
+    - Changing something and having it in multiple places is the worst. I tried to have good OOP with TrainingManager, ~~but perhaps it just muddled it more.~~ Investigate a framework where call_model is a function and then trainstep and valstep just do different logging. Always the code reuse.
+    - great. So val loss actually goes down now with train loss with independent datasets. Even though it's slightly cheating because of sliding window idk. But it's not straight-ahead memorization.
+  - Closing thoughts:
+    - amazing bugfix
+    - model is really learning with train -> val
+    - Investigate sliding window, try to have truly independent dsets.
+    - Now all the code works, we want a model that works the best. Try dropout, regularization, etc, to prevent overfitting and induce real machine learning.
+    - toy with hyperparams, only when you have it perfect scale up. Penalize large weights with adamw or something? Lots of techniques

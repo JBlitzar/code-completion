@@ -627,9 +627,14 @@ test_size = int(dset_size - train_size)
 if test_size == 2:
     print("alert! test size is 2 or whatever. Change this back please.")
 
+#torch.manual_seed(3407) # https://arxiv.org/pdf/2109.08203
+
 train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]
 )
+
+
+#test_dataset = train_dataset # to test if the overfitting is real
 
 #train_dataset = dataset  # TODO change
 

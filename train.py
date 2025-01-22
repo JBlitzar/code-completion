@@ -17,10 +17,13 @@ EXPERIMENT_DIRECTORY = "runs/code-decoder-v21-alltrains-tuner"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
+trainset = get_train_dataset()
+dataloader = get_dataloader(trainset)
 
-dataloader = get_dataloader(get_train_dataset())
+testset = get_test_dataset()
+testloader = get_dataloader(testset)
 
-testloader = get_dataloader(get_test_dataset())
+
 
 
 net = (

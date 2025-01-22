@@ -155,6 +155,7 @@ class TrainingManager:
     def on_trainloop_checkin(self, epoch, step, dataloader_len):
         if self.hasnan():
             # revert
+            print("RESUMIGN")
             self.resume()
 
         self._save("latest.pt")  # Just update latest checkpoint
@@ -265,9 +266,11 @@ class TrainingManager:
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
-        results = self.net(batch)  # , padding_mask=attn_mask[:, :-1])
+        results = self.net(batch, transpose=True)  # , padding_mask=attn_mask[:, :-1])
 
-        loss = self.criterion(results.view(-1, results.size(-1)), labels.view(-1))
+        results = results.transpose(0, 1) # average bug v2 omg
+
+        loss = self.criterion(results.reshape(-1, results.size(-1)), labels.reshape(-1))
 
         if torch.isnan(loss).item():
             print("NAN ALERT!")
@@ -301,8 +304,10 @@ class TrainingManager:
 
     def epoch(self, epoch: int, dataloader, val_loader=None):
 
+        self.net.train()
         self.train_loop(dataloader, epoch)
 
+        self.net.eval()
         self.val_loop(val_loader)
 
         self.on_epoch_checkin(epoch)
