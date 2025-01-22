@@ -720,3 +720,4 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - Investigate sliding window, try to have truly independent dsets.
     - Now all the code works, we want a model that works the best. Try dropout, regularization, etc, to prevent overfitting and induce real machine learning.
     - toy with hyperparams, only when you have it perfect scale up. Penalize large weights with adamw or something? Lots of techniques
+    - oh also commit better oop
