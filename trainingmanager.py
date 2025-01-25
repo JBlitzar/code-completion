@@ -234,6 +234,10 @@ class TrainingManager:
 
         loss, acc = self.eval_model(data)
 
+        self.tracker.add("Loss/trainstep", loss.item())
+        self.tracker.add("Loss/epoch", loss.item())
+
+
         # Backward pass and optimization
         loss.backward()
         self.optimizer.step()
@@ -243,6 +247,9 @@ class TrainingManager:
     @torch.no_grad()  # decorator yay
     def valstep(self, data):
         loss, acc = self.eval_model(data)
+
+        self.tracker.add("Loss/valstep", loss.item())
+        self.tracker.add("Loss/val/epoch", loss.item())
 
         return loss, acc
 
