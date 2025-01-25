@@ -209,74 +209,42 @@ class TrainingManager:
 
         self.write_resume(epoch)
 
-    def trainstep(self, data):
-
+    def eval_model(self, data):
         data = tuple(d.to(self.device) for d in data)
-
-        self.optimizer.zero_grad()
-
-        # Different for every model
         batch, attn_mask = data
-
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
-        # print(batch)
-        # print("---")
-        # print(labels)
-        # print("data^")
-
-        # TODO: change later
+        # Forward pass
         results = self.net(batch, transpose=True)  # , padding_mask=attn_mask[:, :-1])
-
         results = results.transpose(0, 1)  # average bug
 
+        # Compute loss
         loss = self.criterion(results.reshape(-1, results.size(-1)), labels.reshape(-1))
 
-        # TODO remove this maybe
+        # Compute accuracy
         acc = torch.sum(
-            torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
-            == labels.reshape(-1)
+            torch.argmax(results.reshape(-1, results.size(-1)), dim=1) == labels.reshape(-1)
         ) / len(labels.reshape(-1))
 
-        # print(acc)
-        # print(
-        #     f"Next pred: {torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]}, next real: {labels.reshape(-1)[-1]} "
-        # )
+        return loss, acc
 
-        self.tracker.add("Acc/trainstep", acc.item())
+    def trainstep(self, data):
+        self.optimizer.zero_grad()
 
+        loss, acc = self.eval_model(data)
+
+        # Backward pass and optimization
         loss.backward()
-
-        torch.nn.utils.clip_grad_norm_(self.net.parameters(), self.clip)
-
         self.optimizer.step()
 
-        self.tracker.add("Loss/trainstep", loss.item())
-        self.tracker.add("Loss/epoch", loss.item())
+        return loss, acc
 
     @torch.no_grad()  # decorator yay
     def valstep(self, data):
+        loss, acc = self.eval_model(data)
 
-        data = tuple(d.to(self.device) for d in data)
-
-        # Different for every model
-        batch, attn_mask = data
-
-        labels = batch[:, 1:].contiguous()
-        batch = batch[:, :-1].contiguous()
-
-        results = self.net(batch, transpose=True)  # , padding_mask=attn_mask[:, :-1])
-
-        results = results.transpose(0, 1) # average bug v2 omg
-
-        loss = self.criterion(results.reshape(-1, results.size(-1)), labels.reshape(-1))
-
-        if torch.isnan(loss).item():
-            print("NAN ALERT!")
-
-        # self.tracker.add("Loss/valstep", loss.item())
-        self.tracker.add("Loss/val/epoch", loss.item())
+        return loss, acc
 
     def val_loop(self, val_loader):
         if val_loader is not None:
