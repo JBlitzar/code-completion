@@ -602,35 +602,33 @@ class TextCorpusDataset(Dataset):
     def __getitem__(self, idx): #TODO: optimized, but change it back if it doesn't work
         seq = self.chunks[idx]
         return seq, self.dummy  #self.manager.attention_mask(seq)
-
 class Datasplit_chunker(Dataset):
-    def __init__(self, subset, slide=False, stride=1, length=512):
+    def __init__(self, root, name, subset, slide=False, stride=1, length=512):
         super().__init__()
 
-        self.items = []
-        for idx in subset.indices:
-            item, _ = subset.dataset[idx]
-            self.items.append(item)
+        self.root = root
+        if os.path.exists(os.path.join(root, f"encoded_chunked_{name}.pt")):
+            self.items = torch.load(os.path.join(root, f"encoded_chunked_{name}.pt"), weights_only=True)
+        
+        else:
+            self.items = torch.cat([subset.dataset[idx][0] for idx in subset.indices])
 
+            if slide:
+                self.items = self._sliding_window(self.items, window_size=length, stride=stride)
 
-        if slide:
-            self.items = self._sliding_window(self.items, window_size=length, stride=stride)
-
-        self.chunks = self.items#torch.stack(self.items)
-
-        self.dummy = torch.tensor([1],device=DEVICE)
+            torch.save(self.items, os.path.join(root, f"encoded_chunked_{name}.pt"))
+            print("saved!")
+        self.chunks = self.items
+        self.dummy = torch.tensor([1], device=DEVICE)
 
     def _sliding_window(self, sequence, window_size, stride):
-        sequence = torch.flatten(torch.stack(sequence))
+        num_windows = (len(sequence) - window_size) // stride + 1
+        windows = torch.stack([sequence[i * stride:i * stride + window_size] for i in trange(num_windows)])
+        return windows
 
-        windows = []
-        for i in range(0, len(sequence) - window_size + 1, stride):
-            windows.append(sequence[i : i + window_size])
-        return torch.stack(windows)
-    
     def __len__(self):
         return len(self.items)
-    
+
     def __getitem__(self, idx):
         return self.chunks[idx], self.dummy
 
@@ -646,10 +644,10 @@ dataset = TextCorpusDataset(
         # "./smaller-er-test-data"
         #"./smaller-test-data"
         #"~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
-        "~/torch_datasets/github-python/all_trains_subset_corpus"
-        #"~/torch_datasets/github-python/corpus"
+        #"~/torch_datasets/github-python/all_trains_subset_corpus"
+        "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=3645, # edited by me
+    vocab_size=153127,#3645, # edited by me
     IS_CODE=True,  # Remember to change!
     IS_CUSTOM=True,
     # IS_DUMMY=True,
@@ -671,8 +669,8 @@ train_dataset, test_dataset, _ = random_split(
 )
 
 
-train_dataset = Datasplit_chunker(train_dataset, slide=True, stride=10, length=256)
-test_dataset = Datasplit_chunker(test_dataset, slide=True, stride=10, length=256)
+train_dataset = Datasplit_chunker(dataset.root,"TRAIN", train_dataset, slide=True, stride=10, length=256)
+test_dataset = Datasplit_chunker(dataset.root,"TRAIN", test_dataset, slide=True, stride=10, length=256)
 
 
 
