@@ -621,6 +621,8 @@ class Datasplit_chunker(Dataset):
         self.dummy = torch.tensor([1],device=DEVICE)
 
     def _sliding_window(self, sequence, window_size, stride):
+        sequence = torch.flatten(torch.stack(sequence))
+
         windows = []
         for i in range(0, len(sequence) - window_size + 1, stride):
             windows.append(sequence[i : i + window_size])
