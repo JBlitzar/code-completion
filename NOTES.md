@@ -689,6 +689,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Train loss down to 2, val loss up to 9
 
 - Jan 21
+
   - It's overfit, ran check-memorization with output from eval. Val loss is much higher than train loss
   - <img src="readme-imgs/val-loss-v21.png" width="600px">
   - So it's overfitting right away. Strange?
@@ -721,3 +722,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - Now all the code works, we want a model that works the best. Try dropout, regularization, etc, to prevent overfitting and induce real machine learning.
     - toy with hyperparams, only when you have it perfect scale up. Penalize large weights with adamw or something? Lots of techniques
     - oh also commit better oop
+
+- Jan 24
+  - I did better OOP
+  - Allegedly perplexity is good loss?
