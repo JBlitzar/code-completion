@@ -16,7 +16,7 @@ last_date_file = "last_date.txt"
 
 def fetch_repositories_by_date_range(start_date, end_date):
     page = 1
-    query = f"language:Python size:5..5000 stars:>=100 created:{start_date}..{end_date}"
+    query = f"language:Python size:5..5000 stars:>=10 created:{start_date}..{end_date}"
     params = {
         "q": query,
         "per_page": 100,

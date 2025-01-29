@@ -603,6 +603,39 @@ class TextCorpusDataset(Dataset):
         seq = self.chunks[idx]
         return seq, self.dummy  #self.manager.attention_mask(seq)
 
+class Datasplit_chunker(Dataset):
+    def __init__(self, subset, slide=False, stride=1, length=512):
+        super().__init__()
+
+        self.items = []
+        for idx in subset.indices:
+            item, _ = subset.dataset[idx]
+            self.items.append(item)
+
+
+        if slide:
+            self.items = self._sliding_window(self.items, window_size=length, stride=stride)
+
+        self.chunks = self.items#torch.stack(self.items)
+
+        self.dummy = torch.tensor([1],device=DEVICE)
+
+    def _sliding_window(self, sequence, window_size, stride):
+        windows = []
+        for i in range(0, len(sequence) - window_size + 1, stride):
+            windows.append(sequence[i : i + window_size])
+        return torch.stack(windows)
+    
+    def __len__(self):
+        return len(self.items)
+    
+    def __getitem__(self, idx):
+        return self.chunks[idx], self.dummy
+
+
+
+
+
 
 # print("Running....")
 dataset = TextCorpusDataset(
@@ -610,6 +643,7 @@ dataset = TextCorpusDataset(
         # "./dummy-data-dir"
         # "./smaller-er-test-data"
         #"./smaller-test-data"
+        #"~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
         "~/torch_datasets/github-python/all_trains_subset_corpus"
         #"~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
@@ -618,9 +652,10 @@ dataset = TextCorpusDataset(
     IS_CUSTOM=True,
     # IS_DUMMY=True,
     max_length=256,
-    sliding_window=True,
+    sliding_window=False,
     stride=10
 )
+
 dset_size = int(len(dataset))
 train_size = int(0.8 * dset_size)# int(dset_size - 2)
 test_size = int(dset_size - train_size)
@@ -632,6 +667,11 @@ if test_size == 2:
 train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]
 )
+
+
+train_dataset = Datasplit_chunker(train_dataset, slide=True, stride=10, length=256)
+test_dataset = Datasplit_chunker(test_dataset, slide=True, stride=10, length=256)
+
 
 
 #test_dataset = train_dataset # to test if the overfitting is real
