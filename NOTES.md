@@ -726,3 +726,17 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 - Jan 24
   - I did better OOP
   - Allegedly perplexity is good loss?
+- Jan 28
+  - Did some talking with Nick.
+  - We eliminated train/test pollution with sliding windows with the somewhat suspicious Datasplit_chunker.
+  - Considering different datasets, such as stackoverflow or python packages themselves, but maybe not. Perhaps cast the net wider and get a larger dataset? 50k files seems fine for now though.
+  - Actual normal training curve, signifying overfitting (check val loss)
+  - <img src="readme-imgs/normal-training-curve.png" width="30%">
+  - This shows us that data is independent but the model is still learning and generalizing.
+  - Check mem is still returning true, which is suboptimal to say the least.
+  - But sometimes not?? (seems like mostly not now, which is good)
+    - Sample: `<newline> dataset = [ ] <newline> for i in xrange ( batch _ size ) : <newline> point = np . random . randn ( 2 ) * 0 . 0 5 <newline> center = random . choice ( centers ) <newline> point [ 0 ] + = center [ 0 ] <newline> point [ 1 ] + = center` (not memorized.)
+    - Sample: `<newline> logger . info ( f " initial validation samples in first step . . . " ) <newline> model . eval ( ) <newline> <newline> gen _ validation _ samples ( validation _ pipeline , args , wandb , samples _ dir , train _ ts , train _ steps ) <newline> <newline> model . train ( ) <newline>` (not memorized)
+      - But at the same time, this looks pretty good.
+      - The logger.info was the part included in the dset.
+  - Lets train it on the big one again, just for funsies.
