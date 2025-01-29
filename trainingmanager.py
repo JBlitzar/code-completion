@@ -237,6 +237,8 @@ class TrainingManager:
         self.tracker.add("Loss/trainstep", loss.item())
         self.tracker.add("Loss/epoch", loss.item())
 
+        self.tracker.add("Acc/trainstep", acc)
+
 
         # Backward pass and optimization
         loss.backward()
