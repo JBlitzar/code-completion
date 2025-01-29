@@ -669,8 +669,8 @@ train_dataset, test_dataset, _ = random_split(
 )
 
 
-train_dataset = Datasplit_chunker(dataset.root,"TRAIN", train_dataset, slide=True, stride=10, length=256)
-test_dataset = Datasplit_chunker(dataset.root,"TRAIN", test_dataset, slide=True, stride=10, length=256)
+# train_dataset = Datasplit_chunker(dataset.root,"TRAIN", train_dataset, slide=False, stride=10, length=256)
+# test_dataset = Datasplit_chunker(dataset.root,"TEST", test_dataset, slide=False, stride=10, length=256)
 
 
 
@@ -688,7 +688,7 @@ def get_test_dataset():
     return test_dataset
 
 
-def get_dataloader(dataset, batch_size=128):
+def get_dataloader(dataset, batch_size=8):
 
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
