@@ -623,7 +623,7 @@ class Datasplit_chunker(Dataset):
 
     def _sliding_window(self, sequence, window_size, stride):
         num_windows = (len(sequence) - window_size) // stride + 1
-        windows = torch.stack([sequence[i * stride:i * stride + window_size] for i in trange(num_windows)])
+        windows = torch.as_strided(sequence, size=(num_windows, window_size), stride=(stride, 1))
         return windows
 
     def __len__(self):
