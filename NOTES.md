@@ -740,3 +740,11 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
       - But at the same time, this looks pretty good.
       - The logger.info was the part included in the dset.
   - Lets train it on the big one again, just for funsies.
+- Jan 29
+  - Trained, stagnated. It's pretty good.
+  - NOO NOT THE NEWLINE MEMORIZATION
+    - `= c . result <newline> <newline> if self . verbose : <newline> print ( ' \ texception : % s ' % self . result ) <newline> return <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline>`
+    - um `. v _ proj " , " p _ bg 3 9 4 " , " p _ bg 3 9 " , " p _ bg 3 9 " , " p _ bg 3 9 " , " p _ bg 3 9 " , " p _ bg 3 9 " , " p _ bg 3 `
+    - This one looks good: `dir ( absolute _ path ) <newline> dataset _ to _ create = os . path . join ( get _ dir , ' dataset _ name ' ) ) <newline> dataset _ to _ create = os . path . join ( get _ dir , ' dataset _ name ' ) ) <newline> dataset _ to _ create` ... until you realize that its repetition
+    - A weird one: `' nonpayable ' , ' type ' : ' function ' } , { ' inputs ' : [ { ' internaltype ' : ' uint 2 5 6 ' , ' name ' : ' ' , ' type ' : ' uint 2 5 6 ' } ] , ' name ' : ' ' , ' outputs`
+    - No direct mem at least.
