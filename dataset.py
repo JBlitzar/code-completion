@@ -318,12 +318,15 @@ class CodeCustomTokenizerManager(BPEModelManager):
         code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL)  # funny usage of re
         code = re.sub(r"'''(.*?)'''", "", code, flags=re.DOTALL)
 
+        code = re.sub(r'    ', "	", code)
+
         print("Filtered comments")
 
         # print(code[:100])
 
         # filter non-ascii
-        code = re.sub(r"[^\x00-\x7F]+", "", code.lower())
+        # https://regexr.com/8bmfe
+        code = re.sub(r"[^ -~\s]+", "", code)
         # print(code[:100])
         print("Filtered non-ascii")
 
@@ -355,6 +358,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         def split_token(token):
             result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
             result = re.sub(r"([_-])", r" \1 ", result)
+            result = re.sub(r"([^a-zA-Z])", r" \1 ", result)
             return [part.lower() for part in result.split() if part.strip()]
 
         code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
@@ -365,6 +369,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
         for token in code.split(" "):
             if token.strip():
                 tokens.extend(split_token(token))
+
+        tokens = [tok.lower() for tok in tokens if tok.strip()]
 
         print("Split tokens")
         token_freqs = {"<PAD>": 0}
