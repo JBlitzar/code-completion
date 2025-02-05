@@ -775,3 +775,8 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Most tokens appear twice.
   - So only keeping tokens that appear >10 times leaves us with 22809, very reasonable.
   - Training it up! So far it's looking optimistic
+- Feb 5
+- `tab > self . avg = self . sum / self . count < newline > < newline > < tab > def _ _ call _ _ ( self , x ) : < newline > < tab > < tab > return self . sum ( x ) < newline > < newline > < tab > def   | PREFIX FROM TRAIN DSET: tab > self . avg = self . sum / self . count < newline > < newline > <`
+- Still some rep. : `. md ' , rst _ file = filename + ' . rst ' < newline > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > <   | PREFIX FROM TRAIN DSET: . md ' , rst _ file = filename + ' . rst ' < newline > < tab >`
+- :( `< newline > < tab > < newline > < tab > evaluating knn accuracy in feature space . < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab   | PREFIX FROM TRAIN DSET: < newline > < tab > < newline > < tab > evaluating knn accuracy in feature space . <`
+- Its actually just tabspamming: `dependencies automatically for any language . < newline > < newline > fabricate is a build tool that finds dependencies . < newline > < newline > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab >   | PREFIX FROM TRAIN DSET: dependencies automatically for any language . < newline > < newline > fabricate is a build tool that finds dependencies`

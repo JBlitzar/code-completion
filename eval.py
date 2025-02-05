@@ -105,6 +105,7 @@ def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
 
 
 loader = get_dataloader(get_train_dataset())
+torch.random.manual_seed(int(input("seed: ")))
 for data in loader:
     batch, attn_mask = data
 
@@ -151,8 +152,8 @@ for data in loader:
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
     result = evaluate(net, batch.unsqueeze(0), amt=40)
-    print(result, " | PREFIX FROM TRAIN DSET:", dataset.manager.decode(batch))
-    print(dataset.manager.decode(result[0]))
+    print(result)
+    print(dataset.manager.decode(result[0]), " | PREFIX FROM TRAIN DSET:", dataset.manager.decode(batch))
 
     #print(dataset.manager.raw_decode(81))
 
