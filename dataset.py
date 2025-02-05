@@ -431,6 +431,9 @@ class CodeCustomTokenizerManager(BPEModelManager):
         cutoff_thresh = self.cutoff_thresh
         if self.use_vocab_size_instead:
             print("Using vocab size instead")
+            print("deprecated")
+            print("cope")
+            exit()
             sorted_tokens = sorted(token_freqs.items(), key=lambda x: x[1], reverse=True)
             allowed_tokens = set(token for token, _ in sorted_tokens[:self.vocab_size-1]) # -1 for PAD
             for i in range(len(tokens)):
@@ -441,13 +444,11 @@ class CodeCustomTokenizerManager(BPEModelManager):
         else:
             cutoff_amt = 10#np.percentile(list(token_freqs.values()), (1-cutoff_thresh) * 100)
             print(f"Cuttoff amount: {cutoff_amt}")# using threshold {cutoff_thresh}")
-            for token, freq in tqdm(token_freqs.items(), leave=False):
-                if freq < cutoff_amt and token != "<PAD>":
-                    i = tokens.index(token)
-                    
-                    #print(f"Replacing token with UNK: {tokens[i]}")
 
-                    tokens[i] = "<UNK>" # TODO: make sure this works
+            # llm-optimized
+            low_freq_tokens = [token for token, freq in token_freqs.items() if freq < cutoff_amt and token != "<PAD>"]
+            low_freq_tokens_set = set(low_freq_tokens)
+            tokens = ["<UNK>" if token in low_freq_tokens_set else token for token in tqdm(tokens)]
 
 
 

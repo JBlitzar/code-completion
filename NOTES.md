@@ -773,3 +773,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   ```
   - Mean/median differential is crazy
   - Most tokens appear twice.
+  - So only keeping tokens that appear >10 times leaves us with 22809, very reasonable.
+  - Training it up! So far it's looking optimistic
