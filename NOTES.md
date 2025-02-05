@@ -741,6 +741,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
       - The logger.info was the part included in the dset.
   - Lets train it on the big one again, just for funsies.
 - Jan 29
+
   - Trained, stagnated. It's pretty good.
   - NOO NOT THE NEWLINE MEMORIZATION
     - `= c . result <newline> <newline> if self . verbose : <newline> print ( ' \ texception : % s ' % self . result ) <newline> return <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline> <newline>`
@@ -748,3 +749,27 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - This one looks good: `dir ( absolute _ path ) <newline> dataset _ to _ create = os . path . join ( get _ dir , ' dataset _ name ' ) ) <newline> dataset _ to _ create = os . path . join ( get _ dir , ' dataset _ name ' ) ) <newline> dataset _ to _ create` ... until you realize that its repetition
     - A weird one: `' nonpayable ' , ' type ' : ' function ' } , { ' inputs ' : [ { ' internaltype ' : ' uint 2 5 6 ' , ' name ' : ' ' , ' type ' : ' uint 2 5 6 ' } ] , ' name ' : ' ' , ' outputs`
     - No direct mem at least.
+
+- Feb 4
+  - Ran token analysis
+  ```
+  Number of tokens that appear only once: 36431. Percentage: 0.0007120090008913647
+  Mean token count: 493.84688441047024
+  Median token count: 2.0
+  Standard deviation of token count: 40239.56310773193
+  Min token count: 0
+  Max token count: 7655766
+  Top 10 most frequent tokens:
+  > : 7655766
+  <: 7633073
+  tab: 4785963
+  newline: 2818005
+  \_: 2420050
+  .: 1680181
+  ,: 1428405
+  (: 1374695
+  ): 1371692
+  > =: 1294978
+  ```
+  - Mean/median differential is crazy
+  - Most tokens appear twice.

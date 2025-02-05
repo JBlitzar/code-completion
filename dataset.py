@@ -1,3 +1,4 @@
+from collections import Counter
 import torchvision.datasets as dset
 from torch.utils.data import Dataset
 import torch
@@ -10,8 +11,9 @@ import subprocess
 import youtokentome as yttm
 import re
 import time
-from tqdm import trange
+from tqdm import trange, tqdm
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # Device for dataloading and dataloading only. Dataloading on MPS was slower
@@ -366,20 +368,65 @@ class CodeCustomTokenizerManager(BPEModelManager):
         
 
         tokens = []
-        for token in code.split(" "):
+        for token in tqdm(code.split(" "), leave=False):
             if token.strip():
                 tokens.extend(split_token(token))
+
 
         tokens = [tok.lower() for tok in tokens if tok.strip()]
 
         print("Split tokens")
         token_freqs = {"<PAD>": 0}
-        for token in [tok for tok in tokens if tok.strip()]:
+        for token in tqdm(tokens, leave=False):
             if token not in token_freqs:
                 token_freqs[token] = 1
             else:
                 token_freqs[token] += 1
         print("Counted freqs")
+
+        # what statistics do we want to calculate?
+        # Number of tokens that appear only once, and percentage.
+        # Mean number of times any given token appears.
+        # standard things: mean, std, q1, q3, median, min, max
+        # Print out topk most frequent and their freqs
+
+        total_num_tokens = len(tokens)
+
+        counter = Counter(list(token_freqs.values()))
+        num_ones = counter[1]
+        print(f"Number of tokens that appear only once: {num_ones}. Percentage: {num_ones / total_num_tokens}")
+
+        print(f"Mean token count: {np.mean(list(token_freqs.values()))}")
+        print(f"Median token count: {np.median(list(token_freqs.values()))}")
+
+        print(f"Standard deviation of token count: {np.std(list(token_freqs.values()))}")
+
+        print(f"Min token count: {np.min(list(token_freqs.values()))}")
+        print(f"Max token count: {np.max(list(token_freqs.values()))}")
+        
+        print(f"Top 30 most frequent tokens:")
+        sorted_tokens = sorted(token_freqs.items(), key=lambda x: x[1], reverse=True)
+        for token, freq in sorted_tokens[:30]:
+            print(f"{token}: {freq}")
+
+        print(f"Bottom 30 most frequent tokens:")
+        for token, freq in sorted_tokens[-30:]:
+            print(f"{token}: {freq}")
+        
+
+        plt.figure(figsize=(15,6))
+        plt.bar(np.arange(len(sorted_tokens)), [freq for token, freq in sorted_tokens])
+        plt.xlabel("Token")
+        plt.ylabel("Frequency")
+
+        plt.title("Token frequency distribution")
+        
+        plt.show()
+
+        breakpoint()
+
+
+
         # use cutoff thresh to replace tokens with UNK
         cutoff_thresh = self.cutoff_thresh
         if self.use_vocab_size_instead:
@@ -668,7 +715,7 @@ test_size = int(dset_size - train_size)
 if test_size == 2:
     print("alert! test size is 2 or whatever. Change this back please.")
 
-#torch.manual_seed(3407) # https://arxiv.org/pdf/2109.08203
+torch.manual_seed(3407) # https://arxiv.org/pdf/2109.08203
 
 train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]

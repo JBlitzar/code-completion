@@ -151,7 +151,7 @@ for data in loader:
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
     result = evaluate(net, batch.unsqueeze(0), amt=40)
-    print(result)
+    print(result, " | PREFIX FROM TRAIN DSET:", dataset.manager.decode(batch))
     print(dataset.manager.decode(result[0]))
 
     #print(dataset.manager.raw_decode(81))
