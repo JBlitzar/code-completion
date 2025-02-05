@@ -414,16 +414,16 @@ class CodeCustomTokenizerManager(BPEModelManager):
             print(f"{token}: {freq}")
         
 
-        plt.figure(figsize=(15,6))
-        plt.bar(np.arange(len(sorted_tokens)), [freq for token, freq in sorted_tokens])
-        plt.xlabel("Token")
-        plt.ylabel("Frequency")
+        # plt.figure(figsize=(15,6))
+        # plt.bar(np.arange(len(sorted_tokens)), [freq for token, freq in sorted_tokens])
+        # plt.xlabel("Token")
+        # plt.ylabel("Frequency")
 
-        plt.title("Token frequency distribution")
+        # plt.title("Token frequency distribution")
         
-        plt.show()
+        # plt.show()
 
-        breakpoint()
+        # breakpoint()
 
 
 
@@ -439,11 +439,14 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     tokens[i] = "<UNK>"
 
         else:
-            cutoff_amt = np.percentile(list(token_freqs.values()), (1-cutoff_thresh) * 100)
-            print(f"Cuttoff amount: {cutoff_amt} using threshold {cutoff_thresh}")
-            for i, (token, freq) in enumerate(token_freqs.items()):
+            cutoff_amt = 10#np.percentile(list(token_freqs.values()), (1-cutoff_thresh) * 100)
+            print(f"Cuttoff amount: {cutoff_amt}")# using threshold {cutoff_thresh}")
+            for token, freq in tqdm(token_freqs.items(), leave=False):
                 if freq < cutoff_amt and token != "<PAD>":
-                    print(f"Replacing token with UNK: {tokens[i]}")
+                    i = tokens.index(token)
+                    
+                    #print(f"Replacing token with UNK: {tokens[i]}")
+
                     tokens[i] = "<UNK>" # TODO: make sure this works
 
 
