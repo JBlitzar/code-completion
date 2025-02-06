@@ -118,7 +118,7 @@ def make_model():
     heads = 8
     ff_dim = 512
     layers = 6
-    drop = 0
+    drop = 0.1
 
     xformer_real = BuiltinTransformerModel(
         vocab_size, embed_dim, heads, ff_dim, layers, drop

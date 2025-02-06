@@ -776,8 +776,16 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - So only keeping tokens that appear >10 times leaves us with 22809, very reasonable.
   - Training it up! So far it's looking optimistic
 - Feb 5
-- `tab > self . avg = self . sum / self . count < newline > < newline > < tab > def _ _ call _ _ ( self , x ) : < newline > < tab > < tab > return self . sum ( x ) < newline > < newline > < tab > def   | PREFIX FROM TRAIN DSET: tab > self . avg = self . sum / self . count < newline > < newline > <`
-- Still some rep. : `. md ' , rst _ file = filename + ' . rst ' < newline > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > <   | PREFIX FROM TRAIN DSET: . md ' , rst _ file = filename + ' . rst ' < newline > < tab >`
-- :( `< newline > < tab > < newline > < tab > evaluating knn accuracy in feature space . < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab   | PREFIX FROM TRAIN DSET: < newline > < tab > < newline > < tab > evaluating knn accuracy in feature space . <`
-- Its actually just tabspamming: `dependencies automatically for any language . < newline > < newline > fabricate is a build tool that finds dependencies . < newline > < newline > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab >   | PREFIX FROM TRAIN DSET: dependencies automatically for any language . < newline > < newline > fabricate is a build tool that finds dependencies`
-- I'm going to train a bigger model.
+  - `tab > self . avg = self . sum / self . count < newline > < newline > < tab > def _ _ call _ _ ( self , x ) : < newline > < tab > < tab > return self . sum ( x ) < newline > < newline > < tab > def   | PREFIX FROM TRAIN DSET: tab > self . avg = self . sum / self . count < newline > < newline > <`
+  - Still some rep. : `. md ' , rst _ file = filename + ' . rst ' < newline > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > <   | PREFIX FROM TRAIN DSET: . md ' , rst _ file = filename + ' . rst ' < newline > < tab >`
+  - :( `< newline > < tab > < newline > < tab > evaluating knn accuracy in feature space . < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab > < tab > < newline > < tab   | PREFIX FROM TRAIN DSET: < newline > < tab > < newline > < tab > evaluating knn accuracy in feature space . <`
+  - Its actually just tabspamming: `dependencies automatically for any language . < newline > < newline > fabricate is a build tool that finds dependencies . < newline > < newline > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab > < tab >   | PREFIX FROM TRAIN DSET: dependencies automatically for any language . < newline > < newline > fabricate is a build tool that finds dependencies`
+  - I'm going to train a bigger model.
+  - Sad: `> problem ( ' abc ' , ' abd ' , ' <UNK> ' , < tab > iterations ) > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >   | PREFIX FROM TRAIN DSET: > problem ( ' abc ' , ' abd ' , ' <UNK> ' , < tab > iterations )`
+  - Um so it just spams `>`: `in result < newline > < newline > < newline > def test _ get auto track target ( ) > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >   | PREFIX FROM TRAIN DSET: in result < newline > < newline > < newline > def test _ get auto track target ( )`
+  - Maybe its time for dropout. And label smoothing. oh wait label smoothing is already there. Ok, rerunning with dropout ig.
+  - Screenshot for posterity: <img src="readme-imgs/v22-another-run.png" width = "30%">
+  - You can see the 0.15 acc. Ok, so dropout now.
+  - A bit into training, it doesnt seem to be helping: `0 ] ) , < newline > < tab > < tab > < tab > < tab > nn > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >   | PREFIX FROM TRAIN DSET: 0 ] ) , < newline > < tab > < tab > < tab > < tab > nn`
+  - Acc stuck at 0.15, probably because its just constantly doing `>`
+  - So this sucks.
