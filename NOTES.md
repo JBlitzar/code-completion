@@ -789,3 +789,15 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - A bit into training, it doesnt seem to be helping: `0 ] ) , < newline > < tab > < tab > < tab > < tab > nn > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >   | PREFIX FROM TRAIN DSET: 0 ] ) , < newline > < tab > < tab > < tab > < tab > nn`
   - Acc stuck at 0.15, probably because its just constantly doing `>`
   - So this sucks.
+  - I'm going to make a better, less skill-issued tokenizer:
+  ```python
+  def split_token(token):
+            if token.startswith("<") and token.endswith(">"):  # preserve ✨special✨ tokens
+                return [token.lower()]
+            result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
+            result = re.sub(r"([_-])", r" \1 ", result)
+            result = re.sub(r"([^a-zA-Z])", r" \1 ", result)
+            return [part.lower() for part in result.split() if part.strip()]
+  ```
+  - Let's see what this does. New datasample: `<tab> f ' acc @ 1 { acc 1 _ meter . val : . 3 f } ( { acc 1 _ meter . avg : . 3 f } ) \ t ' <newline> <tab> <tab> <tab> <tab> f ' acc @ 5 { acc 5 _ meter . val : . 3 f } ( { acc 5 _ meter . avg : . 3 f } ) \ t ' <newline> <tab> <tab> <tab> <tab> f ' mem { memory _ used : . 0 f } mb ' ) <newline> <tab> logger . info ( f ' * acc @ 1 { acc 1 _ meter . avg : . 3 f } acc @ 5 { acc 5 _ meter . avg : . 3 f } ' ) <newline> <tab> return acc 1 _ meter . avg , acc 5 _ meter . avg , loss _ meter . avg <newline> <newline> <newline> @ torch . no _ grad ( ) <newline> def throughput ( data _ loader , model , logger ) : <newline> <tab> model . eval ( ) <newline> <newline> <tab> for idx , ( images , _ ) in enumerate ( data _ loader ) : <newline> <tab> <tab> images = images . cuda ( non _ blocking = true ) <newline> <tab> <tab> batch _ size = images . shape [ 0 ] <newline> <tab> <tab> for i in range ( 5 0 ) : <newline> <tab> <tab> <tab> model ( images ) <newline>`
+  - Aand hit train yet again.

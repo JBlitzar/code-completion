@@ -358,6 +358,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         # Split identifiers by spaces, underscores, hyphens, or capitalization
         def split_token(token):
+            if token.startswith("<") and token.endswith(">"):  # preserve ✨special✨ tokens
+                return [token.lower()]
             result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
             result = re.sub(r"([_-])", r" \1 ", result)
             result = re.sub(r"([^a-zA-Z])", r" \1 ", result)
