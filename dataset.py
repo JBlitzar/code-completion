@@ -745,7 +745,7 @@ def get_test_dataset():
     return test_dataset
 
 
-def get_dataloader(dataset, batch_size=8):
+def get_dataloader(dataset, batch_size=64):
 
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
