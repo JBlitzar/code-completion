@@ -262,7 +262,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
     ]
 
-    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.1, use_vocab_size_instead=False): # keep 90% with thresh 0.1
+    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.1, use_vocab_size_instead=False, use_whitespace=False): # keep 90% with thresh 0.1
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
@@ -270,6 +270,11 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         print(f"Cutoff threshold: {cutoff_thresh}")
         self.cutoff_thresh = cutoff_thresh
+
+        self.use_whitespace = use_whitespace
+
+        if not use_whitespace:
+            print("Not using whitespace! Important I guess")
 
         if use_vocab_size_instead:
             print("Nevermind! Using vocab size instead, no cutoff thresh")
@@ -366,6 +371,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
             return [part.lower() for part in result.split() if part.strip()]
 
         code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
+        if not self.use_whitespace:
+             code = code.replace("<TAB>", "").replace("<NEWLINE>", "")
         print("Tabs + newlines")
         
 

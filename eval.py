@@ -105,7 +105,7 @@ def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
 
 
 loader = get_dataloader(get_train_dataset())
-torch.random.manual_seed(int(input("seed: ")))
+torch.random.manual_seed(sum([ord(i) for i in input("seed? ")])) # so people can write whatever there
 for data in loader:
     batch, attn_mask = data
 
