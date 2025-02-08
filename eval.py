@@ -7,6 +7,7 @@ import sys
 import time
 from dataset import dataset, get_train_dataset, get_dataloader
 import torch.nn.functional as F
+from tqdm import tqdm, trange
 
 EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"#"runs/code-decoder-v21-alltrains-tuner"#"runs/code-decoder-v19-bigset-5k"#"runs/code-decoder-v18-allTrains-customTokenizer"#"runs/code-decoder-v17-bpe-upscale"#"runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
@@ -43,7 +44,7 @@ def evaluate(
 
     model.eval()
     with torch.no_grad():
-        for _ in range(amt):
+        for _ in trange(amt, leave=False):
             seq = generated_sequence
             results = model(seq, transpose=True)
             results = results.transpose(0, 1)

@@ -817,3 +817,18 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     ```
     - `self.optimizer = torch.optim.Adam(self.net.parameters(), lr=learning_rate, weight_decay=1e-5)`
   - Actual average hyperparameter tuning.
+  - No change that its almost ironic
+  - <img src="readme-imgs/no_change.png">
+  - Less compute is all you need? But also more training time.
+
+    ```python
+    vocab_size = 22812
+    embed_dim = 256
+    heads = 4
+    ff_dim = 256
+    layers = 4
+    drop = 0.1
+    embedding_drop = 0.1
+    ```
+
+    - `results [ index ] = [ rec ] results [ index ] . append ( text ) return results def get _ results ( results , results ) : results = results [ index ] results [ index ] results [ index ] results [ index ] results [ index ] results [ index ] results [ index ] results   | PREFIX FROM TRAIN DSET: results [ index ] = [ rec ] results [ index ] . append ( text ) return results def`
