@@ -809,6 +809,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - brody `) : parser = argparse . argument parser ( description = " " ) parser . add _ argument ( _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   | PREFIX FROM TRAIN DSET: ) : parser = argparse . argument parser ( description = " " ) parser . add _ argument (`
   - It actually just memorizes the most common one.
 - Feb 7
+
   - apparently weight decay works? Also dropout in the embedding
     ```python
      src = self.input_emb(src) * math.sqrt(self.ninp)
@@ -832,3 +833,6 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     ```
 
     - `results [ index ] = [ rec ] results [ index ] . append ( text ) return results def get _ results ( results , results ) : results = results [ index ] results [ index ] results [ index ] results [ index ] results [ index ] results [ index ] results [ index ] results   | PREFIX FROM TRAIN DSET: results [ index ] = [ rec ] results [ index ] . append ( text ) return results def`
+    - Upon further inspection, mostly repetition: `get ( ' image ' , ' ' ) if tag : image _ with _ tag = f ' { tag } ' else : image _ with _ tag = f ' { tag } ' else : image _ with _ tag = f ' { tag } ' else : image _ with _ tag =   | PREFIX FROM TRAIN DSET: get ( ' image ' , ' ' ) if tag : image _ with _ tag = f '`
+    - It just seems to be copying: `= data _ loader . load _ data ( ) dataset _ size = len ( data _ loader ) dataset _ size = len ( data _ loader ) dataset _ size = len ( data _ loader ) dataset _ size = len ( data _ loader ) dataset _ size = len ( data _ loader )   | PREFIX FROM TRAIN DSET: = data _ loader . load _ data ( ) dataset _ size = len ( data _ loader )`
+    - Maybe a larger context window to test is all you need? I'm going to do 100 and 100 now.

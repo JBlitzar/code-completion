@@ -140,9 +140,9 @@ for data in loader:
     batch = batch[0]
     labels = labels[0]
 
-    batch = batch[:20]
-    labels = labels[:20]
-    print("Getting first 20 tokens for batch and labels")
+    batch = batch[:100]
+    labels = labels[:100]
+    print("Getting first 100 tokens for batch and labels")
 
     # inp, mask = dataset[0]
 
@@ -152,7 +152,7 @@ for data in loader:
     print("batch ^ labels v")
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
-    result = evaluate(net, batch.unsqueeze(0), amt=40)
+    result = evaluate(net, batch.unsqueeze(0), amt=100)
     print(result)
     print(dataset.manager.decode(result[0]), " | PREFIX FROM TRAIN DSET:", dataset.manager.decode(batch))
 
