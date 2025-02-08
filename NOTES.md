@@ -810,3 +810,10 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - It actually just memorizes the most common one.
 - Feb 7
   - apparently weight decay works? Also dropout in the embedding
+    ```python
+     src = self.input_emb(src) * math.sqrt(self.ninp)
+     src = self.embedding_dropout(src)
+     src = self.pos_encoder(src)
+    ```
+    - `self.optimizer = torch.optim.Adam(self.net.parameters(), lr=learning_rate, weight_decay=1e-5)`
+  - Actual average hyperparameter tuning.
