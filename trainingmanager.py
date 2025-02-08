@@ -5,6 +5,7 @@ import torch.nn as nn
 from tqdm import tqdm, trange
 from torch.profiler import profile, record_function, ProfilerActivity
 import gc
+
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
@@ -72,7 +73,9 @@ class TrainingManager:
         self.dir = dir
 
         self.criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
-        self.optimizer = torch.optim.Adam(self.net.parameters(), lr=learning_rate, weight_decay=1e-5)
+        self.optimizer = torch.optim.Adam(
+            self.net.parameters(), lr=learning_rate, weight_decay=1e-5
+        )
 
         # No clue what this does. Maybe its good
         # initialized and never used.
@@ -164,7 +167,7 @@ class TrainingManager:
             {"Loss/Trainstep": self.tracker.average("Loss/trainstep")},
             epoch * dataloader_len + step,
         )
-        #print(f"Look at me! I'm logging accuracy! this is trainloop checkin. {self.tracker.average('Acc/trainstep')}")
+        # print(f"Look at me! I'm logging accuracy! this is trainloop checkin. {self.tracker.average('Acc/trainstep')}")
         log_data(
             {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
             epoch * dataloader_len + step,
@@ -200,7 +203,7 @@ class TrainingManager:
         #     {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
         #     epoch,
         # )
-        #print(self.tracker.average("Acc/trainstep"))
+        # print(self.tracker.average("Acc/trainstep"))
 
         self.tracker.reset("Acc/epoch")
 
@@ -224,7 +227,8 @@ class TrainingManager:
 
         # Compute accuracy
         acc = torch.sum(
-            torch.argmax(results.reshape(-1, results.size(-1)), dim=1) == labels.reshape(-1)
+            torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
+            == labels.reshape(-1)
         ) / len(labels.reshape(-1))
 
         return loss, acc
@@ -238,7 +242,6 @@ class TrainingManager:
         self.tracker.add("Loss/epoch", loss.item())
 
         self.tracker.add("Acc/trainstep", acc)
-
 
         # Backward pass and optimization
         loss.backward()
@@ -308,7 +311,9 @@ class TrainingManager:
 
         print("All done!")
         gc.collect()
-        os.system("""osascript -e 'display notification "Training complete" with title "Training Complete"'""")
+        os.system(
+            """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
+        )
 
     def nan_debug(self):
         torch.autograd.set_detect_anomaly(True)
@@ -327,13 +332,13 @@ class TrainingManager:
         return sum(p.numel() for p in self.net.parameters())
 
     def profile_trainstep(self):
-        
+
         self.net.train()
         data = next(iter(self.dataloader))
 
-        #https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html
+        # https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html
         with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
             with record_function("train_step"):
                 self.trainstep(data)
-        
+
         print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))

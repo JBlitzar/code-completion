@@ -54,7 +54,9 @@ class BuiltinPositionalEncoding(nn.Module):
 class BuiltinTransformerModel(nn.Transformer):
     """Container module with an encoder, a recurrent or transformer module, and a decoder."""
 
-    def __init__(self, ntoken, ninp, nhead, nhid, nlayers, dropout=0.5, embedding_drop=0.1):
+    def __init__(
+        self, ntoken, ninp, nhead, nhid, nlayers, dropout=0.5, embedding_drop=0.1
+    ):
         super(BuiltinTransformerModel, self).__init__(
             d_model=ninp, nhead=nhead, dim_feedforward=nhid, num_encoder_layers=nlayers
         )
@@ -110,13 +112,14 @@ class BuiltinTransformerModel(nn.Transformer):
 #     layers = 2
 #     drop = 0
 
+
 #     xformer_real = BuiltinTransformerModel(
 #         vocab_size, embed_dim, heads, ff_dim, layers, drop
 #     )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
 #     return xformer_real
 def make_model():
     # an extra one just for luck
-    vocab_size = 22812#153128#3646#153128#5001
+    vocab_size = 22812  # 153128#3646#153128#5001
     embed_dim = 256
     heads = 4
     ff_dim = 256

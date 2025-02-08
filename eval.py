@@ -9,7 +9,7 @@ from dataset import dataset, get_train_dataset, get_dataloader
 import torch.nn.functional as F
 from tqdm import tqdm, trange
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"#"runs/code-decoder-v21-alltrains-tuner"#"runs/code-decoder-v19-bigset-5k"#"runs/code-decoder-v18-allTrains-customTokenizer"#"runs/code-decoder-v17-bpe-upscale"#"runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"  # "runs/code-decoder-v21-alltrains-tuner"#"runs/code-decoder-v19-bigset-5k"#"runs/code-decoder-v18-allTrains-customTokenizer"#"runs/code-decoder-v17-bpe-upscale"#"runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -18,7 +18,7 @@ device = "cpu"
 # net = DecoderTransformer(vocab_size=199, num_blocks=1)
 net = make_model()
 net.to(device)
-print( os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"))
+print(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"))
 net.load_state_dict(
     torch.load(
         os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
@@ -32,6 +32,33 @@ for name, param in net.named_parameters():
 for name, param in net.named_parameters():
     if param.grad is not None and torch.isnan(param.grad).any():
         print(f"NaN found in gradients of {name}")
+
+
+def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8):
+    generated_sequence = start_sequence.clone().to(device)
+
+    model.eval()
+    with torch.no_grad():
+        for _ in trange(amt, leave=False):
+            seq = generated_sequence
+            results = model(seq, transpose=True)
+            results = results.transpose(0, 1)
+
+            logits = results.reshape(-1, results.size(-1))[-1]
+
+            logits = logits / temperature
+
+            top_k_values, top_k_indices = torch.topk(logits, k)
+            top_k_probs = F.softmax(top_k_values, dim=-1)
+
+            sampled_index = torch.multinomial(top_k_probs, 1).item()
+            next_token = top_k_indices[sampled_index].unsqueeze(0)
+
+            generated_sequence = torch.cat(
+                (generated_sequence, next_token.unsqueeze(0)), dim=1
+            )
+
+    return generated_sequence
 
 
 def evaluate(
@@ -49,7 +76,9 @@ def evaluate(
             results = model(seq, transpose=True)
             results = results.transpose(0, 1)
 
-            next_token = torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1].unsqueeze(0)
+            next_token = torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[
+                -1
+            ].unsqueeze(0)
 
             generated_sequence = torch.cat(
                 (generated_sequence, next_token.unsqueeze(0)), dim=1
@@ -106,7 +135,9 @@ def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
 
 
 loader = get_dataloader(get_train_dataset())
-torch.random.manual_seed(sum([ord(i) for i in input("seed? ")])) # so people can write whatever there
+torch.random.manual_seed(
+    sum([ord(i) for i in input("seed? ")])
+)  # so people can write whatever there
 for data in loader:
     batch, attn_mask = data
 
@@ -152,10 +183,15 @@ for data in loader:
     print("batch ^ labels v")
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
-    result = evaluate(net, batch.unsqueeze(0), amt=100)
+    print("USING TOPK")
+    result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
     print(result)
-    print(dataset.manager.decode(result[0]), " | PREFIX FROM TRAIN DSET:", dataset.manager.decode(batch))
+    print(
+        dataset.manager.decode(result[0]),
+        " | PREFIX FROM TRAIN DSET:",
+        dataset.manager.decode(batch),
+    )
 
-    #print(dataset.manager.raw_decode(81))
+    # print(dataset.manager.raw_decode(81))
 
     break

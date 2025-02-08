@@ -24,8 +24,6 @@ testset = get_test_dataset()
 testloader = get_dataloader(testset)
 
 
-
-
 net = (
     make_model()
 )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)#DecoderTransformer(vocab_size=199, num_blocks=1)

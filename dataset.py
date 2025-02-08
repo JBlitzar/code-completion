@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 
 # Device for dataloading and dataloading only. Dataloading on MPS was slower
 
-DEVICE = "cpu"#"mps" if torch.backends.mps.is_available() else "cpu"
+DEVICE = "cpu"  # "mps" if torch.backends.mps.is_available() else "cpu"
+
 
 class BPEModelManager:
     def __init__(self, root_dir, vocab_size=5000):
@@ -72,7 +73,9 @@ class BPEModelManager:
 
     @staticmethod
     def attention_mask(encoded_sequence, mask_token_ids=[0, 1, 2, 3]):
-        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int).to(encoded_sequence.device)
+        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int).to(
+            encoded_sequence.device
+        )
         # print(mask_token_tensor)
         # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
@@ -118,7 +121,7 @@ class CodeBPEModelManager(BPEModelManager):
             result = result.replace(value.strip(), key)  # value, key
 
         return result
-    
+
     def raw_decode(self, id: int):
         return self.bpe.decode([id])[0]
 
@@ -147,7 +150,7 @@ class CodeBPEModelManager(BPEModelManager):
             vocab_size=self.vocab_size,
             model=self.model_path,
             coverage=1,
-            #coverage=0.995, # TODO: revert if you want
+            # coverage=0.995, # TODO: revert if you want
         )
 
     def format_code(self, code):
@@ -259,10 +262,16 @@ class CodeCustomTokenizerManager(BPEModelManager):
         "0x",
         "0d",
         "0o",
-
     ]
 
-    def __init__(self, root_dir, vocab_size=5000, cutoff_thresh=0.1, use_vocab_size_instead=False, use_whitespace=False): # keep 90% with thresh 0.1
+    def __init__(
+        self,
+        root_dir,
+        vocab_size=5000,
+        cutoff_thresh=0.1,
+        use_vocab_size_instead=False,
+        use_whitespace=False,
+    ):  # keep 90% with thresh 0.1
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
@@ -317,7 +326,6 @@ class CodeCustomTokenizerManager(BPEModelManager):
     def preprocess_text(self, code):
         print("Preprocessing text...", code[:20])
 
-        
         # print(code[:100])
 
         # comments
@@ -325,7 +333,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL)  # funny usage of re
         code = re.sub(r"'''(.*?)'''", "", code, flags=re.DOTALL)
 
-        code = re.sub(r'    ', "	", code)
+        code = re.sub(r"    ", "	", code)
 
         print("Filtered comments")
 
@@ -348,7 +356,6 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         # print("Coped with hex")
 
-
         # each reserved word/symbol is a token. We split by space at the end, so this works.
         for word in self.reserved_keywords:
             code = re.sub(rf"\b{word}\b", f" {word} ", code)
@@ -363,7 +370,9 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         # Split identifiers by spaces, underscores, hyphens, or capitalization
         def split_token(token):
-            if token.startswith("<") and token.endswith(">"):  # preserve ✨special✨ tokens
+            if token.startswith("<") and token.endswith(
+                ">"
+            ):  # preserve ✨special✨ tokens
                 return [token.lower()]
             result = re.sub(r"([a-z])([A-Z])", r"\1 \2", token)
             result = re.sub(r"([_-])", r" \1 ", result)
@@ -372,15 +381,13 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         code = code.replace("	", " <TAB> ").replace("\n", " <NEWLINE> ")
         if not self.use_whitespace:
-             code = code.replace("<TAB>", "").replace("<NEWLINE>", "")
+            code = code.replace("<TAB>", "").replace("<NEWLINE>", "")
         print("Tabs + newlines")
-        
 
         tokens = []
         for token in tqdm(code.split(" "), leave=False):
             if token.strip():
                 tokens.extend(split_token(token))
-
 
         tokens = [tok.lower() for tok in tokens if tok.strip()]
 
@@ -403,16 +410,20 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         counter = Counter(list(token_freqs.values()))
         num_ones = counter[1]
-        print(f"Number of tokens that appear only once: {num_ones}. Percentage: {num_ones / total_num_tokens}")
+        print(
+            f"Number of tokens that appear only once: {num_ones}. Percentage: {num_ones / total_num_tokens}"
+        )
 
         print(f"Mean token count: {np.mean(list(token_freqs.values()))}")
         print(f"Median token count: {np.median(list(token_freqs.values()))}")
 
-        print(f"Standard deviation of token count: {np.std(list(token_freqs.values()))}")
+        print(
+            f"Standard deviation of token count: {np.std(list(token_freqs.values()))}"
+        )
 
         print(f"Min token count: {np.min(list(token_freqs.values()))}")
         print(f"Max token count: {np.max(list(token_freqs.values()))}")
-        
+
         print(f"Top 30 most frequent tokens:")
         sorted_tokens = sorted(token_freqs.items(), key=lambda x: x[1], reverse=True)
         for token, freq in sorted_tokens[:30]:
@@ -421,7 +432,6 @@ class CodeCustomTokenizerManager(BPEModelManager):
         print(f"Bottom 30 most frequent tokens:")
         for token, freq in sorted_tokens[-30:]:
             print(f"{token}: {freq}")
-        
 
         # plt.figure(figsize=(15,6))
         # plt.bar(np.arange(len(sorted_tokens)), [freq for token, freq in sorted_tokens])
@@ -429,12 +439,10 @@ class CodeCustomTokenizerManager(BPEModelManager):
         # plt.ylabel("Frequency")
 
         # plt.title("Token frequency distribution")
-        
+
         # plt.show()
 
         # breakpoint()
-
-
 
         # use cutoff thresh to replace tokens with UNK
         cutoff_thresh = self.cutoff_thresh
@@ -443,25 +451,34 @@ class CodeCustomTokenizerManager(BPEModelManager):
             print("deprecated")
             print("cope")
             exit()
-            sorted_tokens = sorted(token_freqs.items(), key=lambda x: x[1], reverse=True)
-            allowed_tokens = set(token for token, _ in sorted_tokens[:self.vocab_size-1]) # -1 for PAD
+            sorted_tokens = sorted(
+                token_freqs.items(), key=lambda x: x[1], reverse=True
+            )
+            allowed_tokens = set(
+                token for token, _ in sorted_tokens[: self.vocab_size - 1]
+            )  # -1 for PAD
             for i in range(len(tokens)):
                 if tokens[i] not in allowed_tokens and tokens[i] != "<PAD>":
                     print(f"Replacing token with UNK: {tokens[i]}")
                     tokens[i] = "<UNK>"
 
         else:
-            cutoff_amt = 10#np.percentile(list(token_freqs.values()), (1-cutoff_thresh) * 100)
-            print(f"Cuttoff amount: {cutoff_amt}")# using threshold {cutoff_thresh}")
+            cutoff_amt = (
+                10  # np.percentile(list(token_freqs.values()), (1-cutoff_thresh) * 100)
+            )
+            print(f"Cuttoff amount: {cutoff_amt}")  # using threshold {cutoff_thresh}")
 
             # llm-optimized
-            low_freq_tokens = [token for token, freq in token_freqs.items() if freq < cutoff_amt and token != "<PAD>"]
+            low_freq_tokens = [
+                token
+                for token, freq in token_freqs.items()
+                if freq < cutoff_amt and token != "<PAD>"
+            ]
             low_freq_tokens_set = set(low_freq_tokens)
-            tokens = ["<UNK>" if token in low_freq_tokens_set else token for token in tqdm(tokens)]
-
-
-
-            
+            tokens = [
+                "<UNK>" if token in low_freq_tokens_set else token
+                for token in tqdm(tokens)
+            ]
 
         print(tokens[500:700])
 
@@ -490,11 +507,11 @@ class CodeCustomTokenizerManager(BPEModelManager):
                     result += " "
 
         return result
-    
+
     def raw_decode(self, id: int):
         for token, id_iterator in self.token_to_id.items():
-                if id_iterator == id:
-                    return token
+            if id_iterator == id:
+                return token
 
     def format_code(self, code):
         try:
@@ -564,7 +581,9 @@ class DummySequentialDataManager:
 
     @staticmethod
     def attention_mask(encoded_sequence, mask_token_ids=[]):
-        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int).to(encoded_sequence.device)
+        mask_token_tensor = torch.tensor(mask_token_ids, dtype=torch.int).to(
+            encoded_sequence.device
+        )
         # print(mask_token_tensor)
         # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
@@ -632,20 +651,25 @@ class TextCorpusDataset(Dataset):
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
-
-        #TODO: more "optimization"
+        # TODO: more "optimization"
         self.chunks = self.chunks.to(DEVICE)
-        self.dummy = torch.tensor([1],device=DEVICE)
+        self.dummy = torch.tensor([1], device=DEVICE)
 
     def _chunk_and_save(self, encoded):
         chunked_data = []
         if self.sliding_window:
             print("sliding!")
-            for i in trange(0, len(encoded) - self.window_size + 1, self.stride, leave=False):
-                chunked_data.append(torch.tensor(encoded[i : i + self.window_size], dtype=torch.int))
+            for i in trange(
+                0, len(encoded) - self.window_size + 1, self.stride, leave=False
+            ):
+                chunked_data.append(
+                    torch.tensor(encoded[i : i + self.window_size], dtype=torch.int)
+                )
         else:
             for i in trange(0, len(encoded), self.max_length, leave=False):
-                chunked_data.append(torch.tensor(encoded[i : i + self.max_length], dtype=torch.int))
+                chunked_data.append(
+                    torch.tensor(encoded[i : i + self.max_length], dtype=torch.int)
+                )
 
             # me when the last item is not necessarily of length self.max_length
             padded_chunk = torch.zeros(self.max_length, dtype=torch.int)
@@ -665,22 +689,30 @@ class TextCorpusDataset(Dataset):
     def __len__(self):
         return len(self.chunks)
 
-    def __getitem__(self, idx): #TODO: optimized, but change it back if it doesn't work
+    def __getitem__(
+        self, idx
+    ):  # TODO: optimized, but change it back if it doesn't work
         seq = self.chunks[idx]
-        return seq, self.dummy  #self.manager.attention_mask(seq)
+        return seq, self.dummy  # self.manager.attention_mask(seq)
+
+
 class Datasplit_chunker(Dataset):
     def __init__(self, root, name, subset, slide=False, stride=1, length=512):
         super().__init__()
 
         self.root = root
         if os.path.exists(os.path.join(root, f"encoded_chunked_{name}.pt")):
-            self.items = torch.load(os.path.join(root, f"encoded_chunked_{name}.pt"), weights_only=True)
-        
+            self.items = torch.load(
+                os.path.join(root, f"encoded_chunked_{name}.pt"), weights_only=True
+            )
+
         else:
             self.items = torch.cat([subset.dataset[idx][0] for idx in subset.indices])
 
             if slide:
-                self.items = self._sliding_window(self.items, window_size=length, stride=stride)
+                self.items = self._sliding_window(
+                    self.items, window_size=length, stride=stride
+                )
 
             torch.save(self.items, os.path.join(root, f"encoded_chunked_{name}.pt"))
             print("saved!")
@@ -689,7 +721,9 @@ class Datasplit_chunker(Dataset):
 
     def _sliding_window(self, sequence, window_size, stride):
         num_windows = (len(sequence) - window_size) // stride + 1
-        windows = torch.as_strided(sequence, size=(num_windows, window_size), stride=(stride, 1))
+        windows = torch.as_strided(
+            sequence, size=(num_windows, window_size), stride=(stride, 1)
+        )
         return windows
 
     def __len__(self):
@@ -699,36 +733,32 @@ class Datasplit_chunker(Dataset):
         return self.chunks[idx], self.dummy
 
 
-
-
-
-
 # print("Running....")
 dataset = TextCorpusDataset(
     root_dir=os.path.expanduser(
         # "./dummy-data-dir"
         # "./smaller-er-test-data"
-        #"./smaller-test-data"
-        #"~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
-        #"~/torch_datasets/github-python/all_trains_subset_corpus"
+        # "./smaller-test-data"
+        # "~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
+        # "~/torch_datasets/github-python/all_trains_subset_corpus"
         "~/torch_datasets/github-python/corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
-    vocab_size=153127,#3645, # edited by me
+    vocab_size=153127,  # 3645, # edited by me
     IS_CODE=True,  # Remember to change!
     IS_CUSTOM=True,
     # IS_DUMMY=True,
     max_length=256,
     sliding_window=False,
-    stride=10
+    stride=10,
 )
 
 dset_size = int(len(dataset))
-train_size = int(0.8 * dset_size)# int(dset_size - 2)
+train_size = int(0.8 * dset_size)  # int(dset_size - 2)
 test_size = int(dset_size - train_size)
 if test_size == 2:
     print("alert! test size is 2 or whatever. Change this back please.")
 
-torch.manual_seed(3407) # https://arxiv.org/pdf/2109.08203
+torch.manual_seed(3407)  # https://arxiv.org/pdf/2109.08203
 
 train_dataset, test_dataset, _ = random_split(
     dataset, [train_size, test_size, len(dataset) - train_size - test_size]
@@ -739,10 +769,9 @@ train_dataset, test_dataset, _ = random_split(
 # test_dataset = Datasplit_chunker(dataset.root,"TEST", test_dataset, slide=False, stride=10, length=256)
 
 
+# test_dataset = train_dataset # to test if the overfitting is real
 
-#test_dataset = train_dataset # to test if the overfitting is real
-
-#train_dataset = dataset  # TODO change
+# train_dataset = dataset  # TODO change
 
 
 def get_train_dataset():
@@ -767,8 +796,8 @@ if __name__ == "__main__":
         manager = dataset.manager
         print(a)
         print(manager.decode(a))
-        #print(a)
+        # print(a)
         print("--- sep batch --- ")
 
         print(f"Number of tokens used: {len(dataset.manager.token_to_id)}")
-        break # lazy
+        break  # lazy
