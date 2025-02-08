@@ -808,3 +808,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - You know what? You know what we're going to do? Train on a dataset where `<tab>` and `<newline>` doesnt exist. It looks like this: `coalesced = _ flatten _ dense _ tensors ( grads ) dist . all _ reduce ( coalesced ) coalesced / = dist . get _ world _ size ( ) for buf , synced in zip ( grads , _ unflatten _ dense _ tensors ( coalesced , grads ) ) :`
   - brody `) : parser = argparse . argument parser ( description = " " ) parser . add _ argument ( _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   | PREFIX FROM TRAIN DSET: ) : parser = argparse . argument parser ( description = " " ) parser . add _ argument (`
   - It actually just memorizes the most common one.
+- Feb 7
+  - apparently weight decay works? Also dropout in the embedding

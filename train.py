@@ -13,7 +13,7 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v23-decayed_drop"
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
