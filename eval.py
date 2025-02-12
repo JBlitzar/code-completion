@@ -8,6 +8,7 @@ import time
 from dataset import dataset, get_train_dataset, get_dataloader
 import torch.nn.functional as F
 from tqdm import tqdm, trange
+import heapq
 
 EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"  # "runs/code-decoder-v21-alltrains-tuner"#"runs/code-decoder-v19-bigset-5k"#"runs/code-decoder-v18-allTrains-customTokenizer"#"runs/code-decoder-v17-bpe-upscale"#"runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
@@ -60,59 +61,40 @@ def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8):
 
     return generated_sequence
 
+
 def evaluate_beam(model, start_sequence, k=2, amt=10):
     generated_sequence = start_sequence.clone().to(device)
 
     model.eval()
 
-    current_beams = [generated_sequence]
-    current_beam_scores = [1.0]
+    current_beams = torch.stack([generated_sequence] * k)
+    current_beam_scores = torch.zeros(k, device=device)
 
     with torch.no_grad():
         for _ in trange(amt, leave=False, dynamic_ncols=True):
-
-            unpruned_new_beams = []
-            unpruned_new_beam_scores = []
-            for idx, beam in enumerate(current_beams):
-                # generate the top k next tokens for each beam
-                # add them to a temp list
-                seq = beam
+            all_candidates = []
+            for i in range(k):
+                seq = current_beams[i]
                 results = model(seq, transpose=True)
                 results = results.transpose(0, 1)
 
                 logits = results.reshape(-1, results.size(-1))[-1]
-                # values are probs
-                # indices are actual tokens
+                topk_values, topk_indices = torch.topk(logits, k)
 
-                # top_k_values, top_k_indices = torch.topk(logits, k)
-                topk = torch.topk(logits, k)
+                for j in range(k):
+                    candidate = torch.cat(
+                        (seq, topk_indices[j].unsqueeze(0).unsqueeze(0)), dim=1
+                    )
+                    score = current_beam_scores[i] + topk_values[j]
+                    all_candidates.append((candidate, score))
 
-                for topk_idx in range(len(topk[0])):
-                    value = topk[0][topk_idx]
-                    index = topk[1][topk_idx]
+            top_candidates = heapq.nlargest(k, all_candidates, key=lambda x: x[1])
+            current_beams = torch.stack([candidate for candidate, _ in top_candidates])
+            current_beam_scores = torch.tensor(
+                [score for _, score in all_candidates[:k]], device=device
+            )
 
-                    unpruned_new_beam_scores.append(value + current_beam_scores[idx])
-
-                    unpruned_new_beams.append(torch.cat((beam,index.unsqueeze(0).unsqueeze(0)),dim=1))
-                
-            beams_and_scores = dict(zip(unpruned_new_beams,unpruned_new_beam_scores))
-
-            top_beams_and_scores = sorted(beams_and_scores.items(),key=lambda x: x[1],reverse=True)[:k]
-
-            current_beams = [a[0] for a in top_beams_and_scores]
-            current_beam_scores = [a[1] for a in top_beams_and_scores]
-
-            print(len(current_beams))
-            print(current_beams[0].size())
-    
-    # final k beams
-
-    beams_and_scores = dict(zip(current_beams,current_beam_scores))
-
-    generated_sequence, _ = sorted(beams_and_scores.items(),key=lambda x: x[1],reverse=True)[0]
-
-
-    return generated_sequence
+    return current_beams[0]
 
 
 def evaluate(
@@ -240,7 +222,7 @@ for data in loader:
     # print("USING TOPK")
     # result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
     print("usinb beam")
-    result = evaluate_beam(net, batch.unsqueeze(0),amt=100)
+    result = evaluate_beam(net, batch.unsqueeze(0), amt=100)
     print(result)
     print(
         dataset.manager.decode(result[0]),
