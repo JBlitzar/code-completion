@@ -60,6 +60,60 @@ def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8):
 
     return generated_sequence
 
+def evaluate_beam(model, start_sequence, k=2, amt=10):
+    generated_sequence = start_sequence.clone().to(device)
+
+    model.eval()
+
+    current_beams = [generated_sequence]
+    current_beam_scores = [1.0]
+
+    with torch.no_grad():
+        for _ in trange(amt, leave=False, dynamic_ncols=True):
+
+            unpruned_new_beams = []
+            unpruned_new_beam_scores = []
+            for idx, beam in enumerate(current_beams):
+                # generate the top k next tokens for each beam
+                # add them to a temp list
+                seq = beam
+                results = model(seq, transpose=True)
+                results = results.transpose(0, 1)
+
+                logits = results.reshape(-1, results.size(-1))[-1]
+                # values are probs
+                # indices are actual tokens
+
+                # top_k_values, top_k_indices = torch.topk(logits, k)
+                topk = torch.topk(logits, k)
+
+                for topk_idx in range(len(topk[0])):
+                    value = topk[0][topk_idx]
+                    index = topk[1][topk_idx]
+
+                    unpruned_new_beam_scores.append(value + current_beam_scores[idx])
+
+                    unpruned_new_beams.append(torch.cat((beam,index.unsqueeze(0).unsqueeze(0)),dim=1))
+                
+            beams_and_scores = dict(zip(unpruned_new_beams,unpruned_new_beam_scores))
+
+            top_beams_and_scores = sorted(beams_and_scores.items(),key=lambda x: x[1],reverse=True)[:k]
+
+            current_beams = [a[0] for a in top_beams_and_scores]
+            current_beam_scores = [a[1] for a in top_beams_and_scores]
+
+            print(len(current_beams))
+            print(current_beams[0].size())
+    
+    # final k beams
+
+    beams_and_scores = dict(zip(current_beams,current_beam_scores))
+
+    generated_sequence, _ = sorted(beams_and_scores.items(),key=lambda x: x[1],reverse=True)[0]
+
+
+    return generated_sequence
+
 
 def evaluate(
     model,
@@ -183,8 +237,10 @@ for data in loader:
     print("batch ^ labels v")
     print(dataset.manager.decode(labels))
     print("that's inp I guess ^^")
-    print("USING TOPK")
-    result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
+    # print("USING TOPK")
+    # result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
+    print("usinb beam")
+    result = evaluate_beam(net, batch.unsqueeze(0),amt=100)
     print(result)
     print(
         dataset.manager.decode(result[0]),
