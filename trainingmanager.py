@@ -318,8 +318,6 @@ class TrainingManager:
 
         self.epoch_gen(val_loader)
 
-        
-
         self.on_epoch_checkin(epoch)
 
     def train(self, epochs=None, dataloader=None):
