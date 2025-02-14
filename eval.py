@@ -16,23 +16,7 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 device = "cpu"
 
-# net = DecoderTransformer(vocab_size=199, num_blocks=1)
-net = make_model()
-net.to(device)
-print(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"))
-net.load_state_dict(
-    torch.load(
-        os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
-    )
-)
 
-
-for name, param in net.named_parameters():
-    if torch.isnan(param).any():
-        print(f"NaN found in {name}")
-for name, param in net.named_parameters():
-    if param.grad is not None and torch.isnan(param.grad).any():
-        print(f"NaN found in gradients of {name}")
 
 
 def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8):
@@ -40,7 +24,7 @@ def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8):
 
     model.eval()
     with torch.no_grad():
-        for _ in trange(amt, leave=False):
+        for _ in trange(amt, leave=False, dynamic_ncols=True):
             seq = generated_sequence
             results = model(seq, transpose=True)
             results = results.transpose(0, 1)
@@ -161,75 +145,94 @@ def tester_exactly_like_trainingmanager_only_last_please_work(model, rawbatch):
     )
 
 
-def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
-    seq = seq.unsqueeze(0)
+# def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
+#     seq = seq.unsqueeze(0)
 
-    results = model(batch, transpose=True)
-    results = results.transpose(0, 1)
+#     results = model(batch, transpose=True)
+#     results = results.transpose(0, 1)
 
     return torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]
-
-
-loader = get_dataloader(get_train_dataset())
-torch.random.manual_seed(
-    sum([ord(i) for i in input("seed? ")])
-)  # so people can write whatever there
-for data in loader:
-    batch, attn_mask = data
-
-    print(tester_exactly_like_trainingmanager_please_please_work(net, rawbatch=batch))
-    print("pretty please")
-
-    print(
-        tester_exactly_like_trainingmanager_only_last_please_work(net, rawbatch=batch)
-    )
-    print("please please please")
-
-    print(
-        tester_exactly_like_trainingmanager_just_next_given_seq_pls(
-            net, seq=batch[:, :-1].contiguous()[-1]
+def main():
+    # net = DecoderTransformer(vocab_size=199, num_blocks=1)
+    net = make_model()
+    net.to(device)
+    print(os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"))
+    net.load_state_dict(
+        torch.load(
+            os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
         )
     )
-    print(f"Answer was {batch[:,1:].contiguous()[-1][-1]}")
-    print("please please please")
 
-    print(
-        tester_exactly_like_trainingmanager_just_next_given_seq_pls(
-            net, seq=batch[:, :-1].contiguous()[-1][:10]
+
+    for name, param in net.named_parameters():
+        if torch.isnan(param).any():
+            print(f"NaN found in {name}")
+    for name, param in net.named_parameters():
+        if param.grad is not None and torch.isnan(param.grad).any():
+            print(f"NaN found in gradients of {name}")
+    loader = get_dataloader(get_train_dataset())
+    torch.random.manual_seed(
+        sum([ord(i) for i in input("seed? ")])
+    )  # so people can write whatever there
+    for data in loader:
+        batch, attn_mask = data
+
+        print(tester_exactly_like_trainingmanager_please_please_work(net, rawbatch=batch))
+        print("pretty please")
+
+        print(
+            tester_exactly_like_trainingmanager_only_last_please_work(net, rawbatch=batch)
         )
-    )
-    print(f"Answer was {batch[:,1:].contiguous()[-1][10]}")
-    print("please please please")
+        print("please please please")
 
-    labels = batch[:, 1:].contiguous()
-    batch = batch[:, :-1].contiguous()
+        # print(
+        #     tester_exactly_like_trainingmanager_just_next_given_seq_pls(
+        #         net, seq=batch[:, :-1].contiguous()[-1]
+        #     )
+        # )
+        # print(f"Answer was {batch[:,1:].contiguous()[-1][-1]}")
+        # print("please please please")
 
-    batch = batch[0]
-    labels = labels[0]
+        # print(
+        #     tester_exactly_like_trainingmanager_just_next_given_seq_pls(
+        #         net, seq=batch[:, :-1].contiguous()[-1][:10]
+        #     )
+        # )
+        # print(f"Answer was {batch[:,1:].contiguous()[-1][10]}")
+        # print("please please please")
 
-    batch = batch[:100]
-    labels = labels[:100]
-    print("Getting first 100 tokens for batch and labels")
+        labels = batch[:, 1:].contiguous()
+        batch = batch[:, :-1].contiguous()
 
-    # inp, mask = dataset[0]
+        batch = batch[0]
+        labels = labels[0]
 
-    # inp = inp[:-1]
-    print(batch)
-    print(dataset.manager.decode(batch))
-    print("batch ^ labels v")
-    print(dataset.manager.decode(labels))
-    print("that's inp I guess ^^")
-    # print("USING TOPK")
-    # result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
-    print("usinb beam")
-    result = evaluate_beam(net, batch.unsqueeze(0), amt=100)
-    print(result)
-    print(
-        dataset.manager.decode(result[0]),
-        " | PREFIX FROM TRAIN DSET:",
-        dataset.manager.decode(batch),
-    )
+        batch = batch[:100]
+        labels = labels[:100]
+        print("Getting first 100 tokens for batch and labels")
 
-    # print(dataset.manager.raw_decode(81))
+        # inp, mask = dataset[0]
 
-    break
+        # inp = inp[:-1]
+        print(batch)
+        print(dataset.manager.decode(batch))
+        print("batch ^ labels v")
+        print(dataset.manager.decode(labels))
+        print("that's inp I guess ^^")
+        print("USING TOPK")
+        result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
+        # print("usinb beam")
+        # result = evaluate_beam(net, batch.unsqueeze(0), amt=100)
+        print(result)
+        print(
+            dataset.manager.decode(result[0]),
+            " | PREFIX FROM TRAIN DSET:",
+            dataset.manager.decode(batch),
+        )
+
+        # print(dataset.manager.raw_decode(81))
+
+        break
+
+if __name__ == "__main__":
+    main()
