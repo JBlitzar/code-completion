@@ -17,8 +17,6 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 device = "cpu"
 
 
-
-
 def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8, device="cpu"):
     generated_sequence = start_sequence.clone().to(device)
 
@@ -144,14 +142,15 @@ def tester_exactly_like_trainingmanager_only_last_please_work(model, rawbatch):
         -1
     )
 
+    # def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
+    #     seq = seq.unsqueeze(0)
 
-# def tester_exactly_like_trainingmanager_just_next_given_seq_pls(model, seq):
-#     seq = seq.unsqueeze(0)
-
-#     results = model(batch, transpose=True)
-#     results = results.transpose(0, 1)
+    #     results = model(batch, transpose=True)
+    #     results = results.transpose(0, 1)
 
     return torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]
+
+
 def main():
     # net = DecoderTransformer(vocab_size=199, num_blocks=1)
     net = make_model()
@@ -162,7 +161,6 @@ def main():
             os.path.join(EXPERIMENT_DIRECTORY, "ckpt", "latest.pt"), weights_only=True
         )
     )
-
 
     for name, param in net.named_parameters():
         if torch.isnan(param).any():
@@ -177,11 +175,15 @@ def main():
     for data in loader:
         batch, attn_mask = data
 
-        print(tester_exactly_like_trainingmanager_please_please_work(net, rawbatch=batch))
+        print(
+            tester_exactly_like_trainingmanager_please_please_work(net, rawbatch=batch)
+        )
         print("pretty please")
 
         print(
-            tester_exactly_like_trainingmanager_only_last_please_work(net, rawbatch=batch)
+            tester_exactly_like_trainingmanager_only_last_please_work(
+                net, rawbatch=batch
+            )
         )
         print("please please please")
 
@@ -233,6 +235,7 @@ def main():
         # print(dataset.manager.raw_decode(81))
 
         break
+
 
 if __name__ == "__main__":
     main()
