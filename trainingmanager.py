@@ -6,6 +6,10 @@ from tqdm import tqdm, trange
 from torch.profiler import profile, record_function, ProfilerActivity
 import gc
 
+from eval import evaluate_topk
+from dataset import dataset
+
+
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
 
@@ -232,6 +236,26 @@ class TrainingManager:
         ) / len(labels.reshape(-1))
 
         return loss, acc
+    
+    def run_generation(self, data):
+        batch, attn_mask = data
+        start_sequence = batch[:, :-1].contiguous()[0][:100].unsqueeze(0)
+        result = evaluate_topk(self.net, start_sequence, amt=100, k=10, temperature=0.8, device=device)
+
+        result = dataset.manager.decode(result[0])
+        batch_str = dataset.manager.decode(batch[0])
+
+        result = result.replace(batch_str, f"[{batch_str}]")
+
+
+        with open(os.path.join(self.dir, "ckpt", "generated.txt"), "a+") as f:
+            f.write(f"K=10,T=0.8: {result}\n")
+
+    def epoch_gen(self, loader):
+        if loader is not None:
+            for data in loader:
+                self.run_generation(data)
+                break
 
     def trainstep(self, data):
         self.optimizer.zero_grad()
@@ -267,6 +291,8 @@ class TrainingManager:
                 avg_val_loss = self.tracker.average("Loss/val/epoch")
                 test_tqdm.set_postfix({"Val Loss": f"{avg_val_loss:.3f}"})
 
+
+
     def train_loop(self, dataloader, epoch):
         for step, data in enumerate(
             train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True)
@@ -289,6 +315,10 @@ class TrainingManager:
 
         self.net.eval()
         self.val_loop(val_loader)
+
+        self.epoch_gen(val_loader)
+
+        
 
         self.on_epoch_checkin(epoch)
 

@@ -19,12 +19,12 @@ device = "cpu"
 
 
 
-def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8):
+def evaluate_topk(model, start_sequence, amt=10, k=10, temperature=0.8, device="cpu"):
     generated_sequence = start_sequence.clone().to(device)
 
     model.eval()
     with torch.no_grad():
-        for _ in trange(amt, leave=False, dynamic_ncols=True):
+        for _ in trange(amt, leave=False, dynamic_ncols=True, desc="topk"):
             seq = generated_sequence
             results = model(seq, transpose=True)
             results = results.transpose(0, 1)
