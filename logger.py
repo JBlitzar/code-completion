@@ -6,6 +6,9 @@ import webbrowser
 
 writer = None
 
+def flush():
+    writer.flush()
+    writer = None
 
 def log_data(data, i):
 

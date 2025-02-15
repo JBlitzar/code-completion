@@ -7,7 +7,7 @@ from builtin_architecture import make_model, make_model_custom
 from dataset import get_train_dataset, get_test_dataset, get_dataloader
 import torch
 from tqdm import tqdm, trange
-from logger import init_logger
+from logger import init_logger, flush
 import torchvision
 from trainingmanager import TrainingManager
 import torch.nn as nn
@@ -47,6 +47,7 @@ def train_model(experiment_directory, epochs, model_params=None):
         break
 
     trainer.train()
+    flush()
 
 
 if __name__ == "__main__":
