@@ -117,6 +117,8 @@ class BuiltinTransformerModel(nn.Transformer):
 #         vocab_size, embed_dim, heads, ff_dim, layers, drop
 #     )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
 #     return xformer_real
+
+
 def make_model():
     # an extra one just for luck
     vocab_size = 22812  # 153128#3646#153128#5001
@@ -124,6 +126,22 @@ def make_model():
     heads = 4
     ff_dim = 256
     layers = 4
+    drop = 0.1
+    embedding_drop = 0.1
+
+    xformer_real = BuiltinTransformerModel(
+        vocab_size, embed_dim, heads, ff_dim, layers, drop, embedding_drop
+    )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
+    return xformer_real
+
+
+def make_model_custom(dim=256, heads=4, layers=4, *args):
+    # an extra one just for luck
+    vocab_size = 22812  # 153128#3646#153128#5001
+    embed_dim = dim
+    heads = heads
+    ff_dim = dim
+    layers = layers
     drop = 0.1
     embedding_drop = 0.1
 

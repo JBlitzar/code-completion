@@ -3,7 +3,7 @@ import os
 os.system(f"caffeinate -is -w {os.getpid()} &")
 
 # from architecture import DecoderTransformer
-from builtin_architecture import make_model
+from builtin_architecture import make_model, make_model_custom
 from dataset import get_train_dataset, get_test_dataset, get_dataloader
 import torch
 from tqdm import tqdm, trange
@@ -12,15 +12,21 @@ import torchvision
 from trainingmanager import TrainingManager
 import torch.nn as nn
 
-def train_model(experiment_directory, epochs):
+
+def train_model(experiment_directory, epochs, model_params=None):
+    if model_params is None:
+        model_params = {}
+
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     trainset = get_train_dataset()
     dataloader = get_dataloader(trainset)
 
     testset = get_test_dataset()
     testloader = get_dataloader(testset)
-
-    net = make_model()
+    if model_params == {}:
+        net = make_model()
+    else:
+        net = make_model_custom(**model_params)
     net.to(device)
 
     trainer = TrainingManager(
@@ -41,6 +47,7 @@ def train_model(experiment_directory, epochs):
         break
 
     trainer.train()
+
 
 if __name__ == "__main__":
     EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"
