@@ -861,3 +861,4 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - So its doing pretty well, esp considering we are now running eval on valset. Some repetition. Also it looks like I should've trained longer all along. Still continous improvement.
     - Repetition is decreasing but still present.
   - So it's pretty good but not great. Time to hyperparam search model sizes.
+  - fixed a quick bug with the logging. Now running overnight.

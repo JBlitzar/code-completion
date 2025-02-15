@@ -7,6 +7,7 @@ import webbrowser
 writer = None
 
 def flush():
+    global writer
     writer.flush()
     writer = None
 
