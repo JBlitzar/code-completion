@@ -24,7 +24,7 @@ def log_img(img, name):
 def init_logger(net, data=None, dir="runs"):
     net.eval()
     global writer
-    if not writer and writer.log_dir == dir:
+    if not writer or writer is None:
         writer = SummaryWriter(dir)
     if data is not None:
         writer.add_graph(net, data)

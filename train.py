@@ -1,6 +1,6 @@
 import os
 
-os.system(f"caffeinate -is -w {os.getpid()} &")
+
 
 # from architecture import DecoderTransformer
 from builtin_architecture import make_model, make_model_custom
@@ -14,6 +14,8 @@ import torch.nn as nn
 
 
 def train_model(experiment_directory, epochs, model_params=None):
+    os.system(f"caffeinate -is -w {os.getpid()} &")
+    
     if model_params is None:
         model_params = {}
 

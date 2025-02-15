@@ -17,4 +17,4 @@ find . -type f -name "$pattern" | while read -r file; do
     echo "Renamed $file to $dir/$new_filename"
 done
 
-killall caffeinate
+# killall caffeinate
