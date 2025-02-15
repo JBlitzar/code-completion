@@ -17,9 +17,12 @@ hyperparam_sets = [
 
 for config in (pbar := tqdm(hyperparam_sets, dynamic_ncols=True)):
     pbar.set_description(f"Config {config['name']}")
+    
+    # The dictionary comprehension is real
+    cleaned_config = {k: v for k, v in config.items() if k != "name"}
 
     train_model(
-        os.path.join(EXPERIMENT_DIRECTORY, f"CONFIG_{config['name']}"), EPOCHS, config
+        os.path.join(EXPERIMENT_DIRECTORY, f"CONFIG_{config['name']}"), EPOCHS, cleaned_config
     )
 
     os.system("bash safe_cleanup.sh")
