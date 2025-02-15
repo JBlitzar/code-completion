@@ -245,9 +245,10 @@ class TrainingManager:
         )
 
         result = dataset.manager.decode(result[0])
-        batch_str = dataset.manager.decode(batch[0])
+        batch_str = dataset.manager.decode(start_sequence[0])
 
-        result = result.replace(batch_str, f"[{batch_str}]")
+        result = f"<data>{batch_str}</data>{result[len(batch_str):]}"
+        # print(result)
 
         with open(os.path.join(self.dir, "ckpt", "generated.txt"), "a+") as f:
             f.write(f"K=10,T=0.8: {result}\n")

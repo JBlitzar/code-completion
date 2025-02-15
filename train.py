@@ -12,44 +12,37 @@ import torchvision
 from trainingmanager import TrainingManager
 import torch.nn as nn
 
+def train_model(experiment_directory, epochs):
+    device = "mps" if torch.backends.mps.is_available() else "cpu"
+    trainset = get_train_dataset()
+    dataloader = get_dataloader(trainset)
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"
+    testset = get_test_dataset()
+    testloader = get_dataloader(testset)
 
+    net = make_model()
+    net.to(device)
 
-device = "mps" if torch.backends.mps.is_available() else "cpu"
-trainset = get_train_dataset()
-dataloader = get_dataloader(trainset)
-
-testset = get_test_dataset()
-testloader = get_dataloader(testset)
-
-
-net = (
-    make_model()
-)  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)#DecoderTransformer(vocab_size=199, num_blocks=1)
-net.to(device)
-
-
-trainer = TrainingManager(
-    net=net,
-    dir=EXPERIMENT_DIRECTORY,
-    dataloader=dataloader,
-    device=device,
-    trainstep_checkin_interval=100,
-    epochs=20,
-    val_dataloader=testloader,
-)
-
-# trainer.profile_trainstep()
-
-for batch, attn_mask in dataloader:
-    init_logger(
-        net,
-        # batch.to(device),#, attn_mask.to(device)),
-        dir=os.path.join(EXPERIMENT_DIRECTORY, "tensorboard"),
+    trainer = TrainingManager(
+        net=net,
+        dir=experiment_directory,
+        dataloader=dataloader,
+        device=device,
+        trainstep_checkin_interval=100,
+        epochs=epochs,
+        val_dataloader=testloader,
     )
-    break
 
+    for batch, attn_mask in dataloader:
+        init_logger(
+            net,
+            dir=os.path.join(experiment_directory, "tensorboard"),
+        )
+        break
 
-trainer.train()
-# os.system("bash cleanup.sh")
+    trainer.train()
+
+if __name__ == "__main__":
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"
+    EPOCHS = 50
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS)
