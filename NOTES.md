@@ -862,3 +862,6 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - Repetition is decreasing but still present.
   - So it's pretty good but not great. Time to hyperparam search model sizes.
   - fixed a quick bug with the logging. Now running overnight.
+  - Here are the results!
+  - <img src="readme-imgs/comparison.png" width="40%">
+  -
