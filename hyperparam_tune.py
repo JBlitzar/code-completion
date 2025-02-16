@@ -12,12 +12,14 @@ hyperparam_sets = [
     {"name": "smalldim", "heads": 4, "dim": 128, "layers": 4},
     {"name": "deep_smalldim", "heads": 4, "dim": 128, "layers": 8},
     {"name": "bigdim", "heads": 4, "dim": 512, "layers": 4},
+    {"name": "deeper", "heads": 4, "dim": 256, "layers": 8},
+    {"name": "big_deeper", "heads": 4, "dim": 512, "layers": 8},
 ]
 
 
 for config in (pbar := tqdm(hyperparam_sets, dynamic_ncols=True)):
     pbar.set_description(f"Config {config['name']}")
-    
+
     # The dictionary comprehension is real
     cleaned_config = {k: v for k, v in config.items() if k != "name"}
 
