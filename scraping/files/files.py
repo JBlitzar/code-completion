@@ -1,116 +1,95 @@
 import requests
 import time
+import os
+import logging
 from tqdm import tqdm
 from dotenv import load_dotenv
-import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import threading
 
+# Load environment variables
 load_dotenv()
 
 # GitHub API setup
-headers = {"Authorization": "token " + os.environ["GITHUB_PAT_v2"]}
+GITHUB_TOKEN = os.getenv("GITHUB_PAT_v2")  # Use a single token
 timeout_duration = 10  # Timeout for requests in seconds
 output_file = "python_files.txt"
 sha_file = "seen_shas.txt"
 line_number_file = "line_number.txt"
 
-# Lock for file writes
-file_lock = threading.Lock()
-
+# Logging setup
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def fetch_python_files_from_repo(repo_url, seen_shas):
-    # Get the repository name from the URL (e.g., "owner/repo" from "https://github.com/owner/repo")
+    """Fetches Python files from a given GitHub repository."""
     repo_name = repo_url.split("https://github.com/")[-1]
-
-    # Fetch the contents of the repository
     contents_url = f"https://api.github.com/repos/{repo_name}/contents"
+    
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
     response = requests.get(contents_url, headers=headers, timeout=timeout_duration)
 
     if response.status_code == 200:
         contents = response.json()
-
-        # Loop through each file in the repository
         for file_data in contents:
-            if file_data["name"].endswith(".py") and not file_data["name"].endswith(
-                "setup.py"
-            ):  # Python files
+            if file_data["name"].endswith(".py") and not file_data["name"].endswith("setup.py"):
                 file_size = file_data.get("size", 0)
-
-                # Filter by file size (between 1 kb and 100 kb)
-                if 1000 <= file_size <= 100000:
+                if 1000 <= file_size <= 100000:  # Filter by size
                     file_sha = file_data.get("sha")
 
-                    # Skip if SHA has been seen before
-                    if file_sha not in seen_shas:
-                        with file_lock:
-                            with open(output_file, "a") as file:
-                                file.write(f"{file_data['download_url']}\n")
-                            with open(sha_file, "a") as sha_log:
-                                sha_log.write(f"{file_sha}\n")
+                    if file_sha not in seen_shas:  # Avoid duplicates
+                        with open(output_file, "a") as file:
+                            file.write(f"{file_data['download_url']}\n")
+                        with open(sha_file, "a") as sha_log:
+                            sha_log.write(f"{file_sha}\n")
                         seen_shas.add(file_sha)
                     else:
-                        print(
-                            f"Skipping file {file_data['name']} (SHA {file_sha} already seen)"
-                        )
-    else:
-        print(f"Failed to fetch contents for {repo_name}: {response.status_code}")
+                        logging.info(f"Skipping {file_data['name']} (SHA already seen)")
+        return True  # Successfully processed repo
 
+    elif response.status_code == 403:
+        reset_time = int(response.headers.get("X-RateLimit-Reset", time.time()))  # Get reset time
+        wait_time = reset_time - int(time.time())  # Seconds until reset
+        logging.warning(f"Rate limit hit! Waiting {wait_time // 60} minutes until reset...")
+        time.sleep(wait_time + 1)  # Sleep until reset
+        return fetch_python_files_from_repo(repo_url, seen_shas)  # Retry after reset
+
+    logging.error(f"Failed to fetch {repo_name}. Status: {response.status_code}")
+    return False
 
 def read_repositories_from_file(file_path):
+    """Reads repository URLs from a file."""
     with open(file_path, "r") as f:
-        return f.readlines()
-
+        return [line.strip() for line in f if line.strip()]
 
 def read_seen_shas(file_path):
+    """Reads previously seen SHAs from a file."""
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
             return set(f.read().splitlines())
     return set()
 
-
 def get_last_line_number(file_path):
+    """Reads the last processed line number."""
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
             return int(f.read().strip())
     return 0
 
-
 def save_last_line_number(file_path, line_number):
+    """Saves the last processed line number."""
     with open(file_path, "w") as f:
         f.write(str(line_number))
 
-
-# Read repository URLs from repositories.txt
+# Main script execution
 repositories = read_repositories_from_file("repositories.txt")
-
-# Read previously seen SHAs from seen_shas.txt
 seen_shas = read_seen_shas(sha_file)
-
-# Read the last line number from line_number.txt to resume
 last_line_number = get_last_line_number(line_number_file)
 
-# Number of threads for concurrency
-num_threads = 5
+with tqdm(total=len(repositories) - last_line_number, desc="Processing Repositories") as pbar:
+    for index, repo in enumerate(repositories[last_line_number:], start=last_line_number):
+        success = fetch_python_files_from_repo(repo, seen_shas)
+        if not success:
+            continue  # Skip failed repos
+        
+        pbar.update(1)
+        save_last_line_number(line_number_file, index + 1)  # Save progress
 
-# Process repositories from the last saved line number
-with tqdm(
-    total=len(repositories) - last_line_number, desc="Processing Repositories"
-) as pbar:
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        futures = []
-        for i in range(last_line_number, len(repositories)):
-            repo_url = repositories[i].strip()
-            if repo_url:  # Skip empty lines
-                futures.append(
-                    executor.submit(fetch_python_files_from_repo, repo_url, seen_shas)
-                )
-                pbar.update(1)
-                # Save progress in line_number.txt
-                save_last_line_number(line_number_file, i + 1)
-
-        # Wait for all futures to complete
-        for future in as_completed(futures):
-            future.result()
-
-print(f"Python files saved to {output_file}")
+logging.info(f"Python files saved to {output_file}")
