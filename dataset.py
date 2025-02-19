@@ -270,7 +270,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         vocab_size=5000,
         cutoff_thresh=0.1,
         use_vocab_size_instead=False,
-        use_whitespace=False,
+        use_whitespace=True, # haha
     ):  # keep 90% with thresh 0.1
         self.root_dir = root_dir
 

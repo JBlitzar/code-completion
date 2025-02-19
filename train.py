@@ -15,7 +15,7 @@ import torch.nn as nn
 
 def train_model(experiment_directory, epochs, model_params=None):
     os.system(f"caffeinate -is -w {os.getpid()} &")
-    
+
     if model_params is None:
         model_params = {}
 
@@ -53,6 +53,6 @@ def train_model(experiment_directory, epochs, model_params=None):
 
 
 if __name__ == "__main__":
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v22-bigset-tuner"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v23-testing"
     EPOCHS = 50
     train_model(EXPERIMENT_DIRECTORY, EPOCHS)

@@ -865,3 +865,28 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Here are the results!
   - <img src="readme-imgs/comparison.png" width="40%">
   -
+- Feb 18
+
+  - Mostly hitting the ceiling
+  - Maybe more data?
+  - **Make a writeup**
+
+    - For yourself
+    - As a medium
+    - Peer-reviewed thing for high schoolers
+
+      - Journal of emerging investigators
+      - $35 fee, high acceptance rate.
+      - 7-8 months
+      - https://emerginginvestigators.org
+
+      - Theses: Effect of dataset on results, or hyperparameters. Tokenization. Etc.
+
+    - Will take a bit. Nick is happy to advise.
+
+  - Some sort of other metric?
+    - Possible metrics:
+      - Top k accuracy
+      - (not yet) AST parse (possibly too high of a bar)
+      - Longest common subsequence **between generated and actual** (kind of a scuffed metric)
+      - (x) Bleu score might actually work. investigate.

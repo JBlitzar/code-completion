@@ -235,6 +235,17 @@ class TrainingManager:
             == labels.reshape(-1)
         ) / len(labels.reshape(-1))
 
+        # Top k
+        top_k = 5
+        top_k_predictions = torch.topk(results.reshape(-1, results.size(-1)), top_k, dim=1).indices
+        correct_top_k = torch.sum(
+            torch.any(top_k_predictions == labels.reshape(-1, 1), dim=1)
+        ).item()
+        top_k_acc = correct_top_k / len(labels.reshape(-1))
+
+        
+
+
         return loss, acc
 
     def run_generation(self, data):

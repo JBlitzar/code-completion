@@ -14,6 +14,8 @@ hyperparam_sets = [
     {"name": "bigdim", "heads": 4, "dim": 512, "layers": 4},
     {"name": "deeper", "heads": 4, "dim": 256, "layers": 8},
     {"name": "big_deeper", "heads": 4, "dim": 512, "layers": 8},
+    {"name": "medium_drop", "heads": 4, "dim": 256, "layers": 4, "drop":0.3},
+    {"name": "bigdim_drop", "heads": 4, "dim": 512, "layers": 4, "drop":0.3},
 ]
 
 

@@ -135,7 +135,7 @@ def make_model():
     return xformer_real
 
 
-def make_model_custom(dim=256, heads=4, layers=4, *args):
+def make_model_custom(dim=256, heads=4, layers=4, drop=0.1, *args):
     # an extra one just for luck
     vocab_size = 22812  # 153128#3646#153128#5001
     embed_dim = dim
