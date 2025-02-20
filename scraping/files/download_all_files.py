@@ -1,44 +1,48 @@
-import zipfile
 import requests
 import os
 from urllib.parse import urlparse
 from tqdm import tqdm
+import concurrent.futures
 
 
-def download_and_add_to_zip(urls, zip_name):
-    # Open the ZIP file in append mode (to add files incrementally)
-    with zipfile.ZipFile(zip_name, "a", zipfile.ZIP_DEFLATED) as zipf:
-        existing_files = {
-            name for name in zipf.namelist()
-        }  # Set of existing file names in the ZIP archive
+def download_file(url, session, download_folder):
+    try:
+        # Download the file from the URL
+        response = session.get(url)
+        response.raise_for_status()  # Check for errors
 
-        for url in tqdm(urls):
-            try:
-                # Download the file from the URL
-                response = requests.get(url)
-                response.raise_for_status()  # Check for errors
+        # Parse the URL to extract the file name
+        parsed_url = urlparse(url).path.strip("/").split("/")
+        file_name = f"{parsed_url[0]}_{parsed_url[1]}_{parsed_url[2]}.py"
 
-                # Parse the URL to extract the file name
-                parsed_url = urlparse(url).path.strip("/").split("/")
-                file_name = f"{parsed_url[0]}_{parsed_url[1]}_{parsed_url[2]}.py"
+        # Ensure the file name is unique within the download folder
+        original_file_name = file_name
+        counter = 1
+        while os.path.exists(os.path.join(download_folder, file_name)):
+            # If the file name exists, append a counter to make it unique
+            file_name = f"{os.path.splitext(original_file_name)[0]}_{counter}{os.path.splitext(original_file_name)[1]}"
+            counter += 1
 
-                # Ensure the file name is unique within the ZIP archive
-                original_file_name = file_name
-                counter = 1
-                while file_name in existing_files:
-                    # If the file name exists, append a counter to make it unique
-                    file_name = f"{os.path.splitext(original_file_name)[0]}_{counter}{os.path.splitext(original_file_name)[1]}"
-                    counter += 1
+        # Write the file to the download folder
+        with open(os.path.join(download_folder, file_name), "wb") as file:
+            file.write(response.content)
+        return f"Downloaded {file_name}"
 
-                # Write the file to the ZIP archive
-                zipf.writestr(file_name, response.content)
-                existing_files.add(
-                    file_name
-                )  # Track the new file in the existing files set
-                # print(f"Added {file_name} to the ZIP archive.")
+    except requests.exceptions.RequestException as e:
+        return f"Failed to download {url}: {e}"
 
-            except requests.exceptions.RequestException as e:
-                print(f"Failed to download {url}: {e}")
+
+def download_files_concurrently(urls, download_folder):
+    # Ensure the download folder exists
+    os.makedirs(download_folder, exist_ok=True)
+
+    with requests.Session() as session:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit download tasks to the executor
+            futures = [executor.submit(download_file, url, session, download_folder) for url in urls]
+            for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
+                #print(future.result())
+                pass
 
 
 def read_urls_from_file(file_name):
@@ -51,11 +55,11 @@ def read_urls_from_file(file_name):
 # Path to the text file containing URLs
 urls_file = "python_files.txt"
 
-# Name of the ZIP file
-zip_name = "corpus.zip"
+# Folder to save the downloaded files
+download_folder = "downloaded_files"
 
 # Read the URLs from the file
 urls = read_urls_from_file(urls_file)
 
-# Download and add each file to the ZIP archive incrementally
-download_and_add_to_zip(urls, zip_name)
+# Download files concurrently and save them to the folder
+download_files_concurrently(urls, download_folder)
