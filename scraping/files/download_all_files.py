@@ -1,50 +1,65 @@
-import aiohttp
-import asyncio
+import requests
 import os
 from urllib.parse import urlparse
-import aiofiles
-from tqdm.asyncio import tqdm
+from tqdm import tqdm
+import concurrent.futures
 
-DOWNLOAD_FOLDER = "downloaded_files"
-os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-async def download_file(session, url, semaphore):
-    async with semaphore:
-        try:
-            async with session.get(url) as response:
-                response.raise_for_status()
-                parsed_url = urlparse(url).path.strip("/").split("/")
-                file_name = f"{parsed_url[0]}_{parsed_url[1]}_{parsed_url[2]}.py"
+def download_file(url, session, download_folder):
+    try:
+        # Download the file from the URL
+        response = session.get(url)
+        response.raise_for_status()  # Check for errors
 
-                # Ensure filename uniqueness
-                original_file_name = file_name
-                counter = 1
-                while os.path.exists(os.path.join(DOWNLOAD_FOLDER, file_name)):
-                    file_name = f"{os.path.splitext(original_file_name)[0]}_{counter}{os.path.splitext(original_file_name)[1]}"
-                    counter += 1
+        # Parse the URL to extract the file name
+        parsed_url = urlparse(url).path.strip("/").split("/")
+        file_name = f"{parsed_url[0]}_{parsed_url[1]}_{parsed_url[2]}.py"
 
-                # Write file asynchronously
-                file_path = os.path.join(DOWNLOAD_FOLDER, file_name)
-                async with aiofiles.open(file_path, "wb") as file:
-                    await file.write(await response.read())
+        # Ensure the file name is unique within the download folder
+        original_file_name = file_name
+        counter = 1
+        while os.path.exists(os.path.join(download_folder, file_name)):
+            # If the file name exists, append a counter to make it unique
+            file_name = f"{os.path.splitext(original_file_name)[0]}_{counter}{os.path.splitext(original_file_name)[1]}"
+            counter += 1
 
-                return f"Downloaded {file_name}"
+        # Write the file to the download folder
+        with open(os.path.join(download_folder, file_name), "wb") as file:
+            file.write(response.content)
+        return f"Downloaded {file_name}"
 
-        except Exception as e:
-            return f"Failed to download {url}: {e}"
+    except requests.exceptions.RequestException as e:
+        return f"Failed to download {url}: {e}"
 
-async def download_files_concurrently(urls, concurrency=50):
-    semaphore = asyncio.Semaphore(concurrency)
-    async with aiohttp.ClientSession() as session:
-        tasks = [download_file(session, url, semaphore) for url in urls]
-        results = await tqdm.gather(*tasks, total=len(tasks))
-        for result in results:
-            print(result)
+
+def download_files_concurrently(urls, download_folder):
+    # Ensure the download folder exists
+    os.makedirs(download_folder, exist_ok=True)
+
+    with requests.Session() as session:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit download tasks to the executor
+            futures = [executor.submit(download_file, url, session, download_folder) for url in urls]
+            for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
+                #print(future.result())
+                pass
+
 
 def read_urls_from_file(file_name):
+    # Read URLs from a text file and return as a list
     with open(file_name, "r") as file:
+        # Strip newline characters and return as a list
         return [line.strip() for line in file.readlines()]
 
-# Run the async downloader
-urls = read_urls_from_file("python_files.txt")
-asyncio.run(download_files_concurrently(urls, concurrency=100))  # Adjust concurrency if needed
+
+# Path to the text file containing URLs
+urls_file = "python_files.txt"
+
+# Folder to save the downloaded files
+download_folder = "downloaded_files"
+
+# Read the URLs from the file
+urls = read_urls_from_file(urls_file)
+
+# Download files concurrently and save them to the folder
+download_files_concurrently(urls, download_folder)

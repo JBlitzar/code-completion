@@ -894,4 +894,3 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 - Feb 20
   - It's been a bit. Continuously scraping all python repos with >10 stars since 2015 now.
   - Pretty crazy amounts. From 35k to 123k repos, from 52k to 186k files
-    - Interesting asyncio trick to make the actual downloading itself super speedy
