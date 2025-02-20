@@ -2,6 +2,7 @@
 corpus.zip
 *.pt
 *.old
+scraping/files/downloaded_files/*
 
 !smaller-test-data/encoded_chunked.pt
 !runs/code-decoder-v15-sliding/ckpt/best.pt
