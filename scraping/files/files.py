@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # GitHub API setup
-GITHUB_TOKEN = os.getenv("GITHUB_PAT_v2")  # Use a single token
+GITHUB_TOKEN = os.getenv("REAL_TOKEN")  # Use a single token
 timeout_duration = 10  # Timeout for requests in seconds
 output_file = "python_files.txt"
 sha_file = "seen_shas.txt"
@@ -48,7 +48,9 @@ def fetch_python_files_from_repo(repo_url, seen_shas):
         reset_time = int(response.headers.get("X-RateLimit-Reset", time.time()))  # Get reset time
         wait_time = reset_time - int(time.time())  # Seconds until reset
         logging.warning(f"Rate limit hit! Waiting {wait_time // 60} minutes until reset...")
-        time.sleep(wait_time + 1)  # Sleep until reset
+        # time.sleep(wait_time + 1)  # Sleep until reset
+        print("Actually just exiting")
+        exit()
         return fetch_python_files_from_repo(repo_url, seen_shas)  # Retry after reset
 
     logging.error(f"Failed to fetch {repo_name}. Status: {response.status_code}")

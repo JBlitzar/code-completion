@@ -890,3 +890,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
       - (not yet) AST parse (possibly too high of a bar)
       - Longest common subsequence **between generated and actual** (kind of a scuffed metric)
       - (x) Bleu score might actually work. investigate.
+
+- Feb 20
+  - It's been a bit. Continuously scraping all python repos with >10 stars since 2015 now.
+  - Pretty crazy amounts. From 35k to 123k repos, from 52k to 184k files
