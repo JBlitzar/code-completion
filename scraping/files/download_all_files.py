@@ -3,8 +3,10 @@ import os
 from urllib.parse import urlparse
 from tqdm import tqdm
 import concurrent.futures
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=4, max=10))
 def download_file(url, session, download_folder):
     try:
         # Download the file from the URL
