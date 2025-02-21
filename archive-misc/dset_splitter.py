@@ -24,13 +24,13 @@ def split_files(input_path, output_path1, output_path2):
         for fname in tqdm.tqdm(first_80_files):
             with open(os.path.join(input_path, fname), errors="ignore") as infile:
                 outfile1.write(infile.read())
-                outfile1.write("\n# ---FILESEP---\n")
+                outfile1.write("\nprint('---FILESEP---')\n")
 
     with open(output_path2, "w") as outfile2:
         for fname in tqdm.tqdm(last_20_files):
             with open(os.path.join(input_path, fname), errors="ignore") as infile:
                 outfile2.write(infile.read())
-                outfile2.write("\n# ---FILESEP---\n")
+                outfile2.write("\nprint('---FILESEP---')\n")
 
 
 # Example usage

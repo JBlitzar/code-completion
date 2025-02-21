@@ -329,6 +329,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         # print(code[:100])
 
         # comments
+        code = code.replace("# <FILESEP>", "<FILESEP>")
         code = re.sub(r"#.*", "", code)
         code = re.sub(r'"""(.*?)"""', "", code, flags=re.DOTALL)  # funny usage of re
         code = re.sub(r"'''(.*?)'''", "", code, flags=re.DOTALL)
@@ -741,7 +742,8 @@ dataset = TextCorpusDataset(
         # "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
         # "~/torch_datasets/github-python/all_trains_subset_corpus"
-        "~/torch_datasets/github-python/corpus"
+        #"~/torch_datasets/github-python/corpus"
+        "~/torch_datasets/github-python/mega_corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=153127,  # 3645, # edited by me
     IS_CODE=True,  # Remember to change!
