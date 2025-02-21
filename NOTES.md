@@ -895,3 +895,11 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - It's been a bit. Continuously scraping all python repos with >10 stars since 2015 now. Tricky to get around those pesky github rate limits
   - Pretty crazy amounts. From 35k to 123k repos, from 52k to 186k files
   - I scraped it all and am now starting to train. `v23-mega`
+- Feb 21
+  - Wait, generations are getting better.
+    - `K=10,T=0.8: <data>all _ input _ nodes [ 0 ] for i in group ] <newline> <tab> <tab> <tab> <newline> <tab> <tab> <tab> out _ flat = [ <newline> <tab> <tab> <tab> <tab> graph . call _ function ( torch . ops . aten . view . default , args = ( i , [ i . meta [ " val " ] . numel ( ) ] ) ) for i in inputs <newline> <tab> <tab> <tab> ] <newline> <tab> <tab> <tab> out _ cat = graph . call _ function ( torch . ops . aten . cat . default </data>, args = ( i , [ i . meta [ " val " ] . numel ( ) ] ) ) <newline> <tab> <tab> <tab> out _ cat . append ( torch . ops . ops . impl . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . dynamic . view . `
+    - `x _ interp = machine . interpolate ( imgs [ 0 ] , imgs [ 1 ] , n _ interp ) <newline> <newline> <tab> opt </data>= torch . zeros ( len ( imgs ) ) <newline> <tab> for x _ interp in range ( 1 , args . batch _ size ) : <newline> <tab> <tab> x _ interp `
+    - So its actually quite good until it generates too far out.
+      - And its not memorized!
+      - More data is all you need??
+    - With regards to repetition, it always repeats a line. Like `nout = nin <newline> <tab> <tab> nout = nin <newline> <tab> <tab> nout = nin <newline> <tab> <tab>` or `<newline> options . add _ argument ( ' - - port ' , default = ' localhost ' , help = ' port ' ) <newline> options . add _ argument ( ' - - port ' , default = ' localhost ' , help = ' port ' ) <newline> options . add _ argument ( ' - - port ' , default = ' localhost ' , help = ' port ' ) <newline> options . add _ argument ( ' - - port ' , default = ' localhost ' , help = ' port ' ) <newline> options .  `

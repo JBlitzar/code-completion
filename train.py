@@ -54,5 +54,5 @@ def train_model(experiment_directory, epochs, model_params=None):
 
 if __name__ == "__main__":
     EXPERIMENT_DIRECTORY = "runs/code-decoder-v23-mega"
-    EPOCHS = 50
+    EPOCHS = 10
     train_model(EXPERIMENT_DIRECTORY, EPOCHS)
