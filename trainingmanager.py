@@ -171,14 +171,18 @@ class TrainingManager:
             {"Loss/Trainstep": self.tracker.average("Loss/trainstep")},
             epoch * dataloader_len + step,
         )
-        # print(f"Look at me! I'm logging accuracy! this is trainloop checkin. {self.tracker.average('Acc/trainstep')}")
         log_data(
             {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
+            epoch * dataloader_len + step,
+        )
+        log_data(
+            {"TopKAcc/Trainstep": self.tracker.average("TopKAcc/trainstep")},
             epoch * dataloader_len + step,
         )
 
         self.tracker.reset("Loss/trainstep")
         self.tracker.reset("Acc/trainstep")
+        self.tracker.reset("TopKAcc/trainstep")
 
     def on_epoch_checkin(self, epoch):
         if self.hasnan():
@@ -199,20 +203,15 @@ class TrainingManager:
             {
                 "Loss/Epoch": self.tracker.average("Loss/epoch"),
                 "Loss/Val/Epoch": val_loss,
+                "TopKAcc/Epoch": self.tracker.average("TopKAcc/epoch"),
             },
             epoch,
         )
 
-        # log_data(
-        #     {"Acc/Trainstep": self.tracker.average("Acc/trainstep")},
-        #     epoch,
-        # )
-        # print(self.tracker.average("Acc/trainstep"))
-
         self.tracker.reset("Acc/epoch")
-
         self.tracker.reset("Loss/epoch")
         self.tracker.reset("Loss/val/epoch")
+        self.tracker.reset("TopKAcc/epoch")
 
         self.write_resume(epoch)
 
@@ -243,10 +242,7 @@ class TrainingManager:
         ).item()
         top_k_acc = correct_top_k / len(labels.reshape(-1))
 
-        
-
-
-        return loss, acc
+        return loss, acc, top_k_acc
 
     def run_generation(self, data):
         batch, attn_mask = data
@@ -273,12 +269,14 @@ class TrainingManager:
     def trainstep(self, data):
         self.optimizer.zero_grad()
 
-        loss, acc = self.eval_model(data)
+        loss, acc, topk_acc = self.eval_model(data)
 
         self.tracker.add("Loss/trainstep", loss.item())
         self.tracker.add("Loss/epoch", loss.item())
 
         self.tracker.add("Acc/trainstep", acc)
+        self.tracker.add("TopKAcc/trainstep", topk_acc)
+        self.tracker.add("TopKAcc/epoch", topk_acc)
 
         # Backward pass and optimization
         loss.backward()
@@ -288,10 +286,12 @@ class TrainingManager:
 
     @torch.no_grad()  # decorator yay
     def valstep(self, data):
-        loss, acc = self.eval_model(data)
+        loss, acc, topk_acc = self.eval_model(data)
 
         self.tracker.add("Loss/valstep", loss.item())
         self.tracker.add("Loss/val/epoch", loss.item())
+        self.tracker.add("TopKAcc/valstep", topk_acc)
+        self.tracker.add("TopKAcc/val/epoch", topk_acc)
 
         return loss, acc
 
