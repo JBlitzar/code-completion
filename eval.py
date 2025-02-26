@@ -273,23 +273,25 @@ def main():
             entropy = compute_entropy(logits[:, -1, :])  # Compute entropy at last token position
 
         print(f"Entropy of last token: {entropy:.4f}")
-        print("USING TOPK")
-        result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
-        print(result)
-        print(
-            dataset.manager.decode(result[0]),
-            " | PREFIX FROM TRAIN DSET:",
-            dataset.manager.decode(batch),
-        )
+        # print("USING TOPK")
+        # result = evaluate_topk(net, batch.unsqueeze(0), amt=100)
+        # print(result)
+        # print(
+        #     dataset.manager.decode(result[0]),
+        #     " | PREFIX FROM TRAIN DSET:",
+        #     dataset.manager.decode(batch),
+        # )
 
         print("USING BEAM")
-        result = evaluate_beam(net, batch.unsqueeze(0), amt=100)
+        result = evaluate_beam(net, batch.unsqueeze(0), amt=100,k=3)
+
+        result = dataset.manager.decode(result)
+        batch_str = dataset.manager.decode(batch)
+
+        result = f"<data>\n{batch_str}</data>\n{result[len(batch_str):]}"
+
         print(result)
-        print(
-            dataset.manager.decode(result),
-            " | PREFIX FROM TRAIN DSET:",
-            dataset.manager.decode(batch),
-        )
+       
 
         # print(dataset.manager.raw_decode(81))
 
