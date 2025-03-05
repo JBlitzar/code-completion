@@ -952,4 +952,11 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - trainsteps to reach best acc ± eps (or loss)
     - Qualitative
     - Perplexity? Literally e^loss, so easy implementation, and others use it.
-  -
+  - Great! implemented schedule and difficulty score based on rarity.
+    - Things to do:
+      - Perplexity (now)
+      - train on a real (small) dataset and compare
+      - Run hypothesis experiments
+        - Curriculum learning, easy to hard, based off of median token rarity
+        - Control
+        - Anti-curriculum (easy, sort descending)

@@ -364,7 +364,10 @@ class TrainingManager:
         
         #haha, make sure to make a curiculm!
 
-        sorted_dset = sorted(self.dataloader.dataset, key = lambda x: x[1])
+        sorted_indices = sorted(
+            range(len(self.dataloader.dataset)), 
+            key=lambda i: self.dataloader.dataset[i][1]
+        )
 
         schedule = [0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0] # TODO: dynamically based off of epochs
         assert epochs == 10 # if you see this, change the line above
@@ -382,7 +385,8 @@ class TrainingManager:
             if e <= self.resume_amt:
                 continue
             
-            subset = sorted_dset[:int(len(sorted_dset) * schedule[e])]
+            subset_indices = sorted_indices[:int(len(sorted_indices) * schedule[e])]
+            subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
             dataloader = torch.utils.data.DataLoader(subset, batch_size=self.dataloader.batch_size, shuffle=True)
 
             # leave val loader
