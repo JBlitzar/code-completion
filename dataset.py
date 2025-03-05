@@ -275,6 +275,9 @@ class CodeCustomTokenizerManager(BPEModelManager):
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
+
+        self._token_freqs = {}
+        self.total_num_tokens = 0
         print("This is CodeCustomTokenizerManager, vocab size will be disregarded.")
 
         print(f"Cutoff threshold: {cutoff_thresh}")
@@ -434,6 +437,9 @@ class CodeCustomTokenizerManager(BPEModelManager):
         for token, freq in sorted_tokens[-30:]:
             print(f"{token}: {freq}")
 
+        self._token_freqs = token_freqs
+        self.total_num_tokens = total_num_tokens
+
         # plt.figure(figsize=(15,6))
         # plt.bar(np.arange(len(sorted_tokens)), [freq for token, freq in sorted_tokens])
         # plt.xlabel("Token")
@@ -559,6 +565,22 @@ class CodeCustomTokenizerManager(BPEModelManager):
         # print(encoded_sequence)
         return (encoded_sequence.unsqueeze(1) != mask_token_tensor).all(dim=1).int()
 
+    def get_rarity_score(self, sequence):
+        scores = np.zeros_like(sequence)
+        for idx, token in enumerate(sequence):
+            # get token count in entire corpus
+            # get TOTAL token count in entire corpus
+            # divide
+            # recriprocal
+            # rarity score for individual token in THIS sequence
+            # average? max? **median**?
+            token_count = self._token_freqs.get(token, 0)
+            rarity_score = self.total_num_tokens / token_count if token_count > 0 else 0
+            scores[idx] = rarity_score
+        return np.median(scores)
+        
+
+        
 
 class DummySequentialDataManager:
     def __init__(self, root_dir, vocab_size=5000):
@@ -602,12 +624,14 @@ class TextCorpusDataset(Dataset):
         IS_CUSTOM=False,
         sliding_window=False,
         stride=1,
+        get_rarity_score=False,
     ):
         print(root_dir)
         self.root = root_dir
         self.sliding_window = sliding_window
         self.window_size = max_length
         self.stride = stride
+        self.get_rarity_score = get_rarity_score
 
         if IS_DUMMY:
             self.manager = DummySequentialDataManager(root_dir=root_dir)
@@ -680,6 +704,8 @@ class TextCorpusDataset(Dataset):
         self.chunks = torch.stack(chunked_data)
         torch.save(self.chunks, self.cache_file)
 
+
+
     # unused
     # def _sliding_window(self, sequence, window_size, stride):
     #     windows = []
@@ -694,6 +720,8 @@ class TextCorpusDataset(Dataset):
         self, idx
     ):  # TODO: optimized, but change it back if it doesn't work
         seq = self.chunks[idx]
+        if self.get_rarity_score:
+            return seq, self.manager.get_rarity_score(seq)
         return seq, self.dummy  # self.manager.attention_mask(seq)
 
 
@@ -741,9 +769,9 @@ dataset = TextCorpusDataset(
         # "./smaller-er-test-data"
         # "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
-        # "~/torch_datasets/github-python/all_trains_subset_corpus"
+        "~/torch_datasets/github-python/all_trains_subset_corpus"
         #"~/torch_datasets/github-python/corpus"
-        "~/torch_datasets/github-python/mega_corpus"
+        #"~/torch_datasets/github-python/mega_corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=153127,  # 3645, # edited by me
     IS_CODE=True,  # Remember to change!

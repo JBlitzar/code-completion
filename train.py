@@ -53,6 +53,6 @@ def train_model(experiment_directory, epochs, model_params=None):
 
 
 if __name__ == "__main__":
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v23-mega"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-scheduled"
     EPOCHS = 10
     train_model(EXPERIMENT_DIRECTORY, EPOCHS)

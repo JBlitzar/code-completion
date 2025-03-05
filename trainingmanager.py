@@ -354,6 +354,46 @@ class TrainingManager:
             """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
         )
 
+    def train_curriculum(self, epochs=None, dataloader=None):
+
+        if epochs is not None:
+            self.epochs = epochs
+
+        if dataloader is not None:
+            self.dataloader = dataloader
+        
+        #haha, make sure to make a curiculm!
+
+        sorted_dset = sorted(self.dataloader.dataset, key = lambda x: x[1])
+
+        schedule = [0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0] # TODO: dynamically based off of epochs
+        assert epochs == 10 # if you see this, change the line above
+
+
+        # get rarity score
+        # Sort
+        # Get percentile threshold based off of epoch (do the hmath right)
+        # only pass that in as the dataloader, but val dataloader for sure
+
+        for e in trange(
+            self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+        ):
+
+            if e <= self.resume_amt:
+                continue
+            
+            subset = sorted_dset[:int(len(sorted_dset) * schedule[e])]
+            dataloader = torch.utils.data.DataLoader(subset, batch_size=self.dataloader.batch_size, shuffle=True)
+
+            # leave val loader
+            self.epoch(e, dataloader, self.val_dataloader)
+
+        print("All done!")
+        gc.collect()
+        os.system(
+            """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
+        )
+
     def nan_debug(self):
         torch.autograd.set_detect_anomaly(True)
 

@@ -906,6 +906,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 - Feb 22
   - Pretty good. `<data>0 " , <newline> " mozilla / 5 . 0 ( windows nt 5 . 1 ; wow 6 4 ) apple web kit / 5 3 7 . 3 6 ( khtml , like gecko ) firefox / 5 3 . 0 " <newline> ] <newline> <tab> return user _ agents [ int ( hashlib . md 5 ( str ( time . time ( ) ) . encode ( ) ) . hexdigest ( ) , 1 6 ) % len ( user _ agents ) ] <newline> <newline> def get _ integ _ hash ( query ) </data> : <newline> <tab> return user _ agents [ int ( k ) ] <newline> <newline> def extract _ urls ( query ) : <newline> <tab> response = request . read ( ) <newline> <tab> soup = beautiful soup ( response , " lxml " ) <newline> <tab> return response . get ( " html " ) <newline> <newline> def find _ html _ by _ token ( query ) : <newline> <tab> soup = beautiful soup ( response , " html " ) <newline> <tab> return soup . find _ all ( " tr " ) [ 0 ] !   `
 - Feb 25
+
   - Experimenting with minimizing repetition
   - Thinking of hypotheses:
     - Effect of `<something>` on `<metric>`
@@ -921,7 +922,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
       - A curriculum in which you start with easy samples and then move to hard samples performs better on topk accuracy than normal learning
         - Curriculum learning leads to improved convergence speed (more specific, good)
           - Curriculum learning
-            - With loss
+            - With loss (_harder_)
             - with token rarity
             - Not doing curriculum learning
             - anti curriculum learning
@@ -934,3 +935,21 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
           - IDEA: increase sequence length during training for this?
         - (\*) Curriculum learning FOR CODE https://arxiv.org/pdf/2407.10194
           - tinypy dataset: https://www.kaggle.com/datasets/kamelmohammedyamani/tinypy-for-curriculum-learning
+
+- March 4
+  - One solid dataset: check!
+  - Generalizable architecture: check!
+  - Testable hypothesis: check
+    - Experimental groups: different curriculum learning strategies (but actually just only do with and without curriculum)
+      - How to implement?
+        - Assign some sort of difficulty score to each sample
+        - Sort by difficulty
+          - Every epoch, add a few harder ones.
+          - Dynamically do it by loss? If stagnates, increase difficulty
+            - Straightforward and good.
+  - Metric
+    - Just use accuracy
+    - trainsteps to reach best acc ± eps (or loss)
+    - Qualitative
+    - Perplexity? Literally e^loss, so easy implementation, and others use it.
+  -
