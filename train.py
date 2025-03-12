@@ -58,14 +58,14 @@ def train_model(experiment_directory, epochs, model_params=None, schedule=False,
 
 
 if __name__ == "__main__":
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-scheduled"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v26-med-scheduled"
     EPOCHS = 10
     train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True)
 
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-unscheduled"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v26-med-unscheduled"
     EPOCHS = 10
     train_model(EXPERIMENT_DIRECTORY, EPOCHS)
 
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-anti"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v26-med-anti"
     EPOCHS = 10
     train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anti=True)
