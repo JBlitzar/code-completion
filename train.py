@@ -13,7 +13,7 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-def train_model(experiment_directory, epochs, model_params=None):
+def train_model(experiment_directory, epochs, model_params=None, schedule=False, anti=False):
     os.system(f"caffeinate -is -w {os.getpid()} &")
 
     if model_params is None:
@@ -47,12 +47,25 @@ def train_model(experiment_directory, epochs, model_params=None):
             dir=os.path.join(experiment_directory, "tensorboard"),
         )
         break
-
-    trainer.train()
+    if schedule:
+        if anti:
+            trainer.train_curriculum(anticurriculum=True)
+        else:
+            trainer.train_curriculum()
+    else:
+        trainer.train()
     flush()
 
 
 if __name__ == "__main__":
     EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-scheduled"
     EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True)
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-unscheduled"
+    EPOCHS = 10
     train_model(EXPERIMENT_DIRECTORY, EPOCHS)
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v25-alltrains-anti"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anti=True)

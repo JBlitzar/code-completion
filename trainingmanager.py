@@ -374,7 +374,7 @@ class TrainingManager:
             key=lambda i: self.dataloader.dataset[i][1]
         )
         # [min(1.0, ((i+1))/epochs) for i in range(epochs)] for normal range
-        schedule = [min(1.0, ((i+2)-(i%2))/epochs) for i in range(epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
+        schedule = [min(1.0, ((i+2)-(i%2))/self.epochs) for i in range(self.epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
 
         schedule = [1.0 - x for x in schedule] if anticurriculum else schedule
 
