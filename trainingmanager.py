@@ -376,7 +376,7 @@ class TrainingManager:
         # [min(1.0, ((i+1))/epochs) for i in range(epochs)] for normal range
         schedule = [min(1.0, ((i+2)-(i%2))/self.epochs) for i in range(self.epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
 
-        schedule = [1.0 - x for x in schedule] if anticurriculum else schedule
+        schedule = [max(1.0 - x, 0.01) for x in schedule] if anticurriculum else schedule
 
 
         # get rarity score
