@@ -960,3 +960,11 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
         - Curriculum learning, easy to hard, based off of median token rarity
         - Control
         - Anti-curriculum (easy, sort descending)
+- March 11
+  - No meeting, just doing stuff myself. Check for implemented, doublecheck for ran
+    - Perplexity (now)
+      - train on a real (small) dataset and compare
+      - Run hypothesis experiments
+        - Curriculum learning, easy to hard, based off of median token rarity ✅
+        - Control ✅
+        - Anti-curriculum (easy, sort descending) ✅

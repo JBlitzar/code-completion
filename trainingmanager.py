@@ -5,7 +5,7 @@ import torch.nn as nn
 from tqdm import tqdm, trange
 from torch.profiler import profile, record_function, ProfilerActivity
 import gc
-
+import numpy as np
 from eval import evaluate_topk
 from dataset import dataset
 
@@ -203,6 +203,7 @@ class TrainingManager:
             {
                 "Loss/Epoch": self.tracker.average("Loss/epoch"),
                 "Loss/Val/Epoch": val_loss,
+                "Perplexity/Val/Epoch": float(np.exp(val_loss)),
                 "TopKAcc/Epoch": self.tracker.average("TopKAcc/epoch"),
             },
             epoch,
@@ -212,6 +213,7 @@ class TrainingManager:
         self.tracker.reset("Loss/epoch")
         self.tracker.reset("Loss/val/epoch")
         self.tracker.reset("TopKAcc/epoch")
+        self.tracker.reset("Perplexity/val/epoch")
 
         self.write_resume(epoch)
 
@@ -290,6 +292,9 @@ class TrainingManager:
 
         self.tracker.add("Loss/valstep", loss.item())
         self.tracker.add("Loss/val/epoch", loss.item())
+
+        self.tracker.add("Perplexity/val/epoch", float(np.exp(loss.item())))
+
         self.tracker.add("TopKAcc/valstep", topk_acc)
         self.tracker.add("TopKAcc/val/epoch", topk_acc)
 
@@ -354,7 +359,7 @@ class TrainingManager:
             """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
         )
 
-    def train_curriculum(self, epochs=None, dataloader=None):
+    def train_curriculum(self, epochs=None, dataloader=None, anticurriculum=False):
 
         if epochs is not None:
             self.epochs = epochs
@@ -368,9 +373,10 @@ class TrainingManager:
             range(len(self.dataloader.dataset)), 
             key=lambda i: self.dataloader.dataset[i][1]
         )
+        # [min(1.0, ((i+1))/epochs) for i in range(epochs)] for normal range
+        schedule = [min(1.0, ((i+2)-(i%2))/epochs) for i in range(epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
 
-        schedule = [0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0] # TODO: dynamically based off of epochs
-        assert epochs == 10 # if you see this, change the line above
+        schedule = [1.0 - x for x in schedule] if anticurriculum else schedule
 
 
         # get rarity score
