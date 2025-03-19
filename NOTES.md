@@ -968,3 +968,19 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
         - Curriculum learning, easy to hard, based off of median token rarity ✅
         - Control ✅
         - Anti-curriculum (easy, sort descending) ✅
+- March 18
+  - Looking again at https://arxiv.org/pdf/2407.10194. Possibly cite it in the paper.
+  - Fixed anticurriculum
+    - add edit similarity, but it's kind of hard at the moment
+  - added hybrid and sequential schedules as described in section 5.
+  - What experiments? What hyperparams?
+    - `def train_curriculum(self, epochs=None, dataloader=None, noop=True, curriculum=False,  anticurriculum=False, sequential=False, hybrid=False, loss_based=False):`
+    - No curriculum: `noop`, or default
+    - Incremental curriculum | not loss-based vs loss-based: `curriculum=True`, `loss_based=False|True`
+    - incremental anticurriculum (implemented properly this time) | not loss-based vs loss-based: `anticurriculum=True`, `loss_based=False|True`
+    - sequential curriculum | not loss-based vs loss-based: `sequential=True`, `loss_based=False|True`
+    - hybrid curriculum | not loss-based vs loss-based: `hybrid=True`, `loss_based=False|True`
+  - How are we selecting "hard" samples?
+    - Implemented loss-based
+  - TBD copyright issues
+  -

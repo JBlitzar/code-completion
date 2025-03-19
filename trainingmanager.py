@@ -8,6 +8,7 @@ import gc
 import numpy as np
 from eval import evaluate_topk
 from dataset import dataset
+from Levenshtein import ratio
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -359,7 +360,7 @@ class TrainingManager:
             """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
         )
 
-    def train_curriculum(self, epochs=None, dataloader=None, anticurriculum=False):
+    def train_curriculum(self, epochs=None, dataloader=None, noop=True, curriculum=False,  anticurriculum=False, sequential=False, hybrid=False,  loss_based=False):
 
         if epochs is not None:
             self.epochs = epochs
@@ -368,15 +369,28 @@ class TrainingManager:
             self.dataloader = dataloader
         
         #haha, make sure to make a curiculm!
-
-        sorted_indices = sorted(
-            range(len(self.dataloader.dataset)), 
-            key=lambda i: self.dataloader.dataset[i][1]
-        )
+        sorted_indices = None
+        if anticurriculum:
+            sorted_indices = sorted(
+                range(len(self.dataloader.dataset)), 
+                key=lambda i: self.dataloader.dataset[i][1],
+                reverse=True
+            )
+        else:
+            sorted_indices = sorted(
+                range(len(self.dataloader.dataset)), 
+                key=lambda i: self.dataloader.dataset[i][1]
+            )
         # [min(1.0, ((i+1))/epochs) for i in range(epochs)] for normal range
         schedule = [min(1.0, ((i+2)-(i%2))/self.epochs) for i in range(self.epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
 
-        schedule = [max(1.0 - x, 0.01) for x in schedule] if anticurriculum else schedule
+        hybrid_schedule = [min(1.0, (i+2)/self.epochs) for i in range(self.epochs)] # [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
+
+        step_size = 1 / (self.epochs / 2)
+        offset = step_size / 2
+
+
+
 
 
         # get rarity score
@@ -387,11 +401,24 @@ class TrainingManager:
         for e in trange(
             self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
         ):
+            if loss_based:
+                sorted_indices = self.get_loss_based_indices(dataloader, anti=anticurriculum)
+
+
 
             if e <= self.resume_amt:
                 continue
-            
-            subset_indices = sorted_indices[:int(len(sorted_indices) * schedule[e])]
+            subset_indices = None
+            if noop:
+                subset_indices = sorted_indices # full dataset
+            elif sequential:
+                subset_indices = sorted_indices[int(max(len(sorted_indices) * (schedule[e] - step_size),0)):int(len(sorted_indices) * schedule[e])]
+            elif hybrid:
+                subset_indices = sorted_indices[int(max(len(sorted_indices) * (hybrid_schedule[e] - step_size),0)):int(len(sorted_indices) * hybrid_schedule[e])]
+            elif curriculum:
+                subset_indices = sorted_indices[:int(len(sorted_indices) * schedule[e])]
+            else:
+                raise ValueError("No curriculum type specified")
             subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
             dataloader = torch.utils.data.DataLoader(subset, batch_size=self.dataloader.batch_size, shuffle=True)
 
@@ -403,6 +430,18 @@ class TrainingManager:
         os.system(
             """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
         )
+
+    def get_loss_based_indices(self, dataloader, anti=False):
+        losses = []
+        for data, _ in tqdm(dataloader.dataset, dynamic_ncols=True, leave=False):
+            loss, _, _ = self.eval_model(data.unsqueeze(0))
+            losses.append(loss.item())
+        sorted_indices = sorted(
+            range(len(dataloader.dataset)), 
+            key=lambda i: losses[i],
+            reverse=anti
+        )
+        return sorted_indices
 
     def nan_debug(self):
         torch.autograd.set_detect_anomaly(True)
