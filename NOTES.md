@@ -983,4 +983,4 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - How are we selecting "hard" samples?
     - Implemented loss-based
   - TBD copyright issues
-  -
+    - Should resolve: unlicensed bad, but MIT/GPL/CC0 good
