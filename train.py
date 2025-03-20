@@ -53,6 +53,11 @@ def train_model(experiment_directory, epochs, model_params=None, schedule=False,
         trainer.train()
     flush()
 
+def run_experiment(experiment_directory, epochs, del_runs, **kwargs):
+    train_model(experiment_directory, epochs, schedule=True, **kwargs)
+    if del_runs:
+        os.system(f"rm -r {experiment_directory}/ckpt/*.pt")
+
 
 if __name__ == "__main__":
     del_runs = True
@@ -62,56 +67,20 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/noop"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, noop=True)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+    parent_directory = "runs/code-decoder-v27-alltrains-experiment"
+    experiments = [
+        ("noop", {"noop": True}),
+        ("curriculum-noloss", {"curriculum": True, "loss_based": False}),
+        ("curriculum-loss", {"curriculum": True, "loss_based": True}),
+        ("anticurriculum-noloss", {"anticurriculum": True, "loss_based": False}),
+        ("anticurriculum-loss", {"anticurriculum": True, "loss_based": True}),
+        ("sequential-noloss", {"sequential": True, "loss_based": False}),
+        ("sequential-loss", {"sequential": True, "loss_based": True}),
+        ("hybrid-noloss", {"hybrid": True, "loss_based": False}),
+        ("hybrid-loss", {"hybrid": True, "loss_based": True}),
+    ]
 
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/curriculum-noloss"
     EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, curriculum=True, loss_based=False)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/curriculum-loss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, curriculum=True, loss_based=True)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/anticurriculum-noloss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anticurriculum=True, loss_based=False)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/anticurriculum-loss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anticurriculum=True, loss_based=True)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/sequential-noloss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, sequential=True, loss_based=False)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/sequential-loss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, sequential=True, loss_based=True)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/hybrid-noloss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, hybrid=True, loss_based=False)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
-
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/hybrid-loss"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, hybrid=True, loss_based=True)
-    if del_runs:
-        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+    for experiment_name, params in experiments:
+        experiment_directory = os.path.join(parent_directory, experiment_name)
+        run_experiment(experiment_directory, EPOCHS, del_runs, **params)
