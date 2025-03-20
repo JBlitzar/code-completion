@@ -13,7 +13,7 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-def train_model(experiment_directory, epochs, model_params=None, schedule=False, anti=False):
+def train_model(experiment_directory, epochs, model_params=None, schedule=False, **kwargs):
     os.system(f"caffeinate -is -w {os.getpid()} &")
 
     if model_params is None:
@@ -48,24 +48,70 @@ def train_model(experiment_directory, epochs, model_params=None, schedule=False,
         )
         break
     if schedule:
-        if anti:
-            trainer.train_curriculum(anticurriculum=True)
-        else:
-            trainer.train_curriculum()
+        trainer.train_schedule(**kwargs)
     else:
         trainer.train()
     flush()
 
 
 if __name__ == "__main__":
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v26-med-scheduled"
-    EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True)
+    del_runs = True
+    if del_runs:
+        del_runs = del_runs and input("Confirm that this will delete checkpoints") == "y"
+        if not del_runs:
+            print("Exiting")
+            exit()
 
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v26-med-unscheduled"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/noop"
     EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS)
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, noop=True)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
 
-    EXPERIMENT_DIRECTORY = "runs/code-decoder-v26-med-anti"
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/curriculum-noloss"
     EPOCHS = 10
-    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anti=True)
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, curriculum=True, loss_based=False)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/curriculum-loss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, curriculum=True, loss_based=True)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/anticurriculum-noloss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anticurriculum=True, loss_based=False)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/anticurriculum-loss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, anticurriculum=True, loss_based=True)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/sequential-noloss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, sequential=True, loss_based=False)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/sequential-loss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, sequential=True, loss_based=True)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/hybrid-noloss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, hybrid=True, loss_based=False)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
+
+    EXPERIMENT_DIRECTORY = "runs/code-decoder-v27-alltrains-experiment/hybrid-loss"
+    EPOCHS = 10
+    train_model(EXPERIMENT_DIRECTORY, EPOCHS, schedule=True, hybrid=True, loss_based=True)
+    if del_runs:
+        os.system(f"rm -r {EXPERIMENT_DIRECTORY}/ckpt/*.pt")
