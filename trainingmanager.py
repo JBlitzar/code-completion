@@ -219,8 +219,16 @@ class TrainingManager:
         self.write_resume(epoch)
 
     def eval_model(self, data):
-        data = tuple(d.to(self.device) for d in data)
-        batch, attn_mask = data
+        if type(data) == tuple or type(data) == list:
+            data = tuple(d.to(self.device) for d in data)
+            batch, attn_mask = data
+        else:
+            data = data.to(self.device)
+            batch = data
+            attn_mask = None
+
+        del attn_mask # unused
+        
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
@@ -304,7 +312,7 @@ class TrainingManager:
     def val_loop(self, val_loader):
         if val_loader is not None:
             for step, data in enumerate(
-                test_tqdm := tqdm(val_loader, leave=False, dynamic_ncols=True)
+                test_tqdm := tqdm(val_loader, leave=False, dynamic_ncols=True, desc=f"valloop")
             ):
                 self.valstep(data)
                 avg_val_loss = self.tracker.average("Loss/val/epoch")
@@ -312,7 +320,7 @@ class TrainingManager:
 
     def train_loop(self, dataloader, epoch):
         for step, data in enumerate(
-            train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True)
+            train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True, desc=f"trainloop")
         ):
             self.trainstep(data)
 
@@ -401,13 +409,13 @@ class TrainingManager:
         for e in trange(
             self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
         ):
-            if loss_based:
-                sorted_indices = self.get_loss_based_indices(dataloader, anti=anticurriculum)
-
-
-
             if e <= self.resume_amt:
                 continue
+
+
+            if loss_based:
+                sorted_indices = self.get_loss_based_indices(self.dataloader, anti=anticurriculum)
+            
             subset_indices = None
             if noop:
                 subset_indices = sorted_indices # full dataset
@@ -433,7 +441,7 @@ class TrainingManager:
 
     def get_loss_based_indices(self, dataloader, anti=False):
         losses = []
-        for data, _ in tqdm(dataloader.dataset, dynamic_ncols=True, leave=False):
+        for data, _ in tqdm(dataloader.dataset, dynamic_ncols=True, leave=False, desc="Loss-based sorting"):
             loss, _, _ = self.eval_model(data.unsqueeze(0))
             losses.append(loss.item())
         sorted_indices = sorted(

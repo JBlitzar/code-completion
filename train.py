@@ -48,7 +48,7 @@ def train_model(experiment_directory, epochs, model_params=None, schedule=False,
         )
         break
     if schedule:
-        trainer.train_schedule(**kwargs)
+        trainer.train_curriculum(**kwargs)
     else:
         trainer.train()
     flush()
@@ -62,16 +62,17 @@ def run_experiment(experiment_directory, epochs, del_runs, **kwargs):
 if __name__ == "__main__":
     del_runs = True
     if del_runs:
-        del_runs = del_runs and input("Confirm that this will delete checkpoints") == "y"
+        del_runs = del_runs and input("Confirm that this will delete checkpoints: ") == "y"
         if not del_runs:
             print("Exiting")
             exit()
 
     parent_directory = "runs/code-decoder-v27-alltrains-experiment"
     experiments = [
+        ("curriculum-loss", {"curriculum": True, "loss_based": True}),
         ("noop", {"noop": True}),
         ("curriculum-noloss", {"curriculum": True, "loss_based": False}),
-        ("curriculum-loss", {"curriculum": True, "loss_based": True}),
+        
         ("anticurriculum-noloss", {"anticurriculum": True, "loss_based": False}),
         ("anticurriculum-loss", {"anticurriculum": True, "loss_based": True}),
         ("sequential-noloss", {"sequential": True, "loss_based": False}),
