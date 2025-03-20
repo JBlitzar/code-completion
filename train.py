@@ -67,7 +67,7 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    parent_directory = "runs/code-decoder-v27-alltrains-experiment"
+    parent_directory = "runs/code-decoder-v28-fullset-experiment"
     experiments = [
         ("curriculum-loss", {"curriculum": True, "loss_based": True}),
         ("noop", {"noop": True}),
