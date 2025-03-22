@@ -441,9 +441,24 @@ class TrainingManager:
 
     def get_loss_based_indices(self, dataloader, anti=False):
         losses = []
-        for data, _ in tqdm(dataloader.dataset, dynamic_ncols=True, leave=False, desc="Loss-based sorting"):
-            loss, _, _ = self.eval_model(data.unsqueeze(0))
-            losses.append(loss.item())
+        # Create a new dataloader with the same dataset but without shuffling
+        temp_dataloader = torch.utils.data.DataLoader(
+            dataloader.dataset,
+            batch_size=dataloader.batch_size,
+            shuffle=False,
+            num_workers=dataloader.num_workers if hasattr(dataloader, 'num_workers') else 0
+        )
+        
+        with torch.no_grad():  # Add this for faster inference
+            for batch, _ in tqdm(temp_dataloader, dynamic_ncols=True, leave=False, desc="Loss-based sorting"):
+                loss, _, _ = self.eval_model(batch)
+                # If the output is a single tensor, convert to list
+                if isinstance(loss, torch.Tensor) and loss.dim() == 0:
+                    losses.extend([loss.item()] * batch.size(0))
+                else:
+                    # If the output is already batched
+                    losses.extend(loss.tolist())
+        
         sorted_indices = sorted(
             range(len(dataloader.dataset)), 
             key=lambda i: losses[i],
