@@ -91,7 +91,9 @@ class TrainingManager:
         self.tracker = ValueTracker()
 
         self.resume_amt = self.get_resume()
-        if self.resume_amt != 0:
+        if self.resume_amt >= self.epochs - 1:
+            pass
+        elif self.resume_amt != 0:
             self.resume()
         else:
             if os.path.exists(self.dir) and any(
