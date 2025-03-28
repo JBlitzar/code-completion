@@ -27,7 +27,9 @@ def init_logger(net, data=None, dir="runs"):
     if not writer or writer is None:
         writer = SummaryWriter(dir)
     if data is not None:
-        writer.add_graph(net, data)
+        existing_files = [f for f in os.listdir(dir) if f.startswith('events.out.tfevents.')]
+        if not existing_files:
+            writer.add_graph(net, data)
     # writer.close()
     net.train()
     os.system("tensorboard --logdir runs > /dev/null 2>&1 &")
