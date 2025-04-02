@@ -1,7 +1,7 @@
 import requests
 import os
 from tqdm import tqdm
-import concurrent.futures
+import time
 
 allowed_licenses = [
     "MIT License",
@@ -42,14 +42,25 @@ allowed_licenses = [
 
 def check_license_from_direct_url(direct_url):
     resp = requests.get(direct_url)
+
     if resp.status_code == 200:
         text = resp.text
         for license in allowed_licenses:
             if license.lower() in text.lower():
                 return True
+    elif resp.status_code == "429":
+        time.sleep(1800) # sleep for half of an hour
+        resp = requests.get(direct_url)
+        if resp.status_code == 200:
+            text = resp.text
+            for license in allowed_licenses:
+                if license.lower() in text.lower():
+                    return True
+        else:
+            raise ValueError
     else:
-        raise ValueError(f"HTTP {resp.status_code} for {direct_url}")
-    return False
+        raise ValueError
+
 
 
 def check_license_from_file_url(file_url):
@@ -70,38 +81,22 @@ def check_license_from_file_url(file_url):
         except ValueError:
             continue
     return False
-
-
 allowed = []
-
 with open("python_files.txt", "r") as f:
-    files = [line.strip() for line in f.readlines()]
-
-# Adjust number of workers as needed.
-max_workers = 10
-
-# Use multithreading to process files concurrently.
-with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-    # Map each URL to a future.
-    future_to_url = {
-        executor.submit(check_license_from_direct_url, file): file for file in files
-    }
-    # Initialize progress bar with the total number of files.
+    files = f.readlines()
+    files = [f.strip() for f in files]
     num_allowed = 0
-    for future in (
-        pbar := tqdm(concurrent.futures.as_completed(future_to_url), total=len(files))
-    ):
-        url = future_to_url[future]
-        try:
-            result = future.result()
-            if result:
-                allowed.append(url)
-                num_allowed += 1
-            pbar.set_description(f"Allowed: {num_allowed}")
-        except Exception:
-            # Ignore exceptions for now.
-            continue
+    for file in (pbar := tqdm(files)):
+        if check_license_from_file_url(file):
+            allowed.append(file)
+            num_allowed += 1
+        pbar.set_description(f"Allowed: {num_allowed}")
+
 
 with open("python_files_allowed.txt", "w+") as f:
     for file in allowed:
         f.write(file + "\n")
+
+
+
+

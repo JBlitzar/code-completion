@@ -990,5 +990,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - A silly bug for a silly day.
   - Checked in with nick, the losses are maybe a bit _too_ similar. Bug perhaps?
     - "too coincidental should raise alarms"
-  - Ugh so in train.py, passing in \*\*kwargs doesn't override others, but noop=True by default, and it's the first in the if/elif chain, so all other logic is skipped.
-  -
+  - Ugh so in train.py, passing in \*\*kwargs doesn't override others, but `noop=True` by default, and it's the first in the `if`/`elif` chain, so all other logic is skipped.
+  - Also did the license stuff, and refactored the schedule thing to be an enum. Funny story: enums reinstantiated are not `==`.
