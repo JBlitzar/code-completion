@@ -230,8 +230,8 @@ class TrainingManager:
             batch = data
             attn_mask = None
 
-        del attn_mask # unused
-        
+        del attn_mask  # unused
+
         labels = batch[:, 1:].contiguous()
         batch = batch[:, :-1].contiguous()
 
@@ -250,7 +250,9 @@ class TrainingManager:
 
         # Top k
         top_k = 5
-        top_k_predictions = torch.topk(results.reshape(-1, results.size(-1)), top_k, dim=1).indices
+        top_k_predictions = torch.topk(
+            results.reshape(-1, results.size(-1)), top_k, dim=1
+        ).indices
         correct_top_k = torch.sum(
             torch.any(top_k_predictions == labels.reshape(-1, 1), dim=1)
         ).item()
@@ -315,7 +317,9 @@ class TrainingManager:
     def val_loop(self, val_loader):
         if val_loader is not None:
             for step, data in enumerate(
-                test_tqdm := tqdm(val_loader, leave=False, dynamic_ncols=True, desc=f"valloop")
+                test_tqdm := tqdm(
+                    val_loader, leave=False, dynamic_ncols=True, desc=f"valloop"
+                )
             ):
                 self.valstep(data)
                 avg_val_loss = self.tracker.average("Loss/val/epoch")
@@ -323,7 +327,9 @@ class TrainingManager:
 
     def train_loop(self, dataloader, epoch):
         for step, data in enumerate(
-            train_tqdm := tqdm(dataloader, leave=False, dynamic_ncols=True, desc=f"trainloop")
+            train_tqdm := tqdm(
+                dataloader, leave=False, dynamic_ncols=True, desc=f"trainloop"
+            )
         ):
             self.trainstep(data)
 
@@ -373,36 +379,47 @@ class TrainingManager:
 
     @staticmethod
     def get_curriculum_enum():
-        return Enum('Curriculum', [('NOOP', 1), ('CURRICULUM', 2), ('ANTICURRICULUM', 3), ('SEQUENTIAL', 4), ('HYBRID', 5)])
+        return Enum(
+            "Curriculum",
+            [
+                ("NOOP", 1),
+                ("CURRICULUM", 2),
+                ("ANTICURRICULUM", 3),
+                ("SEQUENTIAL", 4),
+                ("HYBRID", 5),
+            ],
+        )
 
-
-    def train_curriculum(self, epochs=None, dataloader=None, curriculum_type=None, loss_based=False):
+    def train_curriculum(
+        self, epochs=None, dataloader=None, curriculum_type=None, loss_based=False
+    ):
 
         print(f"Training curriculum: {curriculum_type} loss_based: {loss_based}")
-       
+
         Curriculum = self.get_curriculum_enum()
-        
+
         if curriculum_type is None:
             curriculum_type = Curriculum.NOOP
-            
+
         if epochs is not None:
             self.epochs = epochs
 
         if dataloader is not None:
             self.dataloader = dataloader
-        
-        
+
         sorted_indices = sorted(
-            range(len(self.dataloader.dataset)), 
+            range(len(self.dataloader.dataset)),
             key=lambda i: self.dataloader.dataset[i][1],
-            reverse=(curriculum_type.value == Curriculum.ANTICURRICULUM.value)
+            reverse=(curriculum_type.value == Curriculum.ANTICURRICULUM.value),
         )
 
-        
-        
         # [min(1.0, ((i+1))/epochs) for i in range(epochs)] for normal range
-        standard_schedule = [min(1.0, ((i+2)-(i%2))/self.epochs) for i in range(self.epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
-        hybrid_schedule = [min(1.0, (i+2)/self.epochs) for i in range(self.epochs)] # [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
+        standard_schedule = [
+            min(1.0, ((i + 2) - (i % 2)) / self.epochs) for i in range(self.epochs)
+        ]  # [0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
+        hybrid_schedule = [
+            min(1.0, (i + 2) / self.epochs) for i in range(self.epochs)
+        ]  # [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
         step_size = 1 / (self.epochs / 2)
 
         for e in trange(
@@ -411,10 +428,11 @@ class TrainingManager:
             if e <= self.resume_amt:
                 continue
 
-
             if loss_based:
-                sorted_indices = self.get_loss_based_indices(self.dataloader, anti=(curriculum_type == Curriculum.ANTICURRICULUM))
-            
+                sorted_indices = self.get_loss_based_indices(
+                    self.dataloader,
+                    anti=(curriculum_type.value == Curriculum.ANTICURRICULUM.value),
+                )
 
             subset_indices = None
             if curriculum_type.value == Curriculum.NOOP.value:
@@ -423,32 +441,34 @@ class TrainingManager:
             elif curriculum_type.value == Curriculum.SEQUENTIAL.value:
                 print("Sequential curriculum")
                 subset_indices = sorted_indices[
-                    int(max(len(sorted_indices) * (standard_schedule[e] - step_size), 0)):
-                    int(len(sorted_indices) * standard_schedule[e])
+                    int(
+                        max(len(sorted_indices) * (standard_schedule[e] - step_size), 0)
+                    ) : int(len(sorted_indices) * standard_schedule[e])
                 ]
             elif curriculum_type.value == Curriculum.HYBRID.value:
                 print("Hybrid curriculum")
                 subset_indices = sorted_indices[
-                    int(max(len(sorted_indices) * (hybrid_schedule[e] - step_size), 0)):
-                    int(len(sorted_indices) * hybrid_schedule[e])
+                    int(
+                        max(len(sorted_indices) * (hybrid_schedule[e] - step_size), 0)
+                    ) : int(len(sorted_indices) * hybrid_schedule[e])
                 ]
             elif curriculum_type.value == Curriculum.CURRICULUM.value:
                 print("Curriculum")
-                subset_indices = sorted_indices[:int(len(sorted_indices) * standard_schedule[e])]
+                subset_indices = sorted_indices[
+                    : int(len(sorted_indices) * standard_schedule[e])
+                ]
             elif curriculum_type.value == Curriculum.ANTICURRICULUM.value:
                 print("Anti curriculum")
-                subset_indices = sorted_indices[:int(len(sorted_indices) * standard_schedule[e])]
+                subset_indices = sorted_indices[
+                    : int(len(sorted_indices) * standard_schedule[e])
+                ]
             else:
                 raise ValueError(f"Unknown curriculum type: {curriculum_type}")
-                
 
             subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
             cur_dataloader = torch.utils.data.DataLoader(
-                subset, 
-                batch_size=self.dataloader.batch_size, 
-                shuffle=True
+                subset, batch_size=self.dataloader.batch_size, shuffle=True
             )
-
 
             self.epoch(e, cur_dataloader, self.val_dataloader)
 
@@ -465,11 +485,18 @@ class TrainingManager:
             dataloader.dataset,
             batch_size=dataloader.batch_size,
             shuffle=False,
-            num_workers=dataloader.num_workers if hasattr(dataloader, 'num_workers') else 0
+            num_workers=(
+                dataloader.num_workers if hasattr(dataloader, "num_workers") else 0
+            ),
         )
-        
+
         with torch.no_grad():  # Add this for faster inference
-            for batch, _ in tqdm(temp_dataloader, dynamic_ncols=True, leave=False, desc="Loss-based sorting"):
+            for batch, _ in tqdm(
+                temp_dataloader,
+                dynamic_ncols=True,
+                leave=False,
+                desc="Loss-based sorting",
+            ):
                 loss, _, _ = self.eval_model(batch)
                 # If the output is a single tensor, convert to list
                 if isinstance(loss, torch.Tensor) and loss.dim() == 0:
@@ -477,11 +504,9 @@ class TrainingManager:
                 else:
                     # If the output is already batched
                     losses.extend(loss.tolist())
-        
+
         sorted_indices = sorted(
-            range(len(dataloader.dataset)), 
-            key=lambda i: losses[i],
-            reverse=anti
+            range(len(dataloader.dataset)), key=lambda i: losses[i], reverse=anti
         )
         return sorted_indices
 

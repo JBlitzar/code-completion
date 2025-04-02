@@ -270,7 +270,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         vocab_size=5000,
         cutoff_thresh=0.1,
         use_vocab_size_instead=False,
-        use_whitespace=True, # haha
+        use_whitespace=True,  # haha
     ):  # keep 90% with thresh 0.1
         self.root_dir = root_dir
 
@@ -578,9 +578,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
             rarity_score = self.total_num_tokens / token_count if token_count > 0 else 0
             scores[idx] = rarity_score
         return np.median(scores)
-        
 
-        
 
 class DummySequentialDataManager:
     def __init__(self, root_dir, vocab_size=5000):
@@ -704,8 +702,6 @@ class TextCorpusDataset(Dataset):
         self.chunks = torch.stack(chunked_data)
         torch.save(self.chunks, self.cache_file)
 
-
-
     # unused
     # def _sliding_window(self, sequence, window_size, stride):
     #     windows = []
@@ -771,7 +767,7 @@ dataset = TextCorpusDataset(
         # "~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
         "~/torch_datasets/github-python/all_trains_subset_corpus"
         # "~/torch_datasets/github-python/corpus"
-        #"~/torch_datasets/github-python/mega_corpus"
+        # "~/torch_datasets/github-python/mega_corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=153127,  # 3645, # edited by me
     IS_CODE=True,  # Remember to change!
