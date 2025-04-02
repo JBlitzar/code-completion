@@ -67,18 +67,21 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    parent_directory = "runs/code-decoder-v28-fullset-experiment"
+    parent_directory = "runs/code-decoder-v30-alltrains-v2"
+
+    Curriculum = TrainingManager.get_curriculum_enum()
+
     experiments = [
-        ("curriculum-loss", {"curriculum": True, "loss_based": True}),
-        ("noop", {"noop": True}),
-        ("curriculum-noloss", {"curriculum": True, "loss_based": False}),
+        ("curriculum-loss", {"curriculum_type": Curriculum.CURRICULUM, "loss_based": True}),
+        ("noop", {"curriculum_type": Curriculum.NOOP, "loss_based": False}),
+        ("curriculum-noloss", {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False}),
         
-        ("anticurriculum-noloss", {"anticurriculum": True, "loss_based": False}),
-        ("anticurriculum-loss", {"anticurriculum": True, "loss_based": True}),
-        ("sequential-noloss", {"sequential": True, "loss_based": False}),
-        ("sequential-loss", {"sequential": True, "loss_based": True}),
-        ("hybrid-noloss", {"hybrid": True, "loss_based": False}),
-        ("hybrid-loss", {"hybrid": True, "loss_based": True}),
+        ("anticurriculum", {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": False}),
+        ("anticurriculum-loss", {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": True}),
+        ("sequential", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": False}),
+        ("sequential-loss", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": True}),
+        ("hybrid", {"curriculum_type": Curriculum.HYBRID, "loss_based": False}),
+        ("hybrid-loss", {"curriculum_type": Curriculum.HYBRID, "loss_based": True}),
     ]
 
     EPOCHS = 10

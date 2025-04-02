@@ -769,8 +769,8 @@ dataset = TextCorpusDataset(
         # "./smaller-er-test-data"
         # "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
-        # "~/torch_datasets/github-python/all_trains_subset_corpus"
-       "~/torch_datasets/github-python/corpus"
+        "~/torch_datasets/github-python/all_trains_subset_corpus"
+        # "~/torch_datasets/github-python/corpus"
         #"~/torch_datasets/github-python/mega_corpus"
     ),  # os.path.expanduser("~/torch_datasets/wikitext/train")
     vocab_size=153127,  # 3645, # edited by me

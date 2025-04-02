@@ -9,6 +9,7 @@ import numpy as np
 from eval import evaluate_topk
 from dataset import dataset
 from Levenshtein import ratio
+from enum import Enum
 
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -370,43 +371,39 @@ class TrainingManager:
             """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
         )
 
-    def train_curriculum(self, epochs=None, dataloader=None, noop=True, curriculum=False,  anticurriculum=False, sequential=False, hybrid=False,  loss_based=False):
+    @staticmethod
+    def get_curriculum_enum():
+        return Enum('Curriculum', [('NOOP', 1), ('CURRICULUM', 2), ('ANTICURRICULUM', 3), ('SEQUENTIAL', 4), ('HYBRID', 5)])
 
+
+    def train_curriculum(self, epochs=None, dataloader=None, curriculum_type=None, loss_based=False):
+
+        print(f"Training curriculum: {curriculum_type} loss_based: {loss_based}")
+       
+        Curriculum = self.get_curriculum_enum()
+        
+        if curriculum_type is None:
+            curriculum_type = Curriculum.NOOP
+            
         if epochs is not None:
             self.epochs = epochs
 
         if dataloader is not None:
             self.dataloader = dataloader
         
-        #haha, make sure to make a curiculm!
-        sorted_indices = None
-        if anticurriculum:
-            sorted_indices = sorted(
-                range(len(self.dataloader.dataset)), 
-                key=lambda i: self.dataloader.dataset[i][1],
-                reverse=True
-            )
-        else:
-            sorted_indices = sorted(
-                range(len(self.dataloader.dataset)), 
-                key=lambda i: self.dataloader.dataset[i][1]
-            )
+        
+        sorted_indices = sorted(
+            range(len(self.dataloader.dataset)), 
+            key=lambda i: self.dataloader.dataset[i][1],
+            reverse=(curriculum_type.value == Curriculum.ANTICURRICULUM.value)
+        )
+
+        
+        
         # [min(1.0, ((i+1))/epochs) for i in range(epochs)] for normal range
-        schedule = [min(1.0, ((i+2)-(i%2))/self.epochs) for i in range(self.epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
-
+        standard_schedule = [min(1.0, ((i+2)-(i%2))/self.epochs) for i in range(self.epochs)]#[0.2,0.2, 0.4,0.4,0.6,0.6,0.8,0.8,1.0,1.0]
         hybrid_schedule = [min(1.0, (i+2)/self.epochs) for i in range(self.epochs)] # [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
-
         step_size = 1 / (self.epochs / 2)
-        offset = step_size / 2
-
-
-
-
-
-        # get rarity score
-        # Sort
-        # Get percentile threshold based off of epoch (do the hmath right)
-        # only pass that in as the dataloader, but val dataloader for sure
 
         for e in trange(
             self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
@@ -416,24 +413,44 @@ class TrainingManager:
 
 
             if loss_based:
-                sorted_indices = self.get_loss_based_indices(self.dataloader, anti=anticurriculum)
+                sorted_indices = self.get_loss_based_indices(self.dataloader, anti=(curriculum_type == Curriculum.ANTICURRICULUM))
             
-            subset_indices = None
-            if noop:
-                subset_indices = sorted_indices # full dataset
-            elif sequential:
-                subset_indices = sorted_indices[int(max(len(sorted_indices) * (schedule[e] - step_size),0)):int(len(sorted_indices) * schedule[e])]
-            elif hybrid:
-                subset_indices = sorted_indices[int(max(len(sorted_indices) * (hybrid_schedule[e] - step_size),0)):int(len(sorted_indices) * hybrid_schedule[e])]
-            elif curriculum:
-                subset_indices = sorted_indices[:int(len(sorted_indices) * schedule[e])]
-            else:
-                raise ValueError("No curriculum type specified")
-            subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
-            dataloader = torch.utils.data.DataLoader(subset, batch_size=self.dataloader.batch_size, shuffle=True)
 
-            # leave val loader
-            self.epoch(e, dataloader, self.val_dataloader)
+            subset_indices = None
+            if curriculum_type.value == Curriculum.NOOP.value:
+                print("No curriculum")
+                subset_indices = sorted_indices  # full dataset
+            elif curriculum_type.value == Curriculum.SEQUENTIAL.value:
+                print("Sequential curriculum")
+                subset_indices = sorted_indices[
+                    int(max(len(sorted_indices) * (standard_schedule[e] - step_size), 0)):
+                    int(len(sorted_indices) * standard_schedule[e])
+                ]
+            elif curriculum_type.value == Curriculum.HYBRID.value:
+                print("Hybrid curriculum")
+                subset_indices = sorted_indices[
+                    int(max(len(sorted_indices) * (hybrid_schedule[e] - step_size), 0)):
+                    int(len(sorted_indices) * hybrid_schedule[e])
+                ]
+            elif curriculum_type.value == Curriculum.CURRICULUM.value:
+                print("Curriculum")
+                subset_indices = sorted_indices[:int(len(sorted_indices) * standard_schedule[e])]
+            elif curriculum_type.value == Curriculum.ANTICURRICULUM.value:
+                print("Anti curriculum")
+                subset_indices = sorted_indices[:int(len(sorted_indices) * standard_schedule[e])]
+            else:
+                raise ValueError(f"Unknown curriculum type: {curriculum_type}")
+                
+
+            subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
+            cur_dataloader = torch.utils.data.DataLoader(
+                subset, 
+                batch_size=self.dataloader.batch_size, 
+                shuffle=True
+            )
+
+
+            self.epoch(e, cur_dataloader, self.val_dataloader)
 
         print("All done!")
         gc.collect()

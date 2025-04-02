@@ -969,6 +969,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
         - Control ✅
         - Anti-curriculum (easy, sort descending) ✅
 - March 18
+
   - Looking again at https://arxiv.org/pdf/2407.10194. Possibly cite it in the paper.
   - Fixed anticurriculum
     - add edit similarity, but it's kind of hard at the moment
@@ -984,3 +985,10 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - Implemented loss-based
   - TBD copyright issues
     - Should resolve: unlicensed bad, but MIT/GPL/CC0 good
+
+- April 1
+  - A silly bug for a silly day.
+  - Checked in with nick, the losses are maybe a bit _too_ similar. Bug perhaps?
+    - "too coincidental should raise alarms"
+  - Ugh so in train.py, passing in \*\*kwargs doesn't override others, but noop=True by default, and it's the first in the if/elif chain, so all other logic is skipped.
+  -
