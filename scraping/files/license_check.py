@@ -40,28 +40,29 @@ allowed_licenses = [
 ]
 
 
+allowed_repos = []
 def check_license_from_direct_url(direct_url):
     resp = requests.get(direct_url)
 
     if resp.status_code == 200:
         text = resp.text
-        for license in allowed_licenses:
-            if license.lower() in text.lower():
+        for lic in allowed_licenses:
+            if lic.lower() in text.lower():
                 return True
-    elif resp.status_code == "429":
-        time.sleep(1800) # sleep for half of an hour
+    elif resp.status_code == 429:
+        print("Rate-limited, waiting for 5m...")
+        time.sleep(300)  # sleep for 5 minutes
         resp = requests.get(direct_url)
         if resp.status_code == 200:
             text = resp.text
-            for license in allowed_licenses:
-                if license.lower() in text.lower():
+            for lic in allowed_licenses:
+                if lic.lower() in text.lower():
                     return True
         else:
             raise ValueError
     else:
         raise ValueError
-
-
+    return False
 
 def check_license_from_file_url(file_url):
     # example: https://raw.githubusercontent.com/ssloy/tinyoptimizer/main/analyzer.py
@@ -74,29 +75,53 @@ def check_license_from_file_url(file_url):
         "LICENSE.md",
         "license.md",
     ]
+    if base in allowed_repos:
+        return True
     for suffix in suffixes:
         try:
             if check_license_from_direct_url(f"{base}/{suffix}"):
+                allowed_repos.append(base)
                 return True
         except ValueError:
             continue
     return False
-allowed = []
+
+def get_last_line_number(file_path):
+    """Reads the last processed line number."""
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            try:
+                return int(f.read().strip())
+            except ValueError:
+                return 0
+    return 0
+
+def save_last_line_number(file_path, line_number):
+    """Saves the last processed line number."""
+    with open(file_path, "w") as f:
+        f.write(str(line_number))
+
+allowed_files = []
+line_number_file = "license_line_number.txt"
+
 with open("python_files.txt", "r") as f:
-    files = f.readlines()
-    files = [f.strip() for f in files]
-    num_allowed = 0
-    for file in (pbar := tqdm(files)):
+    files = [line.strip() for line in f if line.strip()]
+
+last_line_number = get_last_line_number(line_number_file)
+num_allowed = 0
+
+# Use enumerate to track line numbers
+for index, file in enumerate(tqdm(files[last_line_number:], initial=last_line_number, total=len(files)), start=last_line_number):
+    try:
         if check_license_from_file_url(file):
-            allowed.append(file)
+            allowed_files.append(file)
             num_allowed += 1
-        pbar.set_description(f"Allowed: {num_allowed}")
+    except Exception:
+        pass
+    # Update the progress description and save progress at each iteration
+    tqdm.write(f"Allowed: {num_allowed}")
+    save_last_line_number(line_number_file, index + 1)
 
-
-with open("python_files_allowed.txt", "w+") as f:
-    for file in allowed:
-        f.write(file + "\n")
-
-
-
-
+    with open("python_files_allowed.txt", "w") as f:
+        for file in allowed_files:
+            f.write(file + "\n")
