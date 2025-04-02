@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from tqdm import tqdm, trange
 import heapq
 
-EXPERIMENT_DIRECTORY = "runs/code-decoder-v23-mega"#"runs/code-decoder-v22-bigset-tuner"  # "runs/code-decoder-v21-alltrains-tuner"#"runs/code-decoder-v19-bigset-5k"#"runs/code-decoder-v18-allTrains-customTokenizer"#"runs/code-decoder-v17-bpe-upscale"#"runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
+EXPERIMENT_DIRECTORY = "runs/code-decoder-v23-mega"  # "runs/code-decoder-v22-bigset-tuner"  # "runs/code-decoder-v21-alltrains-tuner"#"runs/code-decoder-v19-bigset-5k"#"runs/code-decoder-v18-allTrains-customTokenizer"#"runs/code-decoder-v17-bpe-upscale"#"runs/code-decoder-v16-upscale"#"runs/code-decoder-v13-rescaling-smaller-retrained"  # "runs/code-decoder-v12-dummy"  # "runs/code-decoder-v11-vanilla-alphabet"#"runs/code-decoder-v10-vanilla-smaller-batchfirst"#"runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -43,6 +43,7 @@ def evaluate_topk(model, start_sequence, amt=10, k=20, temperature=1.0, device="
 
     return generated_sequence
 
+
 def evaluate_topp(model, start_sequence, amt=10, p=0.9, temperature=1.0, device="cpu"):
     generated_sequence = start_sequence.clone().to(device)
 
@@ -61,7 +62,6 @@ def evaluate_topp(model, start_sequence, amt=10, p=0.9, temperature=1.0, device=
             sorted_probs, sorted_indices = torch.sort(probs, descending=True)
             cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
 
-
             cutoff_idx = torch.where(cumulative_probs > p)[0][0] + 1
             top_p_probs = sorted_probs[:cutoff_idx]
             top_p_indices = sorted_indices[:cutoff_idx]
@@ -78,6 +78,7 @@ def evaluate_topp(model, start_sequence, amt=10, p=0.9, temperature=1.0, device=
             )
 
     return generated_sequence
+
 
 def evaluate_beam(model, start_sequence, k=2, amt=10, temperature=0.8, device="cpu"):
     generated_sequence = start_sequence.clone().to(device)
@@ -112,11 +113,11 @@ def evaluate_beam(model, start_sequence, k=2, amt=10, temperature=0.8, device="c
             top_candidates = all_candidates[:k]  # Keep top-k
 
             current_beams = torch.cat([candidate for candidate, _ in top_candidates])
-            current_beam_scores = torch.tensor([score.item() for _, score in top_candidates], device=device)
+            current_beam_scores = torch.tensor(
+                [score.item() for _, score in top_candidates], device=device
+            )
 
     return current_beams[0]  # Return the best beam sequence
-
-
 
 
 def evaluate(
@@ -190,12 +191,12 @@ def tester_exactly_like_trainingmanager_only_last_please_work(model, rawbatch):
 
     return torch.argmax(results.reshape(-1, results.size(-1)), dim=1)[-1]
 
+
 def compute_entropy(logits):
 
     probs = F.softmax(logits, dim=-1)
     entropy = -(probs * probs.log()).sum(dim=-1)  # Entropy, I guess
     return entropy.mean().item()
-
 
 
 def main():
@@ -270,7 +271,9 @@ def main():
         print("that's inp I guess ^^")
         with torch.no_grad():
             logits = net(batch.unsqueeze(0))  # Pass batch through model
-            entropy = compute_entropy(logits[:, -1, :])  # Compute entropy at last token position
+            entropy = compute_entropy(
+                logits[:, -1, :]
+            )  # Compute entropy at last token position
 
         print(f"Entropy of last token: {entropy:.4f}")
         # print("USING TOPK")
@@ -283,7 +286,7 @@ def main():
         # )
 
         print("USING BEAM")
-        result = evaluate_beam(net, batch.unsqueeze(0), amt=100,k=3)
+        result = evaluate_beam(net, batch.unsqueeze(0), amt=100, k=3)
 
         result = dataset.manager.decode(result)
         batch_str = dataset.manager.decode(batch)
@@ -291,7 +294,6 @@ def main():
         result = f"<data>\n{batch_str}</data>\n{result[len(batch_str):]}"
 
         print(result)
-       
 
         # print(dataset.manager.raw_decode(81))
 

@@ -40,7 +40,9 @@ def download_files_linearly(urls, download_folder, start_line=0):
     os.makedirs(download_folder, exist_ok=True)
 
     with requests.Session() as session:
-        for i, url in enumerate(tqdm(urls[start_line:], initial=start_line, total=len(urls))):
+        for i, url in enumerate(
+            tqdm(urls[start_line:], initial=start_line, total=len(urls))
+        ):
             result = download_file(url, session, download_folder)
             print(result)
 

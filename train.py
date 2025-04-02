@@ -1,7 +1,6 @@
 import os
 
 
-
 # from architecture import DecoderTransformer
 from builtin_architecture import make_model, make_model_custom
 from dataset import get_train_dataset, get_test_dataset, get_dataloader
@@ -13,7 +12,9 @@ from trainingmanager import TrainingManager
 import torch.nn as nn
 
 
-def train_model(experiment_directory, epochs, model_params=None, schedule=False, **kwargs):
+def train_model(
+    experiment_directory, epochs, model_params=None, schedule=False, **kwargs
+):
     os.system(f"caffeinate -is -w {os.getpid()} &")
 
     if model_params is None:
@@ -53,6 +54,7 @@ def train_model(experiment_directory, epochs, model_params=None, schedule=False,
         trainer.train()
     flush()
 
+
 def run_experiment(experiment_directory, epochs, del_runs, **kwargs):
     train_model(experiment_directory, epochs, schedule=True, **kwargs)
     if del_runs:
@@ -62,7 +64,9 @@ def run_experiment(experiment_directory, epochs, del_runs, **kwargs):
 if __name__ == "__main__":
     del_runs = True
     if del_runs:
-        del_runs = del_runs and input("Confirm that this will delete checkpoints: ") == "y"
+        del_runs = (
+            del_runs and input("Confirm that this will delete checkpoints: ") == "y"
+        )
         if not del_runs:
             print("Exiting")
             exit()
@@ -72,14 +76,28 @@ if __name__ == "__main__":
     Curriculum = TrainingManager.get_curriculum_enum()
 
     experiments = [
-        ("curriculum-loss", {"curriculum_type": Curriculum.CURRICULUM, "loss_based": True}),
+        (
+            "curriculum-loss",
+            {"curriculum_type": Curriculum.CURRICULUM, "loss_based": True},
+        ),
         ("noop", {"curriculum_type": Curriculum.NOOP, "loss_based": False}),
-        ("curriculum-noloss", {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False}),
-        
-        ("anticurriculum", {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": False}),
-        ("anticurriculum-loss", {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": True}),
+        (
+            "curriculum-noloss",
+            {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False},
+        ),
+        (
+            "anticurriculum",
+            {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": False},
+        ),
+        (
+            "anticurriculum-loss",
+            {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": True},
+        ),
         ("sequential", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": False}),
-        ("sequential-loss", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": True}),
+        (
+            "sequential-loss",
+            {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": True},
+        ),
         ("hybrid", {"curriculum_type": Curriculum.HYBRID, "loss_based": False}),
         ("hybrid-loss", {"curriculum_type": Curriculum.HYBRID, "loss_based": True}),
     ]

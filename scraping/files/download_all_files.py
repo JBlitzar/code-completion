@@ -41,9 +41,14 @@ def download_files_concurrently(urls, download_folder):
     with requests.Session() as session:
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Submit download tasks to the executor
-            futures = [executor.submit(download_file, url, session, download_folder) for url in urls]
-            for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
-                #print(future.result())
+            futures = [
+                executor.submit(download_file, url, session, download_folder)
+                for url in urls
+            ]
+            for future in tqdm(
+                concurrent.futures.as_completed(futures), total=len(futures)
+            ):
+                # print(future.result())
                 pass
 
 

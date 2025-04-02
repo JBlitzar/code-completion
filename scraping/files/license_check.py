@@ -4,19 +4,41 @@ from tqdm import tqdm
 import concurrent.futures
 
 allowed_licenses = [
-    "MIT License", "MIT",
-    "Apache License", "Apache 2.0", "Apache-2.0",
-    "BSD License", "BSD", "BSD-2-Clause", "BSD-3-Clause",
-    "CC0", "CC0 1.0", "Creative Commons Zero", "Creative Commons CC0", "CC0 Public Domain Dedication",
-    "Unlicense", "The Unlicense", "Public Domain",
-    "WTFPL", "DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE", "WTFPL License",
-    "ISC", "ISC License",
-    "Zlib", "Zlib License",
-    "Boost Software License", "BSL-1.0", "Boost License",
+    "MIT License",
+    "MIT",
+    "Apache License",
+    "Apache 2.0",
+    "Apache-2.0",
+    "BSD License",
+    "BSD",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0",
+    "CC0 1.0",
+    "Creative Commons Zero",
+    "Creative Commons CC0",
+    "CC0 Public Domain Dedication",
+    "Unlicense",
+    "The Unlicense",
+    "Public Domain",
+    "WTFPL",
+    "DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
+    "WTFPL License",
+    "ISC",
+    "ISC License",
+    "Zlib",
+    "Zlib License",
+    "Boost Software License",
+    "BSL-1.0",
+    "Boost License",
     "Artistic License 2.0",
-    "Python Software Foundation License", "PSF License",
-    "SOFTWARE IS PROVIDED", "f*ck", "fuck"
+    "Python Software Foundation License",
+    "PSF License",
+    "SOFTWARE IS PROVIDED",
+    "f*ck",
+    "fuck",
 ]
+
 
 def check_license_from_direct_url(direct_url):
     resp = requests.get(direct_url)
@@ -29,10 +51,18 @@ def check_license_from_direct_url(direct_url):
         raise ValueError(f"HTTP {resp.status_code} for {direct_url}")
     return False
 
+
 def check_license_from_file_url(file_url):
     # example: https://raw.githubusercontent.com/ssloy/tinyoptimizer/main/analyzer.py
     base = "/".join(file_url.split("/")[:-1])
-    suffixes = ["LICENSE", "license", "LICENSE.txt", "license.txt", "LICENSE.md", "license.md"]
+    suffixes = [
+        "LICENSE",
+        "license",
+        "LICENSE.txt",
+        "license.txt",
+        "LICENSE.md",
+        "license.md",
+    ]
     for suffix in suffixes:
         try:
             if check_license_from_direct_url(f"{base}/{suffix}"):
@@ -40,6 +70,7 @@ def check_license_from_file_url(file_url):
         except ValueError:
             continue
     return False
+
 
 allowed = []
 
@@ -52,10 +83,14 @@ max_workers = 10
 # Use multithreading to process files concurrently.
 with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
     # Map each URL to a future.
-    future_to_url = {executor.submit(check_license_from_direct_url, file): file for file in files}
+    future_to_url = {
+        executor.submit(check_license_from_direct_url, file): file for file in files
+    }
     # Initialize progress bar with the total number of files.
     num_allowed = 0
-    for future in (pbar := tqdm(concurrent.futures.as_completed(future_to_url), total=len(files))):
+    for future in (
+        pbar := tqdm(concurrent.futures.as_completed(future_to_url), total=len(files))
+    ):
         url = future_to_url[future]
         try:
             result = future.result()
