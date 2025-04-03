@@ -993,4 +993,16 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Ugh so in train.py, passing in \*\*kwargs doesn't override others, but `noop=True` by default, and it's the first in the `if`/`elif` chain, so all other logic is skipped.
   - Also did the license stuff, and refactored the schedule thing to be an enum. Funny story: enums reinstantiated are not `==`.
 - April 2
-  - After some head-banging, I got the copying to work. But only 86,616 files, even though all the urls are included. Who knows why haha. 86k is ok when compared to 90k. It's 767 mb of files, so still bigger than the smaller corpus of 450 ish mb.
+  - After some head-banging, I got the copying to work. But only 86,616 files, even though all the urls are included. Who knows why haha. 86k is ok when compared to 90k.
+    - 11:51 later, it's done
+    - but also only 86616 out of 97711 went
+    - So 11,000 files just kind of disappeared
+    - Stuff happens I guess
+- It's 767 mb of files, so still bigger than the smaller corpus of 450 ish mb. Also, let's check the results of training (from the 450mb data)
+  - So uhh
+  - noop schedule model did best 💀📉👎😭😡😤💥💔😩💻🤯📊🔴❌🧠
+  - A picture is worth a thousand words.
+  - Always remember, setbacks are just setups for comebacks! Keep pushing forward, the next run will be better.
+  - <img src="readme-imgs/v30-results.png" style="width: 30%">
+  - <img src="readme-imgs/v30-v2.png" style="width: 30%">
+  -
