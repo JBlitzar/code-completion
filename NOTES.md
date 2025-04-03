@@ -992,3 +992,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - "too coincidental should raise alarms"
   - Ugh so in train.py, passing in \*\*kwargs doesn't override others, but `noop=True` by default, and it's the first in the `if`/`elif` chain, so all other logic is skipped.
   - Also did the license stuff, and refactored the schedule thing to be an enum. Funny story: enums reinstantiated are not `==`.
+- April 2
+  - After some head-banging, I got the copying to work. But only 86,616 files, even though all the urls are included. Who knows why haha. 86k is ok when compared to 90k. It's 767 mb of files, so still bigger than the smaller corpus of 450 ish mb.
