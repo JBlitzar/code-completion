@@ -39,28 +39,34 @@ def get_file_from_url(url, download_folder):
     file_name = f"{parsed_url[0]}_{parsed_url[1]}_{parsed_url[2]}.py"
     file_name = file_name.split(".py")[0] + ".py"
 
-    # Ensure the file name is unique within the download folder
-    original_file_name = file_name
-    counter = 1
-    i = 0
-    while not os.path.exists(os.path.join(download_folder, file_name)) and i < 100:
-        # If the file name exists, append a counter to make it unique
-        file_name = f"{os.path.splitext(original_file_name)[0]}_{counter}{os.path.splitext(original_file_name)[1]}".split(".py")[0] + ".py"
-        counter += 1
-        i += 1
-
     return file_name
+
+def get_fixed_file(file_name, all_files):
+    if file_name in all_files:
+        return file_name
+    else:
+        base_name = file_name.split(".py")[0]
+        for file in all_files:
+            if file.startswith(base_name):
+                return file
+    return "<none>.py"
 
 with open("python_files_allowed.txt", "r") as f:
     urls = [line.strip() for line in f if line.strip()]
     allowed_files = [get_file_from_url(url, path) for url in urls]
 
     num_existing = 0
+    all_files = glob.glob(os.path.join(path, "*.py"))
 
     for file in tqdm(allowed_files):
+        file = os.path.join(path, file)
         if os.path.exists(file):
             file_name = os.path.basename(file)
             shutil.copy(file, os.path.join(output_path, file_name))
+            num_existing += 1
+        elif os.path.exists(get_fixed_file(file, all_files)):
+            file_name = os.path.basename(file)
+            shutil.copy(get_fixed_file(file, all_files), os.path.join(output_path, file_name))
             num_existing += 1
         else:
             print(f"File not found: {file}")
