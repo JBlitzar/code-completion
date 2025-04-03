@@ -34,41 +34,25 @@ for root, _, files in tqdm(os.walk(path)):
             if old_file_path != new_file_path:
                 os.rename(old_file_path, new_file_path)
 print("Renaming completed.")
-def get_file_from_url(url, download_folder):
-    parsed_url = urlparse(url).path.strip("/").split("/")
-    file_name = f"{parsed_url[0]}_{parsed_url[1]}_{parsed_url[2]}.py"
-    file_name = file_name.split(".py")[0] + ".py"
 
-    return file_name
-
-def get_fixed_file(file_name, all_files):
-    if file_name in all_files:
-        return file_name
-    else:
-        base_name = file_name.split(".py")[0]
-        for file in all_files:
-            if file.startswith(base_name):
-                return file
-    return "<none>.py"
 
 with open("python_files_allowed.txt", "r") as f:
     urls = [line.strip() for line in f if line.strip()]
-    allowed_files = [get_file_from_url(url, path) for url in urls]
+    repo_paths = set(["/".join(url.split("//")[1].split("/")[1:3]) for url in urls])
+    print(repo_paths)
 
     num_existing = 0
     all_files = glob.glob(os.path.join(path, "*.py"))
 
-    for file in tqdm(allowed_files):
-        file = os.path.join(path, file)
-        if os.path.exists(file):
+    for file in (pbar := tqdm(all_files)):
+        if any(repo_path in file.replace("_", "/") for repo_path in repo_paths):
+            num_existing += 1
             file_name = os.path.basename(file)
             shutil.copy(file, os.path.join(output_path, file_name))
-            num_existing += 1
-        elif os.path.exists(get_fixed_file(file, all_files)):
-            file_name = os.path.basename(file)
-            shutil.copy(get_fixed_file(file, all_files), os.path.join(output_path, file_name))
-            num_existing += 1
+            pbar.set_description(f"Copied {num_existing} files")
+
         else:
-            print(f"File not found: {file}")
+            #print(f"File not found: {file}")
+            pass
+
     print(f"Number of existing files: {num_existing}")
-    print(f"Retention percentage: {num_existing / len(allowed_files) * 100:.2f}%")
