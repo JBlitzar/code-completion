@@ -2,9 +2,9 @@ import os
 import glob
 from tqdm import tqdm
 
-folder = os.path.expanduser("~/torch_datasets/github-python/mega_corpus/all_files")
+folder = os.path.expanduser("~/torch_datasets/github-python/mega_licensed_all_files")
 output_file = os.path.expanduser(
-    "~/torch_datasets/github-python/mega_corpus/concatenated.py"
+    "~/torch_datasets/github-python/mega_licensed_corpus/concatenated.py"
 )
 
 with open(output_file, "w", encoding="utf-8") as out_f:
