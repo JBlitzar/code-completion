@@ -1002,7 +1002,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - So uhh
   - noop schedule model did best 💀📉👎😭😡😤💥💔😩💻🤯📊🔴❌🧠
   - A picture is worth a thousand words.
-  - Always remember, setbacks are just setups for comebacks! Keep pushing forward, the next run will be better.
+  - _Always remember, setbacks are just setups for comebacks! Keep pushing forward, the next run will be better._
   - <img src="readme-imgs/v30-results.png" style="width: 30%">
   - <img src="readme-imgs/v30-v2.png" style="width: 30%">
   -
