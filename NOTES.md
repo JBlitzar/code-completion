@@ -1005,4 +1005,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - _Always remember, setbacks are just setups for comebacks! Keep pushing forward, the next run will be better._
   - <img src="readme-imgs/v30-results.png" style="width: 30%">
   - <img src="readme-imgs/v30-v2.png" style="width: 30%">
-  -
+  - will it though? "better" is an unclear heuristic. I mean, the "best" run is when it overfit to memorizing the alphabet. Like, I don't know what to say here. 1000 lines of MD is crazy.
+    - Maybe it will. Maybe you always learn something new, and that's what matters. I don't know. Why do we do this, anyways? To learn. To be intellectually stimulated. And here we are. So keep pushing forward towards that goal. Towards fulfillment, whatever that means.
