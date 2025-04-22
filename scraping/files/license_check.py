@@ -41,6 +41,8 @@ allowed_licenses = [
 
 
 allowed_repos = []
+
+
 def check_license_from_direct_url(direct_url):
     resp = requests.get(direct_url)
 
@@ -64,6 +66,7 @@ def check_license_from_direct_url(direct_url):
         raise ValueError
     return False
 
+
 def check_license_from_file_url(file_url):
     # example: https://raw.githubusercontent.com/ssloy/tinyoptimizer/main/analyzer.py
     base = "/".join(file_url.split("/")[:-1])
@@ -86,6 +89,7 @@ def check_license_from_file_url(file_url):
             continue
     return False
 
+
 def get_last_line_number(file_path):
     """Reads the last processed line number."""
     if os.path.exists(file_path):
@@ -96,10 +100,12 @@ def get_last_line_number(file_path):
                 return 0
     return 0
 
+
 def save_last_line_number(file_path, line_number):
     """Saves the last processed line number."""
     with open(file_path, "w") as f:
         f.write(str(line_number))
+
 
 allowed_files = []
 line_number_file = "license_line_number.txt"
@@ -111,7 +117,10 @@ last_line_number = get_last_line_number(line_number_file)
 num_allowed = 0
 
 # Use enumerate to track line numbers
-for index, file in enumerate(tqdm(files[last_line_number:], initial=last_line_number, total=len(files)), start=last_line_number):
+for index, file in enumerate(
+    tqdm(files[last_line_number:], initial=last_line_number, total=len(files)),
+    start=last_line_number,
+):
     try:
         if check_license_from_file_url(file):
             allowed_files.append(file)

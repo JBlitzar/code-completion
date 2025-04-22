@@ -5,7 +5,9 @@ import shutil
 from tqdm import tqdm
 
 path = os.path.expanduser("~/torch_datasets/github-python/mega_corpus_all_files")
-output_path = os.path.expanduser("~/torch_datasets/github-python/mega_licensed_all_files")
+output_path = os.path.expanduser(
+    "~/torch_datasets/github-python/mega_licensed_all_files"
+)
 
 with open("python_files.txt", "r") as f:
     all_urls = {line.strip() for line in f if line.strip()}
@@ -17,7 +19,9 @@ with open("python_files_allowed.txt", "r") as f:
 missing_urls = allowed_urls - all_urls
 
 if missing_urls:
-    print("The following URLs are in python_files_allowed.txt but not in python_files.txt:")
+    print(
+        "The following URLs are in python_files_allowed.txt but not in python_files.txt:"
+    )
     for url in missing_urls:
         print(url)
 else:
@@ -52,7 +56,7 @@ with open("python_files_allowed.txt", "r") as f:
             pbar.set_description(f"Copied {num_existing} files")
 
         else:
-            #print(f"File not found: {file}")
+            # print(f"File not found: {file}")
             pass
 
     print(f"Number of existing files: {num_existing}")
