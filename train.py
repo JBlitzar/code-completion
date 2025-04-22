@@ -3,7 +3,7 @@ import os
 
 # from architecture import DecoderTransformer
 from builtin_architecture import make_model, make_model_custom
-from dataset import get_train_dataset, get_test_dataset, get_dataloader
+from dataset import fromDataset, get_dataloader, TextCorpusDataset
 import torch
 from tqdm import tqdm, trange
 from logger import init_logger, flush
@@ -13,7 +13,13 @@ import torch.nn as nn
 
 
 def train_model(
-    experiment_directory, epochs, model_params=None, schedule=False, **kwargs
+    experiment_directory,
+    trainset,
+    testset,
+    epochs,
+    model_params=None,
+    schedule=False,
+    **kwargs,
 ):
     os.system(f"caffeinate -is -w {os.getpid()} &")
 
@@ -21,10 +27,9 @@ def train_model(
         model_params = {}
 
     device = "mps" if torch.backends.mps.is_available() else "cpu"
-    trainset = get_train_dataset()
+
     dataloader = get_dataloader(trainset)
 
-    testset = get_test_dataset()
     testloader = get_dataloader(testset)
     if model_params == {}:
         net = make_model()
@@ -55,8 +60,8 @@ def train_model(
     flush()
 
 
-def run_experiment(experiment_directory, epochs, del_runs, **kwargs):
-    train_model(experiment_directory, epochs, schedule=True, **kwargs)
+def run_experiment(experiment_directory, epochs, trainset, testset, del_runs, **kwargs):
+    train_model(experiment_directory, trainset, testset, epochs, schedule=True, **kwargs)
     if del_runs:
         os.system(f"rm -r {experiment_directory}/ckpt/*.pt")
 
@@ -71,7 +76,7 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    parent_directory = "runs/code-decoder-v30-alltrains-v2"
+    parent_directory = "runs/code-decoder-v30-alltrains-v3"
 
     Curriculum = TrainingManager.get_curriculum_enum()
 
@@ -105,4 +110,30 @@ if __name__ == "__main__":
     EPOCHS = 10
     for experiment_name, params in experiments:
         experiment_directory = os.path.join(parent_directory, experiment_name)
-        run_experiment(experiment_directory, EPOCHS, del_runs, **params)
+        trainset, testset = fromDataset(
+            TextCorpusDataset(
+                root_dir=os.path.expanduser(
+                    "~/torch_datasets/github-python/all_trains_subset_corpus"
+                ),
+                vocab_size=153127,
+                IS_CODE=True,
+                IS_CUSTOM=True,
+                max_length=256,
+                sliding_window=False,
+                stride=10,
+                get_rarity_score=True,
+                get_entropy_score=False # change to True and change the above to false for entropy score instead
+            )
+        )
+        print(f"Running experiment: {experiment_name}")
+        print(f"Params: {params}")
+        print(len(trainset), len(testset))
+
+        run_experiment(
+            experiment_directory,
+            EPOCHS,
+            trainset,
+            testset,
+            del_runs,
+            **params,
+        )

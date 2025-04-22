@@ -14,7 +14,7 @@ import time
 from tqdm import trange, tqdm
 import numpy as np
 import matplotlib.pyplot as plt
-
+import inspect
 
 # Device for dataloading and dataloading only. Dataloading on MPS was slower
 
@@ -577,7 +577,22 @@ class CodeCustomTokenizerManager(BPEModelManager):
             token_count = self._token_freqs.get(token, 0)
             rarity_score = self.total_num_tokens / token_count if token_count > 0 else 0
             scores[idx] = rarity_score
-        return np.median(scores)
+        
+        return np.float32(np.median(scores))
+
+    def get_entropy_score(self, sequence):
+        if len(sequence) == 0:
+            return 0.0
+
+        unique, counts = np.unique(sequence, return_counts=True)
+
+        probs = counts / counts.sum()
+        entropy = -np.sum(probs * np.log2(probs))
+
+        if len(unique) > 1:
+            entropy /= np.log2(len(unique))
+
+        return np.float32(entropy)
 
 
 class DummySequentialDataManager:
@@ -623,13 +638,24 @@ class TextCorpusDataset(Dataset):
         sliding_window=False,
         stride=1,
         get_rarity_score=False,
+        get_entropy_score=False,
     ):
         print(root_dir)
+
+        # legendary code
+        print("[TextCorpusDataset]")
+        frame = inspect.currentframe()
+        args, _, _, values = inspect.getargvalues(frame)
+        print("Arguments passed:")
+        for arg in args[1:]:  # skip 'self'
+            print(f"  {arg} = {values[arg]}")
+
         self.root = root_dir
         self.sliding_window = sliding_window
         self.window_size = max_length
         self.stride = stride
         self.get_rarity_score = get_rarity_score
+        self.get_entropy_score = get_entropy_score
 
         if IS_DUMMY:
             self.manager = DummySequentialDataManager(root_dir=root_dir)
@@ -718,6 +744,8 @@ class TextCorpusDataset(Dataset):
         seq = self.chunks[idx]
         if self.get_rarity_score:
             return seq, self.manager.get_rarity_score(seq)
+        if self.get_entropy_score:
+            return seq, self.manager.get_entropy_score(seq)
         return seq, self.dummy  # self.manager.attention_mask(seq)
 
 
@@ -776,6 +804,7 @@ dataset = TextCorpusDataset(
     max_length=256,
     sliding_window=False,
     stride=10,
+    get_rarity_score=True,
 )
 
 dset_size = int(len(dataset))
@@ -812,6 +841,22 @@ def get_test_dataset():
 def get_dataloader(dataset, batch_size=64):
 
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+
+def fromDataset(dataset):
+    dset_size = int(len(dataset))
+    train_size = int(0.8 * dset_size)  # int(dset_size - 2)
+    test_size = int(dset_size - train_size)
+    if test_size == 2:
+        print("alert! test size is 2 or whatever. Change this back please.")
+
+    torch.manual_seed(3407)  # https://arxiv.org/pdf/2109.08203
+
+    train_dataset, test_dataset, _ = random_split(
+        dataset, [train_size, test_size, len(dataset) - train_size - test_size]
+    )
+
+    return train_dataset, test_dataset
 
 
 if __name__ == "__main__":

@@ -999,6 +999,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - So 11,000 files just kind of disappeared
     - Stuff happens I guess
 - It's 767 mb of files, so still bigger than the smaller corpus of 450 ish mb. Also, let's check the results of training (from the 450mb data)
+
   - So uhh
   - noop schedule model did best 💀📉👎😭😡😤💥💔😩💻🤯📊🔴❌🧠
   - A picture is worth a thousand words.
@@ -1007,3 +1008,6 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - <img src="readme-imgs/v30-v2.png" style="width: 30%">
   - will it though? "better" is an unclear heuristic. I mean, the "best" run is when it overfit to memorizing the alphabet. Like, I don't know what to say here. 1000 lines of MD is crazy.
     - Maybe it will. Maybe you always learn something new, and that's what matters. I don't know. Why do we do this, anyways? To learn. To be intellectually stimulated. And here we are. So keep pushing forward towards that goal. Towards fulfillment, whatever that means.
+
+- Tuesday, april 22
+  - So I wanted to sort based on entropy. While implementing this, I noticed that, uh, I never used the rarity scores. I really should intermediarily log things more. I swear.
