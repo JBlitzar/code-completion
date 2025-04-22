@@ -128,6 +128,7 @@ if __name__ == "__main__":
         print(f"Running experiment: {experiment_name}")
         print(f"Params: {params}")
         print(len(trainset), len(testset))
+        print(trainset[3])
 
         run_experiment(
             experiment_directory,

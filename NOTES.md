@@ -1013,3 +1013,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - So I wanted to sort based on entropy. While implementing this, I noticed that, uh, I never used the rarity scores. I really should intermediarily log things more. I swear.
   - Rerunning, also added in the entropy sorting. I should question my code more. But if this one works well, then it's nice. so many challenges. Also, I had a lot of things occuring. So that's why it's been twenty days.
   - well, after "fixing" it, results are identical, so I'm going to take a closer look.
+- So it's not fixed.
+
+  - <img src="readme-imgs/sorted_indices.png" style="width: 50%">
+  -

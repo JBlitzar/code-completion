@@ -275,6 +275,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
         self.root_dir = root_dir
 
         self.token_to_id = {"<PAD>": 0}
+        self.id_to_token = None
 
         self._token_freqs = {}
         self.total_num_tokens = 0
@@ -325,6 +326,26 @@ class CodeCustomTokenizerManager(BPEModelManager):
                 self.token_to_id[token] = len(self.token_to_id)
 
         print(f"Number of tokens: {len(self.token_to_id)}")
+    
+    def make_token_freqs(self):
+
+        processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
+        with open(processed_path, "r", errors="ignore") as reader:
+            raw_text = reader.read()
+        tokens = raw_text.split(" ")
+
+        token_freqs = {"<PAD>": 0}
+
+
+        for token in tqdm(tokens, leave=False):
+            if token not in token_freqs:
+                token_freqs[token] = 1
+            else:
+                token_freqs[token] += 1
+        
+        self._token_freqs = token_freqs
+        self.total_num_tokens = len(tokens)
+
 
     def preprocess_text(self, code):
         print("Preprocessing text...", code[:20])
@@ -574,7 +595,11 @@ class CodeCustomTokenizerManager(BPEModelManager):
             # recriprocal
             # rarity score for individual token in THIS sequence
             # average? max? **median**?
-            token_count = self._token_freqs.get(token, 0)
+            if self._token_freqs == {}:
+                self.make_token_freqs()
+            if not self.id_to_token:
+                self.id_to_token = {v: k for k, v in self.token_to_id.items()}
+            token_count = self._token_freqs.get(self.id_to_token[token.item()], 0)
             rarity_score = self.total_num_tokens / token_count if token_count > 0 else 0
             scores[idx] = rarity_score
         
