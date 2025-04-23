@@ -81,15 +81,16 @@ if __name__ == "__main__":
     Curriculum = TrainingManager.get_curriculum_enum()
 
     experiments = [
+         (
+            "curriculum-noloss",
+            {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False},
+        ),
         (
             "curriculum-loss",
             {"curriculum_type": Curriculum.CURRICULUM, "loss_based": True},
         ),
         ("noop", {"curriculum_type": Curriculum.NOOP, "loss_based": False}),
-        (
-            "curriculum-noloss",
-            {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False},
-        ),
+       
         (
             "anticurriculum",
             {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": False},

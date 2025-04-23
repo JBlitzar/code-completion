@@ -1016,4 +1016,7 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 - So it's not fixed.
 
   - <img src="readme-imgs/sorted_indices.png" style="width: 50%">
-  -
+
+- Run
+- Run with entropy
+- Fill in outline
