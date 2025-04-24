@@ -1010,13 +1010,21 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     - Maybe it will. Maybe you always learn something new, and that's what matters. I don't know. Why do we do this, anyways? To learn. To be intellectually stimulated. And here we are. So keep pushing forward towards that goal. Towards fulfillment, whatever that means.
 
 - Tuesday, april 22
+
   - So I wanted to sort based on entropy. While implementing this, I noticed that, uh, I never used the rarity scores. I really should intermediarily log things more. I swear.
   - Rerunning, also added in the entropy sorting. I should question my code more. But if this one works well, then it's nice. so many challenges. Also, I had a lot of things occuring. So that's why it's been twenty days.
   - well, after "fixing" it, results are identical, so I'm going to take a closer look.
-- So it's not fixed.
 
-  - <img src="readme-imgs/sorted_indices.png" style="width: 50%">
+    - So it's not fixed.
 
-- Run
-- Run with entropy
-- Fill in outline
+    - <img src="readme-imgs/sorted_indices.png" style="width: 50%">
+
+      - Run
+      - Run with entropy
+      - Fill in outline
+
+- Wednesday apr 23
+  - Quick entry, line 1024 !
+  - <img src="readme-imgs/v30-v3-v4.png" style="width: 30%">
+  - <img src="readme-imgs/v30-v3-v4-topk.png" style="width: 30%">
+  - The second one is interesting because there was some overtaking. Several other metrics looked like the first. Finally, noop did best. :\(
