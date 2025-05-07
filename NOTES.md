@@ -996,8 +996,8 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - After some head-banging, I got the copying to work. But only 86,616 files, even though all the urls are included. Who knows why haha. 86k is ok when compared to 90k.
     - 11:51 later, it's done
     - but also only 86616 out of 97711 went
-    - So 11,000 files just kind of disappeared
-    - Stuff happens I guess
+    - So 11,000 files just kind of disappeared. Stuff happens I guess
+    - Line 1000 !
 - It's 767 mb of files, so still bigger than the smaller corpus of 450 ish mb. Also, let's check the results of training (from the 450mb data)
 
   - So uhh
@@ -1024,7 +1024,11 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
       - Fill in outline
 
 - Wednesday apr 23
+
   - Quick entry, line 1024 !
   - <img src="readme-imgs/v30-v3-v4.png" style="width: 30%">
   - <img src="readme-imgs/v30-v3-v4-topk.png" style="width: 30%">
   - The second one is interesting because there was some overtaking. Several other metrics looked like the first. Finally, noop did best. :\(
+
+- Tue may 6
+  - Something today and then there will be nothing for two weeks because I will be away. Mostly doing some work in the doc, actually writing the paper. I'll put the PDF here one day, of course. Maybe it's all just very silly. My results show that it doesn't work, and it's not even unique because that's what the last guy came across. What more can you do? I am trying, hoping, dreaming of contributing meaningfully to the world, and I thought that this might be a chance. It's a start. It's something. It's not nothing. Plus, it's interesting to write a paper, and I did make a transformer, if nothing else. It's all about learning. And I did learn today. One day it'll all come together. I can report on these results. And I really hope I get in because it would suck if I didn't, especially with the 75% acceptance rate. So I do that, and then what? Several months of review later, I have a paper under my name. That's cool, at least. I don't know, but I guess this is what I'm doing.
