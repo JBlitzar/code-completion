@@ -1032,3 +1032,5 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 
 - Tue may 6
   - Something today and then there will be nothing for two weeks because I will be away. Mostly doing some work in the doc, actually writing the paper. I'll put the PDF here one day, of course. Maybe it's all just very silly. My results show that it doesn't work, and it's not even unique because that's what the last guy came across. What more can you do? I am trying, hoping, dreaming of contributing meaningfully to the world, and I thought that this might be a chance. It's a start. It's something. It's not nothing. Plus, it's interesting to write a paper, and I did make a transformer, if nothing else. It's all about learning. And I did learn today. One day it'll all come together. I can report on these results. And I really hope I get in because it would suck if I didn't, especially with the 75% acceptance rate. So I do that, and then what? Several months of review later, I have a paper under my name. That's cool, at least. I don't know, but I guess this is what I'm doing.
+- Wednesday may 7
+  - Updated readme.

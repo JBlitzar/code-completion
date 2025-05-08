@@ -28,7 +28,7 @@ This project aims to develop a code completion model for Python. My process invo
 - I implemented gradient clipping, weight decay, and Xavier normalization.
 - What's amazing is that I was at this stage of the project _in November_. In previous, less complex ML projects (such as the VAE), I would do a few weeks of training and finetuning, but usually finish not long after that.
 
-## **4. Challenges, Takeaways, & Next Steps**
+## **4. Challenges, Takeaways, & Further Experimentation**
 
 ### **Challenges**
 
@@ -43,12 +43,14 @@ This project aims to develop a code completion model for Python. My process invo
     - The lesson here is to make sure you don't have the same code in multiple places, and to ensure when you change a part, that it won't have unintended side effects.
 
 - Analysis of data is important to understand it and know how to treat it.
+
   - For example, it was important to realize that many tokens were used only a couple of times. This allowed me to cut down on the number of unique tokens, thus reducing model size, without disrupting the diversity of the dataset.
 
-### **Next Steps**
-
 - After relatively extensive hyperparameter tuning, I had determined that I was plateuing on performance.
-- I am currently working on investigating new evaluation metrics, inference strategies such as beam search, and curating a larger dataset (with 10 github stars rather than 100 github stars as the minimum threshold, resulting in ~4x the data).
+- I implemented additional inference strategies (top-k, top-p, beam search) and metrics (perplexity, top-k accuracy)
+- I curated a larger dataset, with a threshold of 10 github stars rather than 100 and more lenient size restrictions. This resulted in a dataset approximately four times bigger. After some license filtering, I ended up with a dataset approximately two times bigger.
+
+- Most recently, I've been working on experimenting with different curriculums to see if it leads to faster convergence speeds. There was [another paper](https://arxiv.org/pdf/2407.10194) on the same topic which concluded that curriculum learning has no effect on code generation, instead finding that it greatly assisted in code execution. They used procedurally-generated synthetic data to control for which samples were easy, medium, or hard, but I was curious how it would pan out on real data rather than synthetic data. I've been experimenting with several different curriculums, using several different metrics, namely median token rarity, entropy, and loss-based metrics, with the curriculums being a traditional sequential curriculum, sliding window curriculum, anticurriculum, and three-stage hybrid curriculum.
 
 ## **5. Conclusion**
 
