@@ -17,6 +17,7 @@ def train_model(
     trainset,
     testset,
     epochs,
+    additional_epochs,
     model_params=None,
     schedule=False,
     **kwargs,
@@ -57,11 +58,25 @@ def train_model(
         trainer.train_curriculum(**kwargs)
     else:
         trainer.train()
+
+    if additional_epochs > 0:
+        print(f"Running additional {additional_epochs} epochs")
+        additional_trainer = TrainingManager(
+            net=net,
+            dir=experiment_directory,
+            dataloader=dataloader,
+            device=device,
+            trainstep_checkin_interval=100,
+            epochs=epochs + additional_epochs,
+            val_dataloader=testloader,
+        )
+        additional_trainer.train()
+        
     flush()
 
 
-def run_experiment(experiment_directory, epochs, trainset, testset, del_runs, **kwargs):
-    train_model(experiment_directory, trainset, testset, epochs, schedule=True, **kwargs)
+def run_experiment(experiment_directory, epochs, additional_epochs, trainset, testset, del_runs, **kwargs):
+    train_model(experiment_directory, trainset, testset, epochs, additional_epochs, schedule=True, **kwargs)
     if del_runs:
         os.system(f"rm -r {experiment_directory}/ckpt/*.pt")
 
@@ -76,7 +91,7 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    parent_directory = "runs/code-decoder-v30-alltrains-v3"
+    parent_directory = "runs/code-decoder-v31-mega-licensed-1"
 
     Curriculum = TrainingManager.get_curriculum_enum()
 
@@ -99,24 +114,27 @@ if __name__ == "__main__":
             "anticurriculum-loss",
             {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": True},
         ),
+        
+        ("hybrid", {"curriculum_type": Curriculum.HYBRID, "loss_based": False}),
+        ("hybrid-loss", {"curriculum_type": Curriculum.HYBRID, "loss_based": True}),
+
         ("sequential", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": False}),
         (
             "sequential-loss",
             {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": True},
         ),
-        ("hybrid", {"curriculum_type": Curriculum.HYBRID, "loss_based": False}),
-        ("hybrid-loss", {"curriculum_type": Curriculum.HYBRID, "loss_based": True}),
     ]
 
     EPOCHS = 10
+    ADDITIONAL_EPOCHS = 20
     for experiment_name, params in experiments:
         experiment_directory = os.path.join(parent_directory, experiment_name)
         trainset, testset = fromDataset(
             TextCorpusDataset(
                 root_dir=os.path.expanduser(
-                    "~/torch_datasets/github-python/all_trains_subset_corpus"
+                    "~/torch_datasets/github-python/mega_licensed_corpus"
                 ),
-                vocab_size=153127,
+                vocab_size=33819,
                 IS_CODE=True,
                 IS_CUSTOM=True,
                 max_length=256,
@@ -134,72 +152,11 @@ if __name__ == "__main__":
         run_experiment(
             experiment_directory,
             EPOCHS,
+            ADDITIONAL_EPOCHS,
             trainset,
             testset,
             del_runs,
             **params,
         )
 
-    parent_directory = "runs/code-decoder-v30-alltrains-v4-entropic"
-
-    Curriculum = TrainingManager.get_curriculum_enum()
-
-    experiments = [
-         (
-            "curriculum-noloss",
-            {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False},
-        ),
-        (
-            "curriculum-loss",
-            {"curriculum_type": Curriculum.CURRICULUM, "loss_based": True},
-        ),
-        ("noop", {"curriculum_type": Curriculum.NOOP, "loss_based": False}),
-       
-        (
-            "anticurriculum",
-            {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": False},
-        ),
-        (
-            "anticurriculum-loss",
-            {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": True},
-        ),
-        ("sequential", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": False}),
-        (
-            "sequential-loss",
-            {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": True},
-        ),
-        ("hybrid", {"curriculum_type": Curriculum.HYBRID, "loss_based": False}),
-        ("hybrid-loss", {"curriculum_type": Curriculum.HYBRID, "loss_based": True}),
-    ]
-
-    EPOCHS = 10
-    for experiment_name, params in experiments:
-        experiment_directory = os.path.join(parent_directory, experiment_name)
-        trainset, testset = fromDataset(
-            TextCorpusDataset(
-                root_dir=os.path.expanduser(
-                    "~/torch_datasets/github-python/all_trains_subset_corpus"
-                ),
-                vocab_size=153127,
-                IS_CODE=True,
-                IS_CUSTOM=True,
-                max_length=256,
-                sliding_window=False,
-                stride=10,
-                get_rarity_score=False,
-                get_entropy_score=True # change to True and change the above to false for entropy score instead
-            )
-        )
-        print(f"Running experiment: {experiment_name}")
-        print(f"Params: {params}")
-        print(len(trainset), len(testset))
-        print(trainset[3])
-
-        run_experiment(
-            experiment_directory,
-            EPOCHS,
-            trainset,
-            testset,
-            del_runs,
-            **params,
-        )
+   

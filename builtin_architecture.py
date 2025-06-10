@@ -149,3 +149,10 @@ def make_model_custom(dim=256, heads=4, layers=4, drop=0.1, *args):
         vocab_size, embed_dim, heads, ff_dim, layers, drop, embedding_drop
     )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
     return xformer_real
+
+if __name__ == "__main__":
+    model = make_model()
+    print(model)
+    print("Model created successfully.")
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total parameters: {total_params}")

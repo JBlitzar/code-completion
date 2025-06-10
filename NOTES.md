@@ -1033,4 +1033,13 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
 - Tue may 6
   - Something today and then there will be nothing for two weeks because I will be away. Mostly doing some work in the doc, actually writing the paper. I'll put the PDF here one day, of course. Maybe it's all just very silly. My results show that it doesn't work, and it's not even unique because that's what the last guy came across. What more can you do? I am trying, hoping, dreaming of contributing meaningfully to the world, and I thought that this might be a chance. It's a start. It's something. It's not nothing. Plus, it's interesting to write a paper, and I did make a transformer, if nothing else. It's all about learning. And I did learn today. One day it'll all come together. I can report on these results. And I really hope I get in because it would suck if I didn't, especially with the 75% acceptance rate. So I do that, and then what? Several months of review later, I have a paper under my name. That's cool, at least. I don't know, but I guess this is what I'm doing.
 - Wednesday may 7
+
   - Updated readme.
+
+- Tue Jun 10
+  - haha, it's been a bit. Looking over it with Nick, it's not fully converged. Also, yes, noop did best. Perhaps we train longer? What does training longer even mean? Do you just show it all the data at that point?
+  - Start training on the real data (mega licensed) because it's more data for a larger model.
+  - Make some diagrams for curriculums. Easier to communicate for understanding.
+  - "catastrophic forgetting": if you use sliding windows (sequential), gradient updates overwrite the hard ones, you forget the easy stuff. Maybe model isn't doing as well. And we have empirical results: the worst-performing one is the sequential one.
+  - Train for longer to actually see what's going on. Train for all the data after the schedule is done.
+  - Curriculum learning is usually used as a warm-up, not a full-time training schedule. You train normally for several epochs after.
