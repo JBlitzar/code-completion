@@ -74,6 +74,8 @@ def train_model(
         
     flush()
 
+    os.system("bash safe_cleanup.sh")
+
 
 def run_experiment(experiment_directory, epochs, additional_epochs, trainset, testset, del_runs, **kwargs):
     train_model(experiment_directory, trainset, testset, epochs, additional_epochs, schedule=True, **kwargs)
@@ -82,7 +84,7 @@ def run_experiment(experiment_directory, epochs, additional_epochs, trainset, te
 
 
 if __name__ == "__main__":
-    del_runs = True
+    del_runs = False
     if del_runs:
         del_runs = (
             del_runs and input("Confirm that this will delete checkpoints: ") == "y"
