@@ -91,10 +91,10 @@ class TrainingManager:
 
         self.tracker = ValueTracker()
 
-        self.resume_amt = self.get_resume()
-        if self.resume_amt >= self.epochs - 1:
+        self.resume_epoch, self.resume_step = self.get_resume()
+        if self.resume_epoch >= self.epochs - 1:
             pass
-        elif self.resume_amt != 0:
+        elif self.resume_epoch != 0 or self.resume_step != 0:
             self.resume()
         else:
             if os.path.exists(self.dir) and any(
@@ -127,16 +127,22 @@ class TrainingManager:
             torch.load(os.path.join(self.dir, "ckpt", name), weights_only=True)
         )
 
-    def write_resume(self, epoch):
+    def write_resume(self, epoch, step=0):
         with open(os.path.join(self.dir, "ckpt", "resume.txt"), "w+") as f:
-            f.write(str(epoch))
+            f.write(f"{epoch},{step}")
 
     def get_resume(self):
         try:
             with open(os.path.join(self.dir, "ckpt", "resume.txt"), "r") as f:
-                return int(f.read())
+                content = f.read().strip()
+                if ',' in content:
+                    epoch, step = content.split(',')
+                    return int(epoch), int(step)
+                else:
+                    # Backward compatibility: if only epoch is stored
+                    return int(content), 0
         except (FileNotFoundError, ValueError):
-            return 0
+            return 0, 0
 
     def write_best_val_loss(self, loss):
         with open(os.path.join(self.dir, "ckpt", "best_val_loss.txt"), "w+") as f:
@@ -166,10 +172,11 @@ class TrainingManager:
     def on_trainloop_checkin(self, epoch, step, dataloader_len):
         if self.hasnan():
             # revert
-            print("RESUMIGN")
+            print("RESUMING")
             self.resume()
 
         self._save("latest.pt")  # Just update latest checkpoint
+        self.write_resume(epoch, step + 1)  # Save current progress
 
         log_data(
             {"Loss/Trainstep": self.tracker.average("Loss/trainstep")},
@@ -219,7 +226,7 @@ class TrainingManager:
         self.tracker.reset("TopKAcc/epoch")
         self.tracker.reset("Perplexity/val/epoch")
 
-        self.write_resume(epoch)
+        self.write_resume(epoch + 1, 0)  # Start next epoch at step 0
 
     def eval_model(self, data):
         if type(data) == tuple or type(data) == list:
@@ -326,11 +333,17 @@ class TrainingManager:
                 test_tqdm.set_postfix({"Val Loss": f"{avg_val_loss:.3f}"})
 
     def train_loop(self, dataloader, epoch):
+        start_step = self.resume_step if epoch == self.resume_epoch else 0
+        
         for step, data in enumerate(
             train_tqdm := tqdm(
                 dataloader, leave=False, dynamic_ncols=True, desc=f"trainloop"
             )
         ):
+            # Skip steps if resuming
+            if step < start_step:
+                continue
+                
             self.trainstep(data)
 
             avg_train_loss = self.tracker.average("Loss/trainstep")
@@ -363,11 +376,8 @@ class TrainingManager:
             self.dataloader = dataloader
 
         for e in trange(
-            self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+            self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
         ):
-
-            if e <= self.resume_amt:
-                continue
 
             self.epoch(e, self.dataloader, self.val_dataloader)
 
@@ -423,10 +433,8 @@ class TrainingManager:
         step_size = 1 / (self.epochs / 2)
 
         for e in trange(
-            self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+            self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
         ):
-            if e <= self.resume_amt:
-                continue
 
             if loss_based:
                 sorted_indices = self.get_loss_based_indices(
