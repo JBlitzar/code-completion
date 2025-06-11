@@ -129,9 +129,7 @@ if __name__ == "__main__":
 
     EPOCHS = 10
     ADDITIONAL_EPOCHS = 20
-    for experiment_name, params in experiments:
-        experiment_directory = os.path.join(parent_directory, experiment_name)
-        trainset, testset = fromDataset(
+    trainset, testset = fromDataset(
             TextCorpusDataset(
                 root_dir=os.path.expanduser(
                     "~/torch_datasets/github-python/mega_licensed_corpus"
@@ -146,6 +144,9 @@ if __name__ == "__main__":
                 get_entropy_score=False # change to True and change the above to false for entropy score instead
             )
         )
+    for experiment_name, params in experiments:
+        experiment_directory = os.path.join(parent_directory, experiment_name)
+        
         print(f"Running experiment: {experiment_name}")
         print(f"Params: {params}")
         print(len(trainset), len(testset))
@@ -160,5 +161,19 @@ if __name__ == "__main__":
             del_runs,
             **params,
         )
+
+
+        torch.cuda.empty_cache()
+        import gc
+        gc.collect()
+        for obj in gc.get_objects():
+            try:
+                if torch.is_tensor(obj):
+                    del obj
+            except:
+                pass
+        if torch.backends.mps.is_available():
+            torch._C._mps_emptyCache()
+
 
    
