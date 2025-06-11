@@ -1043,5 +1043,3 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - "catastrophic forgetting": if you use sliding windows (sequential), gradient updates overwrite the hard ones, you forget the easy stuff. Maybe model isn't doing as well. And we have empirical results: the worst-performing one is the sequential one.
   - Train for longer to actually see what's going on. Train for all the data after the schedule is done.
   - Curriculum learning is usually used as a warm-up, not a full-time training schedule. You train normally for several epochs after.
-- Wed Jun 11
-  - changed to mixed precision for slight speedup.

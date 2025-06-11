@@ -71,9 +71,8 @@ class TrainingManager:
 
         self.dataloader = dataloader
         self.val_dataloader = val_dataloader
-        #print("Compiling model...")
-        self.net = net#torch.compile(net, backend="inductor")#net # torch.jit.script(net) # 
-        #print("Done!")
+
+        self.net = net
         self.net.to(device)
         self.device = device
 
@@ -196,8 +195,6 @@ class TrainingManager:
         self.tracker.reset("Acc/trainstep")
         self.tracker.reset("TopKAcc/trainstep")
 
-        # TrainingManager.print_memory_stats(self.net, self.dataloader.dataset)
-
     def on_epoch_checkin(self, epoch):
         if self.hasnan():
             # revert
@@ -294,8 +291,8 @@ class TrainingManager:
 
     def trainstep(self, data):
         self.optimizer.zero_grad()
-        with torch.autocast(device_type="mps", dtype=torch.float16):
-            loss, acc, topk_acc = self.eval_model(data)
+
+        loss, acc, topk_acc = self.eval_model(data)
 
         self.tracker.add("Loss/trainstep", loss.item())
         self.tracker.add("Loss/epoch", loss.item())
@@ -312,8 +309,7 @@ class TrainingManager:
 
     @torch.no_grad()  # decorator yay
     def valstep(self, data):
-        with torch.autocast(device_type="mps", dtype=torch.float16):
-            loss, acc, topk_acc = self.eval_model(data)
+        loss, acc, topk_acc = self.eval_model(data)
 
         self.tracker.add("Loss/valstep", loss.item())
         self.tracker.add("Loss/val/epoch", loss.item())
@@ -509,8 +505,7 @@ class TrainingManager:
                 leave=False,
                 desc="Loss-based sorting",
             ):
-                with torch.autocast(device_type="mps", dtype=torch.float16):
-                    loss, _, _ = self.eval_model(batch)
+                loss, _, _ = self.eval_model(batch)
                 # If the output is a single tensor, convert to list
                 if isinstance(loss, torch.Tensor) and loss.dim() == 0:
                     losses.extend([loss.item()] * batch.size(0))
@@ -550,25 +545,3 @@ class TrainingManager:
                 self.trainstep(data)
 
         print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
-
-    # Add to the start of your train_model function
-    @staticmethod
-    def print_memory_stats(net, trainset):
-        import psutil
-        if torch.backends.mps.is_available():
-            print(f"MPS Memory: {torch.mps.current_allocated_memory()/1e9:.2f} GB allocated")
-        print(f"CPU RAM: {psutil.virtual_memory().percent}% used")
-        
-        # Print dataset size
-        chunks = getattr(trainset, 'chunks', getattr(trainset.dataset, 'chunks', None))
-       
-        if chunks is not None:
-            print(f"Dataset size: {sum(p.numel() * p.element_size() for p in [chunks]) / 1e9:.2f} GB")
-        
-        # Print model size
-        model_size = sum(p.numel() * p.element_size() for p in net.parameters()) / 1e9
-        print(f"Model parameters: {model_size:.2f} GB")
-        
-        # Estimate optimizer size
-        optimizer_size = model_size * 2  # Adam uses ~2x model size
-        print(f"Estimated optimizer state: {optimizer_size:.2f} GB")
