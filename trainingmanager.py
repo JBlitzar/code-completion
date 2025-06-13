@@ -79,7 +79,7 @@ class TrainingManager:
         self.dir = dir
 
         self.criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
-        self.optimizer = torch.optim.Adam(
+        self.optimizer = torch.optim.AdamW(
             self.net.parameters(), lr=learning_rate, weight_decay=1e-5
         )
 
