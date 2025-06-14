@@ -319,15 +319,14 @@ class TrainingManager:
         self.tracker.add("Loss/trainstep", loss.item())
         self.tracker.add("Loss/epoch", loss.item())
 
-        self.tracker.add("Acc/trainstep", acc)
+        self.tracker.add("Acc/trainstep", acc.item())
         self.tracker.add("TopKAcc/trainstep", topk_acc)
         self.tracker.add("TopKAcc/epoch", topk_acc)
 
-        # Backward pass and optimization
         loss.backward()
         self.optimizer.step()
 
-        return loss, acc
+        return loss.detach(), acc.detach()
 
     @torch.no_grad()  # decorator yay
     def valstep(self, data):
@@ -341,7 +340,7 @@ class TrainingManager:
         self.tracker.add("TopKAcc/valstep", topk_acc)
         self.tracker.add("TopKAcc/val/epoch", topk_acc)
 
-        return loss, acc
+        return loss.detach(), acc.detach()
 
     def val_loop(self, val_loader):
         if val_loader is not None:
@@ -564,7 +563,7 @@ class TrainingManager:
                     losses.extend([loss.item()] * batch.size(0))
                 else:
                     # If the output is already batched
-                    losses.extend(loss.tolist())
+                    losses.extend(loss.detach().tolist())
 
         sorted_indices = sorted(
             range(len(dataloader.dataset)), key=lambda i: losses[i], reverse=anti
