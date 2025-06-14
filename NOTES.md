@@ -1049,4 +1049,4 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - <img src="readme-imgs/schedule-diagrams.png">
   - Still training. Retraining. Let's see if AdamW + gc is faster. Patience. 1.15 ish s/it, same as 1.1 baseline, so idk. I'll take faster convergence times, though. Then again, it's with respect to the other ones. So idk.
   - <img src="readme-imgs/tb-31-curves.png" style="width: 30%">
-  - Checking TB, it stabilizes after 20, but 30 looks like a good loss curve, I guess. I don't know. 88% RAM is pressing, but I can get away with one other app open, so I'll just let this cook.
+  - Checking TB, it stabilizes after 20, but 30 looks like a good loss curve, I guess. I don't know. 88% RAM is pressing, but I can get away with one other app open, so I'll just let this cook. Tried pin memory, it was about the same.
