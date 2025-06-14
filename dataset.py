@@ -696,6 +696,8 @@ class TextCorpusDataset(Dataset):
 
         self.max_length = max_length
         self.cache_file = os.path.join(root_dir, "encoded_chunked.pt")
+        self.rarity_cache_file = os.path.join(root_dir, "rarity_scores.pt")
+        self.entropy_cache_file = os.path.join(root_dir, "entropy_scores.pt")
 
         start_t = time.time()
         if os.path.exists(self.cache_file):
@@ -722,11 +724,18 @@ class TextCorpusDataset(Dataset):
 
                 self._chunk_and_save(encoded)
 
+        # Load or compute cached scores
+        self._load_or_compute_scores()
+
         end_t = time.time()
         print(f"Dataset loading took {end_t - start_t} seconds.")
 
         # TODO: more "optimization"
         self.chunks = self.chunks.to(DEVICE)
+        if self.get_rarity_score:
+            self.rarity_scores = self.rarity_scores.to(DEVICE)
+        if self.get_entropy_score:
+            self.entropy_scores = self.entropy_scores.to(DEVICE)
         self.dummy = torch.tensor([1], device=DEVICE)
 
     def _chunk_and_save(self, encoded):
@@ -753,6 +762,54 @@ class TextCorpusDataset(Dataset):
         self.chunks = torch.stack(chunked_data)
         torch.save(self.chunks, self.cache_file)
 
+    def _load_or_compute_scores(self):
+        """Load cached scores or compute them if not available"""
+        if self.get_rarity_score:
+            if os.path.exists(self.rarity_cache_file):
+                print("Loading cached rarity scores...")
+                self.rarity_scores = torch.load(self.rarity_cache_file, weights_only=True)
+                if len(self.rarity_scores) != len(self.chunks):
+                    print("Rarity cache size mismatch, recomputing...")
+                    self._compute_and_cache_rarity_scores()
+            else:
+                print("Computing rarity scores...")
+                self._compute_and_cache_rarity_scores()
+        
+        if self.get_entropy_score:
+            if os.path.exists(self.entropy_cache_file):
+                print("Loading cached entropy scores...")
+                self.entropy_scores = torch.load(self.entropy_cache_file, weights_only=True)
+                if len(self.entropy_scores) != len(self.chunks):
+                    print("Entropy cache size mismatch, recomputing...")
+                    self._compute_and_cache_entropy_scores()
+            else:
+                print("Computing entropy scores...")
+                self._compute_and_cache_entropy_scores()
+
+    def _compute_and_cache_rarity_scores(self):
+        """Compute rarity scores for all chunks and cache them"""
+        rarity_scores = []
+        print("Computing rarity scores for all chunks...")
+        for i in trange(len(self.chunks), desc="Computing rarity scores"):
+            score = self.manager.get_rarity_score(self.chunks[i])
+            rarity_scores.append(score)
+        
+        self.rarity_scores = torch.tensor(rarity_scores, dtype=torch.float32)
+        torch.save(self.rarity_scores, self.rarity_cache_file)
+        print(f"Cached rarity scores to {self.rarity_cache_file}")
+
+    def _compute_and_cache_entropy_scores(self):
+        """Compute entropy scores for all chunks and cache them"""
+        entropy_scores = []
+        print("Computing entropy scores for all chunks...")
+        for i in trange(len(self.chunks), desc="Computing entropy scores"):
+            score = self.manager.get_entropy_score(self.chunks[i])
+            entropy_scores.append(score)
+        
+        self.entropy_scores = torch.tensor(entropy_scores, dtype=torch.float32)
+        torch.save(self.entropy_scores, self.entropy_cache_file)
+        print(f"Cached entropy scores to {self.entropy_cache_file}")
+
     # unused
     # def _sliding_window(self, sequence, window_size, stride):
     #     windows = []
@@ -765,12 +822,12 @@ class TextCorpusDataset(Dataset):
 
     def __getitem__(
         self, idx
-    ):  # TODO: optimized, but change it back if it doesn't work
+    ): 
         seq = self.chunks[idx]
         if self.get_rarity_score:
-            return seq, self.manager.get_rarity_score(seq)
+            return seq, self.rarity_scores[idx]
         if self.get_entropy_score:
-            return seq, self.manager.get_entropy_score(seq)
+            return seq, self.entropy_scores[idx]
         return seq, self.dummy  # self.manager.attention_mask(seq)
 
 

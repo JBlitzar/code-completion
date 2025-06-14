@@ -80,7 +80,7 @@ class TrainingManager:
 
         self.criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
         self.optimizer = torch.optim.AdamW(
-            self.net.parameters(), lr=learning_rate, weight_decay=1e-5
+            self.net.parameters(), lr=learning_rate#, weight_decay=1e-5
         )
 
         # No clue what this does. Maybe its good
@@ -353,13 +353,16 @@ class TrainingManager:
                 step % self.trainstep_checkin_interval
                 == self.trainstep_checkin_interval - 1
             ):
+                
                 self.on_trainloop_checkin(epoch, step, len(dataloader))
+                
 
     def epoch(self, epoch: int, dataloader, val_loader=None):
 
         self.net.train()
+        
         self.train_loop(dataloader, epoch)
-
+        tqdm.write(self.get_memory_stats(self.net, dataloader.dataset, sep=" / "))
         self.net.eval()
         self.val_loop(val_loader)
 
@@ -545,3 +548,30 @@ class TrainingManager:
                 self.trainstep(data)
 
         print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
+
+    @staticmethod
+    def get_memory_stats(net, trainset, sep="\n"):
+        result = ""
+        import datetime
+        import time
+        result += f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" + sep
+        import psutil
+        if torch.backends.mps.is_available():
+            result += f"MPS: {torch.mps.current_allocated_memory()/1e9:.2f} GB" + sep
+        result += f"RAM: {psutil.virtual_memory().percent}% used" + sep
+        
+        # Print dataset size
+        chunks = getattr(trainset, 'chunks', getattr(trainset.dataset, 'chunks', None))
+       
+        if chunks is not None:
+            result += f"data: {sum(p.numel() * p.element_size() for p in [chunks]) / 1e9:.2f} GB" + sep
+        
+        # Print model size
+        model_size = sum(p.numel() * p.element_size() for p in net.parameters()) / 1e9
+        result += f"Params: {model_size:.2f} GB" + sep
+        
+        # Estimate optimizer size
+        optimizer_size = model_size * 2
+        result += f"Optim (est): {optimizer_size:.2f} GB" + sep
+
+        return result
