@@ -10,7 +10,8 @@ from eval import evaluate_topk
 from dataset import dataset
 from Levenshtein import ratio
 from enum import Enum
-
+import signal
+import sys
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -107,6 +108,27 @@ class TrainingManager:
             os.makedirs(os.path.join(self.dir, "ckpt"), exist_ok=True)
 
         print(f"{self.get_param_count()} parameters.")
+        
+        # Set up signal handler for graceful shutdown
+        signal.signal(signal.SIGINT, self._signal_handler)
+        self._interrupted = False
+
+    def _signal_handler(self, signum, frame):
+        """Handle keyboard interrupt gracefully"""
+        print("\nKeyboard interrupt received. Saving checkpoint...")
+        self._interrupted = True
+
+    def _save_on_interrupt(self, epoch, step):
+        """Save checkpoint and resume info on interrupt"""
+        try:
+            self._save("latest.pt")
+            self.write_resume(epoch, step)
+            print(f"Checkpoint saved at epoch {epoch}, step {step}")
+        except Exception as e:
+            print(f"Failed to save checkpoint: {e}")
+        finally:
+            print("Exiting...")
+            sys.exit(0)
 
     def hasnan(self):
         for _, param in self.net.named_parameters():
@@ -340,6 +362,11 @@ class TrainingManager:
                 dataloader, leave=False, dynamic_ncols=True, desc=f"trainloop"
             )
         ):
+            # Check for interrupt
+            if self._interrupted:
+                self._save_on_interrupt(epoch, step)
+                raise KeyboardInterrupt("Training interrupted by user")
+                
             # Skip steps if resuming
             if step < start_step:
                 continue
@@ -358,16 +385,23 @@ class TrainingManager:
                 
 
     def epoch(self, epoch: int, dataloader, val_loader=None):
-
+        if self._interrupted:
+            return
+            
         self.net.train()
-        
         self.train_loop(dataloader, epoch)
+        
+        if self._interrupted:
+            return
+            
         tqdm.write(self.get_memory_stats(self.net, dataloader.dataset, sep=" / "))
         self.net.eval()
         self.val_loop(val_loader)
 
+        if self._interrupted:
+            return
+            
         self.epoch_gen(val_loader)
-
         self.on_epoch_checkin(epoch)
 
     def train(self, epochs=None, dataloader=None):
@@ -378,17 +412,23 @@ class TrainingManager:
         if dataloader is not None:
             self.dataloader = dataloader
 
-        for e in trange(
-            self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
-        ):
+        try:
+            for e in trange(
+                self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+            ):
+                if self._interrupted:
+                    break
+                    
+                self.epoch(e, self.dataloader, self.val_dataloader)
 
-            self.epoch(e, self.dataloader, self.val_dataloader)
-
-        print("All done!")
-        gc.collect()
-        os.system(
-            """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
-        )
+        except KeyboardInterrupt:
+            print("\nTraining interrupted. Checkpoint saved.")
+        finally:
+            print("Training session ended.")
+            gc.collect()
+            os.system(
+                """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
+            )
 
     @staticmethod
     def get_curriculum_enum():
@@ -435,53 +475,63 @@ class TrainingManager:
         ]  # [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
         step_size = 1 / (self.epochs / 2)
 
-        for e in trange(
-            self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
-        ):
+        try:
+            for e in trange(
+                self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+            ):
 
-            if loss_based:
-                sorted_indices = self.get_loss_based_indices(
-                    self.dataloader,
-                    anti=(curriculum_type.value == Curriculum.ANTICURRICULUM.value),
+                if loss_based:
+                    sorted_indices = self.get_loss_based_indices(
+                        self.dataloader,
+                        anti=(curriculum_type.value == Curriculum.ANTICURRICULUM.value),
+                    )
+
+                subset_indices = None
+                if curriculum_type.value == Curriculum.NOOP.value:
+                    print("No curriculum")
+                    subset_indices = sorted_indices  # full dataset
+                elif curriculum_type.value == Curriculum.SEQUENTIAL.value:
+                    print("Sequential curriculum")
+                    subset_indices = sorted_indices[
+                        int(
+                            max(len(sorted_indices) * (standard_schedule[e] - step_size), 0)
+                        ) : int(len(sorted_indices) * standard_schedule[e])
+                    ]
+                elif curriculum_type.value == Curriculum.HYBRID.value:
+                    print("Hybrid curriculum")
+                    subset_indices = sorted_indices[
+                        int(
+                            max(len(sorted_indices) * (hybrid_schedule[e] - step_size), 0)
+                        ) : int(len(sorted_indices) * hybrid_schedule[e])
+                    ]
+                elif curriculum_type.value == Curriculum.CURRICULUM.value:
+                    print("Curriculum")
+                    subset_indices = sorted_indices[
+                        : int(len(sorted_indices) * standard_schedule[e])
+                    ]
+                elif curriculum_type.value == Curriculum.ANTICURRICULUM.value:
+                    print("Anti curriculum")
+                    subset_indices = sorted_indices[
+                        : int(len(sorted_indices) * standard_schedule[e])
+                    ]
+                else:
+                    raise ValueError(f"Unknown curriculum type: {curriculum_type}")
+
+                subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
+                cur_dataloader = torch.utils.data.DataLoader(
+                    subset, batch_size=self.dataloader.batch_size, shuffle=True, pin_memory=True
                 )
 
-            subset_indices = None
-            if curriculum_type.value == Curriculum.NOOP.value:
-                print("No curriculum")
-                subset_indices = sorted_indices  # full dataset
-            elif curriculum_type.value == Curriculum.SEQUENTIAL.value:
-                print("Sequential curriculum")
-                subset_indices = sorted_indices[
-                    int(
-                        max(len(sorted_indices) * (standard_schedule[e] - step_size), 0)
-                    ) : int(len(sorted_indices) * standard_schedule[e])
-                ]
-            elif curriculum_type.value == Curriculum.HYBRID.value:
-                print("Hybrid curriculum")
-                subset_indices = sorted_indices[
-                    int(
-                        max(len(sorted_indices) * (hybrid_schedule[e] - step_size), 0)
-                    ) : int(len(sorted_indices) * hybrid_schedule[e])
-                ]
-            elif curriculum_type.value == Curriculum.CURRICULUM.value:
-                print("Curriculum")
-                subset_indices = sorted_indices[
-                    : int(len(sorted_indices) * standard_schedule[e])
-                ]
-            elif curriculum_type.value == Curriculum.ANTICURRICULUM.value:
-                print("Anti curriculum")
-                subset_indices = sorted_indices[
-                    : int(len(sorted_indices) * standard_schedule[e])
-                ]
-            else:
-                raise ValueError(f"Unknown curriculum type: {curriculum_type}")
+                self.epoch(e, cur_dataloader, self.val_dataloader)
 
-            subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
-            cur_dataloader = torch.utils.data.DataLoader(
-                subset, batch_size=self.dataloader.batch_size, shuffle=True, pin_memory=True
+        except KeyboardInterrupt:
+            print("\nCurriculum training interrupted. Checkpoint saved.")
+        finally:
+            print("Curriculum training session ended.")
+            gc.collect()
+            os.system(
+                """osascript -e 'display notification "Training complete" with title "Training Complete"'"""
             )
-
-            self.epoch(e, cur_dataloader, self.val_dataloader)
 
         print("All done!")
         gc.collect()
