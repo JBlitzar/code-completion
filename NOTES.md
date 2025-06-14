@@ -1051,3 +1051,4 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - <img src="readme-imgs/tb-31-curves.png" style="width: 30%">
   - Checking TB, it stabilizes after 20, but 30 looks like a good loss curve, I guess. I don't know. 88% RAM is pressing, but I can get away with one other app open, so I'll just let this cook. Tried pin memory, it was about the same. Better to not mess with that stuff, let the OS manage memory as needed since RAM is so high for some reason even though the model is 120mb.
   - added crazy graceful shutdown so it saves exactly upon ctrl+c. Cursed SIGINT handlers and `except KeyboardInterrupt` and `if self._interrupted` logic. It works. Did I use copilot? Of course. Such is programming these days. I can feel it. It's becoming real now. haha 360 commits later.
+  - perhaps it's unoptimized `_generate_square_subsequent_mask`. Perhaps I should just let it train in peace and hop on something else.

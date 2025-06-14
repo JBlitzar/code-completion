@@ -71,6 +71,24 @@ class BuiltinTransformerModel(nn.Transformer):
         self.embedding_dropout = nn.Dropout(embedding_drop)
 
         self.init_weights()
+        """    def _generate_square_subsequent_mask(self, sz):
+        # Much faster than torch.log(torch.tril(...))
+        mask = torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1)
+        return mask
+
+    def forward(self, src, has_mask=True, transpose=True):
+        if transpose:
+            src = src.transpose(0, 1)
+
+        if has_mask:
+            device = src.device
+            if self.src_mask is None or self.src_mask.size(0) != len(src):
+                # Pre-allocate larger mask to avoid recreation
+                mask = self._generate_square_subsequent_mask(len(src)).to(device)
+                self.src_mask = mask
+        else:
+            self.src_mask = None
+        # ...existing code...""" # allegedly faster than torch.log(torch.tril(...)). TBD I guess
 
     def _generate_square_subsequent_mask(self, sz):
         return torch.log(torch.tril(torch.ones(sz, sz)))
