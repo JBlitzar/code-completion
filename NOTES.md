@@ -1052,3 +1052,13 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Checking TB, it stabilizes after 20, but 30 looks like a good loss curve, I guess. I don't know. 88% RAM is pressing, but I can get away with one other app open, so I'll just let this cook. Tried pin memory, it was about the same. Better to not mess with that stuff, let the OS manage memory as needed since RAM is so high for some reason even though the model is 120mb.
   - added crazy graceful shutdown so it saves exactly upon ctrl+c. Cursed SIGINT handlers and `except KeyboardInterrupt` and `if self._interrupted` logic. It works. Did I use copilot? Of course. Such is programming these days. I can feel it. It's becoming real now. haha 360 commits later.
   - perhaps it's unoptimized `_generate_square_subsequent_mask`. Perhaps I should just let it train in peace and hop on something else.
+  - average fluctuation:
+    ```
+    Time: 2025-06-14 02:36:56 / MPS: 0.82 GB / RAM: 88.6% used / data: 0.25 GB / Params: 0.12 GB / Optim (est): 0.25 GB /
+    Time: 2025-06-14 03:45:40 / MPS: 0.82 GB / RAM: 83.9% used / data: 0.25 GB / Params: 0.12 GB / Optim (est): 0.25 GB /
+    Time: 2025-06-14 04:54:29 / MPS: 0.82 GB / RAM: 75.8% used / data: 0.25 GB / Params: 0.12 GB / Optim (est): 0.25 GB /
+    Time: 2025-06-14 06:02:54 / MPS: 0.82 GB / RAM: 85.4% used / data: 0.25 GB / Params: 0.12 GB / Optim (est): 0.25 GB /
+    Time: 2025-06-14 07:11:30 / MPS: 0.82 GB / RAM: 92.2% used / data: 0.25 GB / Params: 0.12 GB / Optim (est): 0.25 GB /
+    ```
+  - 75 to 92% is a big range. That's between 48gb and 58 gb used. I guess it's all those activations. Haha quadratic-time-complexity attention mechanisms. Well, no OOM so this is as fast as it's going to get.
+  - Looking at `vm_stat`, swap space is being used. First of all, all those code helper (renderer) and code helper (plugin) processes. Perhaps I need to just quit vsc and use terminal while training.
