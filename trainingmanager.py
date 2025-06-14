@@ -519,7 +519,7 @@ class TrainingManager:
 
                 subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
                 cur_dataloader = torch.utils.data.DataLoader(
-                    subset, batch_size=self.dataloader.batch_size, shuffle=True, pin_memory=True
+                    subset, batch_size=self.dataloader.batch_size, shuffle=True#, pin_memory=True
                 )
 
                 self.epoch(e, cur_dataloader, self.val_dataloader)

@@ -923,7 +923,7 @@ def get_test_dataset():
 
 def get_dataloader(dataset, batch_size=64):
 
-    return DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
 def fromDataset(dataset):
