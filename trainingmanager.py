@@ -250,7 +250,7 @@ class TrainingManager:
 
         self.write_resume(epoch + 1, 0)  # Start next epoch at step 0
 
-    def eval_model(self, data):
+    def eval_model(self, data, compute_metrics=True):
         if type(data) == tuple or type(data) == list:
             data = tuple(d.to(self.device) for d in data)
             batch, attn_mask = data
@@ -270,7 +270,8 @@ class TrainingManager:
 
         # Compute loss
         loss = self.criterion(results.reshape(-1, results.size(-1)), labels.reshape(-1))
-
+        if not compute_metrics:
+            return loss, None, None
         # Compute accuracy
         acc = torch.sum(
             torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
@@ -557,13 +558,14 @@ class TrainingManager:
                 leave=False,
                 desc="Loss-based sorting",
             ):
-                loss, _, _ = self.eval_model(batch)
+                loss, _, _ = self.eval_model(batch, compute_metrics=False)
+                
                 # If the output is a single tensor, convert to list
                 if isinstance(loss, torch.Tensor) and loss.dim() == 0:
                     losses.extend([loss.item()] * batch.size(0))
                 else:
                     # If the output is already batched
-                    losses.extend(loss.detach().tolist())
+                    losses.extend(loss.detach().cpu().tolist())
 
         sorted_indices = sorted(
             range(len(dataloader.dataset)), key=lambda i: losses[i], reverse=anti
