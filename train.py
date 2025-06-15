@@ -166,7 +166,7 @@ if __name__ == "__main__":
             **params,
         )
 
-        torch.cuda.empty_cache()
+        
         import gc
         gc.collect()
         for obj in gc.get_objects():
@@ -177,4 +177,5 @@ if __name__ == "__main__":
                 pass
         if torch.backends.mps.is_available():
             torch._C._mps_emptyCache()
+            torch.mps.empty_cache()
 
