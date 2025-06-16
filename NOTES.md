@@ -1062,3 +1062,8 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
     ```
   - 75 to 92% is a big range. That's between 48gb and 58 gb used. I guess it's all those activations. Haha quadratic-time-complexity attention mechanisms. Well, no OOM so this is as fast as it's going to get.
   - Looking at `vm_stat`, swap space is being used. First of all, all those code helper (renderer) and code helper (plugin) processes. Perhaps I need to just quit vsc and use terminal while training.
+- Jun 16
+  - aaahaha still training. continuously. On run 3.8.
+  - Strange loss curve.
+  - <img src="readme-imgs/funny-curve.png" style="width: 30%">
+    -Perhaps this is AdamW, but the loss fluctuates in almost a regular pattern. Maybe batches aren't randomly sorted?

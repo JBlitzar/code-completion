@@ -270,23 +270,19 @@ class TrainingManager:
 
         # Compute loss
         loss = self.criterion(results.reshape(-1, results.size(-1)), labels.reshape(-1))
+
         if not compute_metrics:
             return loss, None, None
+        
         # Compute accuracy
-        acc = torch.sum(
-            torch.argmax(results.reshape(-1, results.size(-1)), dim=1)
-            == labels.reshape(-1)
-        ) / len(labels.reshape(-1))
+        preds = results.reshape(-1, results.size(-1)).argmax(dim=1)
+        labels_flat = labels.reshape(-1)
+        acc = (preds == labels_flat).float().mean()
 
-        # Top k
+        # Top-k accuracy
         top_k = 5
-        top_k_predictions = torch.topk(
-            results.reshape(-1, results.size(-1)), top_k, dim=1
-        ).indices
-        correct_top_k = torch.sum(
-            torch.any(top_k_predictions == labels.reshape(-1, 1), dim=1)
-        ).item()
-        top_k_acc = correct_top_k / len(labels.reshape(-1))
+        top_k_preds = results.reshape(-1, results.size(-1)).topk(top_k, dim=1).indices
+        top_k_acc = (top_k_preds == labels_flat.unsqueeze(1)).any(dim=1).float().mean().item()
 
         return loss, acc, top_k_acc
 
