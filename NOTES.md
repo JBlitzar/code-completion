@@ -1074,3 +1074,6 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - "At this point the only thing these variants have optimized is your emotional resilience" -ChatGPT
     - And what of this project? So many extractable lessons, so much resilience learned over nine months now (crazy) and 368 commits. But not much in terms of results. A paper is cool, but a paper that presents new things as doing better is cooler. Oh well. I'll take what I can get. Because what else are you going to do? What else are you going to do. My god this has been a journey. "Oh haha. I know what to do! I'll code a transformer. It'll be fun and quick. Two month project." Little did they know. It has been fun (at times), but it has _not_ been quick.
     - That feeling when the transformer trains you (to be more resilient, I guess?)
+- Jun 22
+  - 5.8 done.
+  - Also I guess I knew even before the preliminary experiments, because it also didn't work in the other paper. But I guess I thought I would be different. And then I did the small experiments, and it didn't work. But I guess I thought I would be different. Now, after two weeks of continuous training, the results are almost in and the verdict is that it didn't work. So I can't say this is a sudden realization.
