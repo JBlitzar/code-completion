@@ -1067,3 +1067,9 @@ def write_flat(f, name, ar, np.array([0, 0, 0])))
   - Strange loss curve.
   - <img src="readme-imgs/funny-curve.png" style="width: 30%">
     -Perhaps this is AdamW, but the loss fluctuates in almost a regular pattern. Maybe batches aren't randomly sorted?
+- Jun 21
+  - Took a look at the runs. 5.3/8 done, each takes on average 1.5 days.
+    - four days left?? FOUR DAYS??? Today is Saturday and the meeting is on Tuesday. That's 3.5 at best. Well then. I guess two weeks wasn't enough time for me to get it together. To be fair, that's 8\*1.5=12 days straight training, and I lost three days to restart because _someone_ had the brilliant idea to use AdamW. which wasn't w to restart and produced not-w loss curves (weird regular fluctuation which, by the way, is consistent across runs). So actually the estimate is accurate.
+  - haha noop config does slightly better but they are all about the same. The exact opposite of my hypothesis. Very slick.
+  - "At this point the only thing these variants have optimized is your emotional resilience" -ChatGPT
+    - And what of this project? So many extractable lessons, so much resilience learned over nine months now (crazy) and 368 commits. But not much in terms of results. A paper is cool, but a paper that presents new things as doing better is cooler. Oh well. I'll take what I can get. Because what else are you going to do? What else are you going to do. My god this has been a journey. "Oh haha. I know what to do! I'll code a transformer. It'll be fun and quick. Two month project." Little did they know. It has been fun (at times), but it has _not_ been quick.
