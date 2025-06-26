@@ -57,27 +57,39 @@ def get_color_mapping(run_names):
     #     '#bcbd22',  # Yellow-green
     #     '#17becf',  # Cyan
     # ]
-    colors = """#091717
+#     colors = """#091717
 
-#13B3B9
+# #13B3B9
 
-#265E5A
+# #265E5A
 
-#20808D
+# #20808D
 
-#25E5A5
+# #25E5A5
 
-#20808D
+# #20808D
 
-#FBFAF4
+# #FBFAF4
 
-#E4E3D4
+# #E4E3D4
 
-#FFD2A6
+# #FFD2A6
 
-#A84B2F
+# #A84B2F
 
-#944454""".lower().split("\n\n")
+# #944454""".lower().split("\n\n")
+    colors = [
+        "#e6194b",  # Red
+        "#f58231",  # Orange
+        "#ffe119",  # Yellow
+        "#bfef45",  # Lime
+        "#3cb44b",  # Green
+        "#42d4f4",  # Cyan
+        "#4363d8",  # Blue
+        "#911eb4",  # Purple
+        "#f032e6",  # Magenta
+        "#a9a9a9"   # Grey
+    ]
     
     # Create a mapping of run names to colors
     return {name: colors[i % len(colors)] for i, name in enumerate(sorted(run_names))}
@@ -112,7 +124,9 @@ def plot_metric(metric_dir, color_mapping, output_dir):
     # Set labels and title
     plt.xlabel('Step')
     plt.ylabel(get_metric_label(metric_name))
-    plt.title(f'{get_metric_label(metric_name)} vs. Step', fontweight='bold')
+
+    comparison = "Epoch" if "epoch" in metric_name else "Step"
+    plt.title(f'{get_metric_label(metric_name)} vs. {comparison}', fontweight='bold')
     
     # Add legend with good positioning
     plt.legend(loc='best', frameon=True, fancybox=True, framealpha=0.9, 
