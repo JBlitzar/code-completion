@@ -45,18 +45,39 @@ def get_metric_label(metric_name):
 def get_color_mapping(run_names):
     """Create a consistent color mapping for all runs."""
     # Define a color palette with distinct colors
-    colors = [
-        '#1f77b4',  # Blue
-        '#ff7f0e',  # Orange
-        '#2ca02c',  # Green
-        '#d62728',  # Red
-        '#9467bd',  # Purple
-        '#8c564b',  # Brown
-        '#e377c2',  # Pink
-        '#7f7f7f',  # Gray
-        '#bcbd22',  # Yellow-green
-        '#17becf',  # Cyan
-    ]
+    # colors = [
+    #     '#1f77b4',  # Blue
+    #     '#ff7f0e',  # Orange
+    #     '#2ca02c',  # Green
+    #     '#d62728',  # Red
+    #     '#9467bd',  # Purple
+    #     '#8c564b',  # Brown
+    #     '#e377c2',  # Pink
+    #     '#7f7f7f',  # Gray
+    #     '#bcbd22',  # Yellow-green
+    #     '#17becf',  # Cyan
+    # ]
+    colors = """#091717
+
+#13B3B9
+
+#265E5A
+
+#20808D
+
+#25E5A5
+
+#20808D
+
+#FBFAF4
+
+#E4E3D4
+
+#FFD2A6
+
+#A84B2F
+
+#944454""".lower().split("\n\n")
     
     # Create a mapping of run names to colors
     return {name: colors[i % len(colors)] for i, name in enumerate(sorted(run_names))}
