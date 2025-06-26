@@ -39,7 +39,7 @@ def plot_loss_curves(json_path, output_path=None):
     parts = basename.replace(".json", "").replace("_tensorboard", "").split("_")[-1].split("-")
     metric = parts[-1]
     experiment = "".join(parts[:-1])
-    ax.plot(epochs, values,   label=json_path.spli,   marker='o')
+    ax.plot(epochs, values,   label=json_path.split(),   marker='o')
 
     # Labels & title
     ax.set_xlabel('Epoch')
