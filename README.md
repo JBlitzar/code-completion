@@ -26,7 +26,7 @@ This project aims to develop a code completion model for Python. My process invo
 - After learning about attention mechanisms and reading through various [resources](resources.md), I implemented it myself in [architecture.py](architecture.py). The design is very modular, each component usually being composed of a few smaller components glued together in a `Sequential`. While this was an excellent learning opportunity, and it was really great to truly understand how attention mechanisms worked inside of a transformer, because this project has so many moving parts, as I continued debugging, I used pytorch's builtin implementation of transformers for iteration. The [source code itself](https://github.com/pytorch/pytorch/blob/v2.6.0/torch/nn/modules/transformer.py#L57) is actually surprisingly similar.
 - I created my own [training framework](trainingmanager.py), which I've used in the past to quickly train other models. Building off of this, I made a quick script to run [hyperparameter searches](hyperparam_tune.py).
 - I implemented gradient clipping, weight decay, and Xavier normalization.
-- What's amazing is that I was at this stage of the project _in November_. In previous, less complex ML projects (such as the VAE), I would do a few weeks of training and finetuning, but usually finish not long after that.
+- What's amazing is that I was at this stage of the project _in November_. Spoiler alert: it's not November anymore. In previous, less complex ML projects (such as the VAE), I would do a few weeks of training and finetuning, but usually finish not long after that.
 
 ## **4. Challenges, Takeaways, & Further Experimentation**
 
