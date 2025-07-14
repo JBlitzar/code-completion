@@ -1,6 +1,6 @@
 # Code Completion
 
-# Take a look at [notes.md](https://github.com/JBlitzar/code-completion/blob/main/NOTES.md)
+## Take a look at [notes.md](https://github.com/JBlitzar/code-completion/blob/main/NOTES.md)
 
 ## **1. Overview**
 
@@ -18,8 +18,8 @@ This project aims to develop a code completion model for Python. My process invo
 - Tokenization experiments:
   - Started with BERT-based tokenization.
   - Explored Byte Pair Encoding (BPE) with `yttm` but decided against it because of strange tokenization issues. Processing code is a more nuanced problem than natural language (different use of punctuation and whitespace, in particular).
-  - Eventually settled on a custom tokenizer ([link](https://github.com/JBlitzar/code-completion/blob/main/dataset.py#L178)), agressively subdividing the code by first removing docstrings and comments, and then splitting based off of capitalization, spaces, and underscores while preserving newlines and indentation.
-    - I discovered that, despite the agressive tokenization, there were still many tokens that were used only once or twice. In the end, I only preserved tokens that appeared more than ten times.
+  - Eventually settled on a custom tokenizer ([link](https://github.com/JBlitzar/code-completion/blob/main/dataset.py#L178)), aggressively subdividing the code by first removing docstrings and comments, and then splitting based off of capitalization, spaces, and underscores while preserving newlines and indentation.
+    - I discovered that, despite the aggressive tokenization, there were still many tokens that were used only once or twice. In the end, I only preserved tokens that appeared more than ten times.
 
 ## **3. Model Development & Training**
 
