@@ -11,13 +11,10 @@ dataset_type: code
 tags:
   - code
   - python
-  - code-generation
 size_categories:
   - 100K<n⩽1M
 task_categories:
   - text-generation
-task_ids:
-  - code-completion
 ---
 
 # GitHub-Python — Licensed & Elaborated Variants
@@ -25,27 +22,27 @@ task_ids:
 This repository ships **two complementary Python-code corpora** extracted from
 public GitHub:
 
-* **Licensed Subset** – strictly *permissive-licensed* files suitable for
+- **Licensed Subset** – strictly _permissive-licensed_ files suitable for
   commercial redistribution / model training (main corpus used in our
   experiments).
-* **Elaborated Collection** – a broader crawl that additionally contains files
-  under *copyleft* or unclear licenses (GPL/AGPL/LGPL, etc.).  Useful for
+- **Elaborated Collection** – a broader crawl that additionally contains files
+  under _copyleft_ or unclear licenses (GPL/AGPL/LGPL, etc.). Useful for
   analysis or pre-training where license mixing is acceptable.
 
 Both variants target **code-completion / generation** research.
 
 ## Dataset at a glance
 
-|                           | **Licensed Subset** | **Elaborated Collection** |
-| ------------------------- | ------------------- | ------------------------- |
-| Files (.py)               | 53,017              | 186,066                  |
-| Unique repositories       | 16,447              | 59,852                   |
-| Repository owners         | 12,515              | 43,517                   |
-| Compressed size           | 732 MB              | 2.4 GB \*               |
-| Vocabulary (tokens)       | 443,431             | 443,431 †               |
-| License coverage          | Permissive only     | Mixed (perm. + copyleft) |
-| Secrets redacted          | ✅                  | ⚠️ not guaranteed       |
-| Time window               | ≥ 2015-01-01        | ≥ 2015-01-01             |
+|                     | **Licensed Subset** | **Elaborated Collection** |
+| ------------------- | ------------------- | ------------------------- |
+| Files (.py)         | 53,017              | 186,066                   |
+| Unique repositories | 16,447              | 59,852                    |
+| Repository owners   | 12,515              | 43,517                    |
+| Compressed size     | 732 MB              | 2.4 GB \*                 |
+| Vocabulary (tokens) | 443,431             | 443,431 †                 |
+| License coverage    | Permissive only     | Mixed (perm. + copyleft)  |
+| Secrets redacted    | ✅                  | ⚠️ not guaranteed         |
+| Time window         | ≥ 2015-01-01        | ≥ 2015-01-01              |
 
 \* estimated – elaborated corpus is distributed as raw file list, not a single
 text file.  
@@ -81,18 +78,18 @@ code of one file.
 
 ## Dataset variants
 
-### 1. Licensed Subset  (`mega_licensed_corpus_redacted.txt`)
+### 1. Licensed Subset (`mega_licensed_corpus_redacted.txt`)
 
 • 53 K permissively-licensed files (MIT/BSD/Apache/ISC/Unlicense).  
 • All API keys & credentials removed.  
 • Ready for redistribution & commercial use (respect upstream NOTICE files).
 
-### 2. Elaborated Collection  (`python_files_elaborated.txt`)
+### 2. Elaborated Collection (`python_files_elaborated.txt`)
 
 • 186 K files from a much larger crawl.  
 • Contains **GPL / LGPL / AGPL and other copyleft** licenses.  
-• Shipped *as URL list* + metadata CSV; you must download the files yourself
-  (`datasets.load_dataset` streaming, `wget`, etc.).  
+• Shipped _as URL list_ + metadata CSV; you must download the files yourself
+(`datasets.load_dataset` streaming, `wget`, etc.).  
 • **No license filtering or secret-redaction performed** – use with caution.
 
 When first loading the dataset, decide which variant aligns with your use case
