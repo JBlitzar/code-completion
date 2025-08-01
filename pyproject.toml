@@ -1,0 +1,20 @@
+[project]
+name = "code-completion"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cython>=3.1.2",
+    "levenshtein>=0.27.1",
+    "matplotlib>=3.10.5",
+    "numpy>=2.3.2",
+    "pip>=25.2",
+    "setuptools>=80.9.0",
+    "tensorboard>=2.20.0",
+    "tiktoken>=0.9.0",
+    "torch>=2.7.1",
+    "torchvision>=0.22.1",
+    "tqdm>=4.67.1",
+    "wheel>=0.45.1",
+]
