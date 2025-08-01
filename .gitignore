@@ -169,3 +169,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# ---------------------------------------------------------------------------
+# Hugging Face dataset files (too large for GitHub – push directly to HF Hub)
+# ---------------------------------------------------------------------------
+huggingface_dataset/*.txt
+huggingface_dataset/*.csv
+
