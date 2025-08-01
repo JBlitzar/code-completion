@@ -1,6 +1,6 @@
 import os
 import torch
-from logger import log_data, init_logger, log_img
+from logger import log_data
 import torch.nn as nn
 from tqdm import tqdm, trange
 from torch.profiler import profile, record_function, ProfilerActivity
@@ -8,15 +8,11 @@ import gc
 import numpy as np
 from eval import evaluate_topk
 from dataset import dataset
-from Levenshtein import ratio
 from enum import Enum
 import signal
 import sys
 
 device = "mps" if torch.backends.mps.is_available() else "cpu"
-
-
-from collections import defaultdict
 
 
 class ValueTracker:
@@ -62,7 +58,6 @@ class TrainingManager:
         epochs=100,
         val_dataloader=None,
     ):
-
         learning_rate = 0.001
 
         self.clip = 1.0
@@ -81,7 +76,8 @@ class TrainingManager:
 
         self.criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
         self.optimizer = torch.optim.AdamW(
-            self.net.parameters(), lr=learning_rate#, weight_decay=1e-5
+            self.net.parameters(),
+            lr=learning_rate,  # , weight_decay=1e-5
         )
 
         # No clue what this does. Maybe its good
@@ -108,7 +104,7 @@ class TrainingManager:
             os.makedirs(os.path.join(self.dir, "ckpt"), exist_ok=True)
 
         print(f"{self.get_param_count()} parameters.")
-        
+
         # Set up signal handler for graceful shutdown
         signal.signal(signal.SIGINT, self._signal_handler)
         self._interrupted = False
@@ -157,8 +153,8 @@ class TrainingManager:
         try:
             with open(os.path.join(self.dir, "ckpt", "resume.txt"), "r") as f:
                 content = f.read().strip()
-                if ',' in content:
-                    epoch, step = content.split(',')
+                if "," in content:
+                    epoch, step = content.split(",")
                     return int(epoch), int(step)
                 else:
                     # Backward compatibility: if only epoch is stored
@@ -273,7 +269,7 @@ class TrainingManager:
 
         if not compute_metrics:
             return loss, None, None
-        
+
         # Compute accuracy
         preds = results.reshape(-1, results.size(-1)).argmax(dim=1)
         labels_flat = labels.reshape(-1)
@@ -282,7 +278,9 @@ class TrainingManager:
         # Top-k accuracy
         top_k = 5
         top_k_preds = results.reshape(-1, results.size(-1)).topk(top_k, dim=1).indices
-        top_k_acc = (top_k_preds == labels_flat.unsqueeze(1)).any(dim=1).float().mean().item()
+        top_k_acc = (
+            (top_k_preds == labels_flat.unsqueeze(1)).any(dim=1).float().mean().item()
+        )
 
         return loss, acc, top_k_acc
 
@@ -296,7 +294,7 @@ class TrainingManager:
         result = dataset.manager.decode(result[0])
         batch_str = dataset.manager.decode(start_sequence[0])
 
-        result = f"<data>{batch_str}</data>{result[len(batch_str):]}"
+        result = f"<data>{batch_str}</data>{result[len(batch_str) :]}"
         # print(result)
 
         with open(os.path.join(self.dir, "ckpt", "generated.txt"), "a+") as f:
@@ -343,7 +341,7 @@ class TrainingManager:
         if val_loader is not None:
             for step, data in enumerate(
                 test_tqdm := tqdm(
-                    val_loader, leave=False, dynamic_ncols=True, desc=f"valloop"
+                    val_loader, leave=False, dynamic_ncols=True, desc="valloop"
                 )
             ):
                 self.valstep(data)
@@ -352,21 +350,21 @@ class TrainingManager:
 
     def train_loop(self, dataloader, epoch):
         start_step = self.resume_step if epoch == self.resume_epoch else 0
-        
+
         for step, data in enumerate(
             train_tqdm := tqdm(
-                dataloader, leave=False, dynamic_ncols=True, desc=f"trainloop"
+                dataloader, leave=False, dynamic_ncols=True, desc="trainloop"
             )
         ):
             # Check for interrupt
             if self._interrupted:
                 self._save_on_interrupt(epoch, step)
                 raise KeyboardInterrupt("Training interrupted by user")
-                
+
             # Skip steps if resuming
             if step < start_step:
                 continue
-                
+
             self.trainstep(data)
 
             avg_train_loss = self.tracker.average("Loss/trainstep")
@@ -376,32 +374,29 @@ class TrainingManager:
                 step % self.trainstep_checkin_interval
                 == self.trainstep_checkin_interval - 1
             ):
-                
                 self.on_trainloop_checkin(epoch, step, len(dataloader))
-                
 
     def epoch(self, epoch: int, dataloader, val_loader=None):
         if self._interrupted:
             return
-            
+
         self.net.train()
         self.train_loop(dataloader, epoch)
-        
+
         if self._interrupted:
             return
-            
+
         tqdm.write(self.get_memory_stats(self.net, dataloader.dataset, sep=" / "))
         self.net.eval()
         self.val_loop(val_loader)
 
         if self._interrupted:
             return
-            
+
         self.epoch_gen(val_loader)
         self.on_epoch_checkin(epoch)
 
     def train(self, epochs=None, dataloader=None):
-
         if epochs is not None:
             self.epochs = epochs
 
@@ -410,11 +405,15 @@ class TrainingManager:
 
         try:
             for e in trange(
-                self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+                self.resume_epoch,
+                self.epochs,
+                dynamic_ncols=True,
+                unit_scale=True,
+                unit_divisor=60,
             ):
                 if self._interrupted:
                     break
-                    
+
                 self.epoch(e, self.dataloader, self.val_dataloader)
 
         except KeyboardInterrupt:
@@ -442,7 +441,6 @@ class TrainingManager:
     def train_curriculum(
         self, epochs=None, dataloader=None, curriculum_type=None, loss_based=False
     ):
-
         print(f"Training curriculum: {curriculum_type} loss_based: {loss_based}")
 
         Curriculum = self.get_curriculum_enum()
@@ -473,9 +471,12 @@ class TrainingManager:
 
         try:
             for e in trange(
-                self.resume_epoch, self.epochs, dynamic_ncols=True, unit_scale=True, unit_divisor=60
+                self.resume_epoch,
+                self.epochs,
+                dynamic_ncols=True,
+                unit_scale=True,
+                unit_divisor=60,
             ):
-
                 if loss_based:
                     sorted_indices = self.get_loss_based_indices(
                         self.dataloader,
@@ -490,14 +491,21 @@ class TrainingManager:
                     print("Sequential curriculum")
                     subset_indices = sorted_indices[
                         int(
-                            max(len(sorted_indices) * (standard_schedule[e] - step_size), 0)
+                            max(
+                                len(sorted_indices)
+                                * (standard_schedule[e] - step_size),
+                                0,
+                            )
                         ) : int(len(sorted_indices) * standard_schedule[e])
                     ]
                 elif curriculum_type.value == Curriculum.HYBRID.value:
                     print("Hybrid curriculum")
                     subset_indices = sorted_indices[
                         int(
-                            max(len(sorted_indices) * (hybrid_schedule[e] - step_size), 0)
+                            max(
+                                len(sorted_indices) * (hybrid_schedule[e] - step_size),
+                                0,
+                            )
                         ) : int(len(sorted_indices) * hybrid_schedule[e])
                     ]
                 elif curriculum_type.value == Curriculum.CURRICULUM.value:
@@ -513,9 +521,13 @@ class TrainingManager:
                 else:
                     raise ValueError(f"Unknown curriculum type: {curriculum_type}")
 
-                subset = torch.utils.data.Subset(self.dataloader.dataset, subset_indices)
+                subset = torch.utils.data.Subset(
+                    self.dataloader.dataset, subset_indices
+                )
                 cur_dataloader = torch.utils.data.DataLoader(
-                    subset, batch_size=self.dataloader.batch_size, shuffle=True#, pin_memory=True
+                    subset,
+                    batch_size=self.dataloader.batch_size,
+                    shuffle=True,  # , pin_memory=True
                 )
 
                 self.epoch(e, cur_dataloader, self.val_dataloader)
@@ -555,7 +567,7 @@ class TrainingManager:
                 desc="Loss-based sorting",
             ):
                 loss, _, _ = self.eval_model(batch, compute_metrics=False)
-                
+
                 # If the output is a single tensor, convert to list
                 if isinstance(loss, torch.Tensor) and loss.dim() == 0:
                     losses.extend([loss.item()] * batch.size(0))
@@ -585,7 +597,6 @@ class TrainingManager:
         return sum(p.numel() for p in self.net.parameters())
 
     def profile_trainstep(self):
-
         self.net.train()
         data = next(iter(self.dataloader))
 
@@ -600,23 +611,27 @@ class TrainingManager:
     def get_memory_stats(net, trainset, sep="\n"):
         result = ""
         import datetime
-        import time
+
         result += f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" + sep
         import psutil
+
         if torch.backends.mps.is_available():
-            result += f"MPS: {torch.mps.current_allocated_memory()/1e9:.2f} GB" + sep
+            result += f"MPS: {torch.mps.current_allocated_memory() / 1e9:.2f} GB" + sep
         result += f"RAM: {psutil.virtual_memory().percent}% used" + sep
-        
+
         # Print dataset size
-        chunks = getattr(trainset, 'chunks', getattr(trainset.dataset, 'chunks', None))
-       
+        chunks = getattr(trainset, "chunks", getattr(trainset.dataset, "chunks", None))
+
         if chunks is not None:
-            result += f"data: {sum(p.numel() * p.element_size() for p in [chunks]) / 1e9:.2f} GB" + sep
-        
+            result += (
+                f"data: {sum(p.numel() * p.element_size() for p in [chunks]) / 1e9:.2f} GB"
+                + sep
+            )
+
         # Print model size
         model_size = sum(p.numel() * p.element_size() for p in net.parameters()) / 1e9
         result += f"Params: {model_size:.2f} GB" + sep
-        
+
         # Estimate optimizer size
         optimizer_size = model_size * 2
         result += f"Optim (est): {optimizer_size:.2f} GB" + sep

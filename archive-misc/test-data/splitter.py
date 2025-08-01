@@ -14,7 +14,7 @@ def split_file(input_file, lines_per_split=20):
     # Save each chunk as a new file
     base_name = os.path.splitext(input_file)[0]
     for idx, chunk in enumerate(chunks):
-        new_file_name = f"{base_name}_part{idx+1}.txt"
+        new_file_name = f"{base_name}_part{idx + 1}.txt"
         with open(new_file_name, "w") as f:
             f.writelines(chunk)
 

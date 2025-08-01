@@ -5,11 +5,8 @@ import os
 from builtin_architecture import make_model, make_model_custom
 from dataset import fromDataset, get_dataloader, TextCorpusDataset
 import torch
-from tqdm import tqdm, trange
 from logger import init_logger, flush
-import torchvision
 from trainingmanager import TrainingManager
-import torch.nn as nn
 
 
 def train_model(
@@ -73,14 +70,30 @@ def train_model(
             val_dataloader=testloader,
         )
         additional_trainer.train()
-        
+
     flush()
 
     os.system("bash safe_cleanup.sh")
 
 
-def run_experiment(experiment_directory, epochs, additional_epochs, trainset, testset, del_runs, **kwargs):
-    train_model(experiment_directory, trainset, testset, epochs, additional_epochs, schedule=True, **kwargs)
+def run_experiment(
+    experiment_directory,
+    epochs,
+    additional_epochs,
+    trainset,
+    testset,
+    del_runs,
+    **kwargs,
+):
+    train_model(
+        experiment_directory,
+        trainset,
+        testset,
+        epochs,
+        additional_epochs,
+        schedule=True,
+        **kwargs,
+    )
     if del_runs:
         os.system(f"rm -r {experiment_directory}/ckpt/*.pt")
 
@@ -100,7 +113,7 @@ if __name__ == "__main__":
     Curriculum = TrainingManager.get_curriculum_enum()
 
     experiments = [
-         (
+        (
             "curriculum-noloss",
             {"curriculum_type": Curriculum.CURRICULUM, "loss_based": False},
         ),
@@ -109,7 +122,6 @@ if __name__ == "__main__":
             {"curriculum_type": Curriculum.CURRICULUM, "loss_based": True},
         ),
         ("noop", {"curriculum_type": Curriculum.NOOP, "loss_based": False}),
-       
         (
             "anticurriculum",
             {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": False},
@@ -118,10 +130,8 @@ if __name__ == "__main__":
             "anticurriculum-loss",
             {"curriculum_type": Curriculum.ANTICURRICULUM, "loss_based": True},
         ),
-        
         ("hybrid", {"curriculum_type": Curriculum.HYBRID, "loss_based": False}),
         ("hybrid-loss", {"curriculum_type": Curriculum.HYBRID, "loss_based": True}),
-
         ("sequential", {"curriculum_type": Curriculum.SEQUENTIAL, "loss_based": False}),
         (
             "sequential-loss",
@@ -132,25 +142,24 @@ if __name__ == "__main__":
     EPOCHS = 10
     ADDITIONAL_EPOCHS = 20
     trainset, testset = fromDataset(
-            TextCorpusDataset(
-                root_dir=os.path.expanduser(
-                    "~/torch_datasets/github-python/mega_licensed_corpus"
-                ),
-                vocab_size=33819,
-                IS_CODE=True,
-                IS_CUSTOM=True,
-                max_length=256,
-                sliding_window=False,
-                stride=10,
-                get_rarity_score=True,
-                get_entropy_score=False # change to True and change the above to false for entropy score instead
-            )
+        TextCorpusDataset(
+            root_dir=os.path.expanduser(
+                "~/torch_datasets/github-python/mega_licensed_corpus"
+            ),
+            vocab_size=33819,
+            IS_CODE=True,
+            IS_CUSTOM=True,
+            max_length=256,
+            sliding_window=False,
+            stride=10,
+            get_rarity_score=True,
+            get_entropy_score=False,  # change to True and change the above to false for entropy score instead
         )
-    
+    )
 
     for experiment_name, params in experiments:
         experiment_directory = os.path.join(parent_directory, experiment_name)
-        
+
         print(f"Running experiment: {experiment_name}")
         print(f"Params: {params}")
         # print(len(trainset), len(testset))
@@ -166,8 +175,8 @@ if __name__ == "__main__":
             **params,
         )
 
-        
         import gc
+
         gc.collect()
         for obj in gc.get_objects():
             try:
@@ -178,4 +187,3 @@ if __name__ == "__main__":
         if torch.backends.mps.is_available():
             torch._C._mps_emptyCache()
             torch.mps.empty_cache()
-

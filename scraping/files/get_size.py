@@ -41,7 +41,7 @@ def calculate_total_size(file_path):
             tqdm(
                 executor.map(get_file_size, urls),
                 total=len(urls),
-                desc=f"Processing URLs.",
+                desc="Processing URLs.",
             )
         )
 

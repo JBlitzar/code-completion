@@ -1,7 +1,5 @@
-import torch
 from torch.utils.tensorboard import SummaryWriter
 import os
-import webbrowser
 
 
 writer = None
@@ -14,7 +12,6 @@ def flush():
 
 
 def log_data(data, i):
-
     for key in data.keys():
         writer.add_scalar(key, data[key], i)
 

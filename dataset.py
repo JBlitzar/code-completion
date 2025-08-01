@@ -1,11 +1,9 @@
 from collections import Counter
-import torchvision.datasets as dset
 from torch.utils.data import Dataset
 import torch
 from torch.utils.data import DataLoader
-import glob
 import os
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import random_split
 from shutil import copyfile
 import subprocess
 import youtokentome as yttm
@@ -13,7 +11,6 @@ import re
 import time
 from tqdm import trange, tqdm
 import numpy as np
-import matplotlib.pyplot as plt
 import inspect
 
 # Device for dataloading and dataloading only. Dataloading on MPS was slower
@@ -131,7 +128,6 @@ class CodeBPEModelManager(BPEModelManager):
         processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
 
         if input("Reformat? Will take time [y/N]") == "y":
-
             with open(data_path, "r", errors="ignore", encoding="utf-8") as reader:
                 raw_text = reader.read()
 
@@ -326,9 +322,8 @@ class CodeCustomTokenizerManager(BPEModelManager):
                 self.token_to_id[token] = len(self.token_to_id)
 
         print(f"Number of tokens: {len(self.token_to_id)}")
-    
-    def make_token_freqs(self):
 
+    def make_token_freqs(self):
         processed_path = os.path.join(self.root_dir, "data/corpus_processed.txt")
         with open(processed_path, "r", errors="ignore") as reader:
             raw_text = reader.read()
@@ -336,16 +331,14 @@ class CodeCustomTokenizerManager(BPEModelManager):
 
         token_freqs = {"<PAD>": 0}
 
-
         for token in tqdm(tokens, leave=False):
             if token not in token_freqs:
                 token_freqs[token] = 1
             else:
                 token_freqs[token] += 1
-        
+
         self._token_freqs = token_freqs
         self.total_num_tokens = len(tokens)
-
 
     def preprocess_text(self, code):
         print("Preprocessing text...", code[:20])
@@ -449,12 +442,12 @@ class CodeCustomTokenizerManager(BPEModelManager):
         print(f"Min token count: {np.min(list(token_freqs.values()))}")
         print(f"Max token count: {np.max(list(token_freqs.values()))}")
 
-        print(f"Top 30 most frequent tokens:")
+        print("Top 30 most frequent tokens:")
         sorted_tokens = sorted(token_freqs.items(), key=lambda x: x[1], reverse=True)
         for token, freq in sorted_tokens[:30]:
             print(f"{token}: {freq}")
 
-        print(f"Bottom 30 most frequent tokens:")
+        print("Bottom 30 most frequent tokens:")
         for token, freq in sorted_tokens[-30:]:
             print(f"{token}: {freq}")
 
@@ -602,7 +595,7 @@ class CodeCustomTokenizerManager(BPEModelManager):
             token_count = self._token_freqs.get(self.id_to_token[token.item()], 0)
             rarity_score = self.total_num_tokens / token_count if token_count > 0 else 0
             scores[idx] = rarity_score
-        
+
         return np.float32(np.median(scores))
 
     def get_entropy_score(self, sequence):
@@ -767,18 +760,22 @@ class TextCorpusDataset(Dataset):
         if self.get_rarity_score:
             if os.path.exists(self.rarity_cache_file):
                 print("Loading cached rarity scores...")
-                self.rarity_scores = torch.load(self.rarity_cache_file, weights_only=True)
+                self.rarity_scores = torch.load(
+                    self.rarity_cache_file, weights_only=True
+                )
                 if len(self.rarity_scores) != len(self.chunks):
                     print("Rarity cache size mismatch, recomputing...")
                     self._compute_and_cache_rarity_scores()
             else:
                 print("Computing rarity scores...")
                 self._compute_and_cache_rarity_scores()
-        
+
         if self.get_entropy_score:
             if os.path.exists(self.entropy_cache_file):
                 print("Loading cached entropy scores...")
-                self.entropy_scores = torch.load(self.entropy_cache_file, weights_only=True)
+                self.entropy_scores = torch.load(
+                    self.entropy_cache_file, weights_only=True
+                )
                 if len(self.entropy_scores) != len(self.chunks):
                     print("Entropy cache size mismatch, recomputing...")
                     self._compute_and_cache_entropy_scores()
@@ -793,7 +790,7 @@ class TextCorpusDataset(Dataset):
         for i in trange(len(self.chunks), desc="Computing rarity scores"):
             score = self.manager.get_rarity_score(self.chunks[i])
             rarity_scores.append(score)
-        
+
         self.rarity_scores = torch.tensor(rarity_scores, dtype=torch.float32)
         torch.save(self.rarity_scores, self.rarity_cache_file)
         print(f"Cached rarity scores to {self.rarity_cache_file}")
@@ -805,7 +802,7 @@ class TextCorpusDataset(Dataset):
         for i in trange(len(self.chunks), desc="Computing entropy scores"):
             score = self.manager.get_entropy_score(self.chunks[i])
             entropy_scores.append(score)
-        
+
         self.entropy_scores = torch.tensor(entropy_scores, dtype=torch.float32)
         torch.save(self.entropy_scores, self.entropy_cache_file)
         print(f"Cached entropy scores to {self.entropy_cache_file}")
@@ -820,9 +817,7 @@ class TextCorpusDataset(Dataset):
     def __len__(self):
         return len(self.chunks)
 
-    def __getitem__(
-        self, idx
-    ): 
+    def __getitem__(self, idx):
         seq = self.chunks[idx]
         if self.get_rarity_score:
             return seq, self.rarity_scores[idx]
@@ -875,7 +870,7 @@ dataset = TextCorpusDataset(
         # "./smaller-er-test-data"
         # "./smaller-test-data"
         # "~/torch_datasets/github-python/all_trains_subset_corpus/all_trains_TRAINSPLIT"
-        #"~/torch_datasets/github-python/all_trains_subset_corpus"
+        # "~/torch_datasets/github-python/all_trains_subset_corpus"
         # "~/torch_datasets/github-python/corpus"
         # "~/torch_datasets/github-python/mega_corpus"
         "~/torch_datasets/github-python/mega_licensed_corpus"
@@ -917,12 +912,10 @@ def get_train_dataset():
 
 
 def get_test_dataset():
-
     return test_dataset
 
 
 def get_dataloader(dataset, batch_size=64):
-
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 

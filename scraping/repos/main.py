@@ -23,9 +23,10 @@ def fetch_repositories_by_date_range(start_date, end_date):
         "sort": "stars",
     }
 
-    with open(output_file, "a") as file, tqdm(
-        desc=f"Fetching {start_date} to {end_date}", unit="page"
-    ) as pbar:
+    with (
+        open(output_file, "a") as file,
+        tqdm(desc=f"Fetching {start_date} to {end_date}", unit="page") as pbar,
+    ):
         while True:
             params["page"] = page
             try:
@@ -74,8 +75,9 @@ def generate_date_ranges(start_year=2015):
 
     while current_date < end_date:
         next_date = current_date + timedelta(days=30)  # Move by roughly one month
-        yield current_date.strftime("%Y-%m-%d"), min(next_date, end_date).strftime(
-            "%Y-%m-%d"
+        yield (
+            current_date.strftime("%Y-%m-%d"),
+            min(next_date, end_date).strftime("%Y-%m-%d"),
         )
         current_date = next_date
 

@@ -1,5 +1,4 @@
 import os
-from urllib.parse import urlparse
 import glob
 import shutil
 from tqdm import tqdm

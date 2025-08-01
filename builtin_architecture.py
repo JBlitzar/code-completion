@@ -71,11 +71,12 @@ class BuiltinTransformerModel(nn.Transformer):
         self.embedding_dropout = nn.Dropout(embedding_drop)
 
         self.init_weights()
-       
 
     def _generate_square_subsequent_mask(self, sz):
         # archive-misc/test_new_attnmask.py
-        return torch.triu(torch.full((sz, sz), float('-inf')), diagonal=1)#torch.log(torch.tril(torch.ones(sz, sz)))
+        return torch.triu(
+            torch.full((sz, sz), float("-inf")), diagonal=1
+        )  # torch.log(torch.tril(torch.ones(sz, sz)))
 
     def init_weights(self):
         initrange = 0.1
@@ -151,6 +152,7 @@ def make_model_custom(dim=256, heads=4, layers=4, drop=0.1, *args):
         vocab_size, embed_dim, heads, ff_dim, layers, drop, embedding_drop
     )  # nn.Transformer(d_model=128, nhead=1, num_decoder_layers=2, num_encoder_layers=0)
     return xformer_real
+
 
 if __name__ == "__main__":
     model = make_model()

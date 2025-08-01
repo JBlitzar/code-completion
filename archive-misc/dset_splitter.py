@@ -4,7 +4,6 @@ import tqdm
 
 # get through all files in inputted path, put the first 80% in one file concatenated and the last 20% in another
 def split_files(input_path, output_path1, output_path2):
-
     files = [
         f
         for f in os.listdir(input_path)

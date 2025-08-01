@@ -6,11 +6,11 @@ import math
 def calculate_topk_upper_bound(file_path, k=5):
     """
     Calculates the upper bound for top-k accuracy based on the tokenized text file.
-    
+
     Args:
         file_path (str): Path to the input text file.
         k (int): Top-k accuracy value to compute.
-    
+
     Returns:
         float: The upper bound for top-k accuracy.
     """
@@ -20,7 +20,7 @@ def calculate_topk_upper_bound(file_path, k=5):
             text = f.read()
 
         tokens = text.split()  # Tokenize by spaces
-        
+
         # Calculate token frequencies
         token_counts = Counter(tokens)
         total_tokens = len(tokens)
@@ -29,13 +29,17 @@ def calculate_topk_upper_bound(file_path, k=5):
             return 0
 
         # Convert frequencies to probabilities
-        token_probabilities = {token: count / total_tokens for token, count in token_counts.items()}
-        
+        token_probabilities = {
+            token: count / total_tokens for token, count in token_counts.items()
+        }
+
         # Calculate entropy
         entropy = -sum(p * math.log2(p) for p in token_probabilities.values())
-        
+
         # Calculate top-k accuracy upper bound
-        sorted_tokens = sorted(token_probabilities.items(), key=lambda x: x[1], reverse=True)
+        sorted_tokens = sorted(
+            token_probabilities.items(), key=lambda x: x[1], reverse=True
+        )
         top_k_prob = sum(prob for _, prob in sorted_tokens[:k])
 
         # Print entropy and top-k accuracy upper bound

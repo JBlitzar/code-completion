@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import numpy as np
 
 DIM = 128
@@ -166,7 +165,6 @@ class DecoderTransformer(nn.Module):
         #     print("NAN ALERT!")
 
         for didx, dblock in enumerate(self.decoders):
-
             x = dblock(x, padding_mask=padding_mask)
 
         x = self.oblock(x)

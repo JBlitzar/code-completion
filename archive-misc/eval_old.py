@@ -3,9 +3,7 @@ import torch
 # from architecture import DecoderTransformer
 from builtin_architecture import make_model
 import os
-import sys
-import time
-from dataset import dataset, get_train_dataset
+from dataset import dataset
 import torch.nn.functional as F
 
 EXPERIMENT_DIRECTORY = "runs/code-decoder-v10-vanilla-smaller-batchfirst"  # "runs/code-decoder-v9-vanilla-smaller"#"runs/code-decoder-v8-smaller"  # "runs/code-decoder-v4-improved"  # shakespeare-test, run1-python

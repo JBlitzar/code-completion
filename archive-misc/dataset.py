@@ -1,11 +1,9 @@
-import torchvision.datasets as dset
 from torch.utils.data import Dataset
-import torch
 from torch.utils.data import DataLoader
 import glob
 import os
 from transformers import AutoTokenizer
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import random_split
 
 
 class GithubDataset(Dataset):
@@ -24,7 +22,6 @@ class GithubDataset(Dataset):
         return len(self.file_list)
 
     def __getitem__(self, idx):
-
         path = self.file_list[idx]
 
         with open(path, "r", encoding="utf-8", errors="ignore") as file:
@@ -59,12 +56,10 @@ def get_train_dataset():
 
 
 def get_test_dataset():
-
     return test_dataset
 
 
 def get_dataloader(dataset, batch_size=64):
-
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
