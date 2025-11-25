@@ -241,7 +241,7 @@ class TrainingManager:
         self.write_resume(epoch + 1, 0)  # Start next epoch at step 0
 
     def eval_model(self, data, compute_metrics=True):
-        if type(data) == tuple or type(data) == list:
+        if isinstance(data, (tuple, list)):
             data = tuple(d.to(self.device) for d in data)
             batch, attn_mask = data
         else:
@@ -522,7 +522,9 @@ class TrainingManager:
                     if remainder > 0:
                         subset_indices.extend(
                             np.random.choice(
-                                subset_indices, remainder, replace=False
+                                subset_indices,
+                                remainder,
+                                replace=True,  # have to because sometimes remainder > subset size
                             ).tolist()
                         )
                     elif remainder < -1:

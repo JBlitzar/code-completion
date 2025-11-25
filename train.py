@@ -108,7 +108,7 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    parent_directory = "runs/code-decoder-v31-mega-licensed-1"
+    parent_directory = "runs/code-decoder-v33-revision-patch1"
 
     Curriculum = TrainingManager.get_curriculum_enum()
 
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     ]
 
     EPOCHS = 10
-    ADDITIONAL_EPOCHS = 20
+    ADDITIONAL_EPOCHS = 5
     trainset, testset = fromDataset(
         TextCorpusDataset(
             root_dir=os.path.expanduser(
