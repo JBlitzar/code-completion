@@ -80,12 +80,6 @@ class TrainingManager:
             lr=learning_rate,  # , weight_decay=1e-5
         )
 
-        # No clue what this does. Maybe its good
-        # initialized and never used.
-        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer=self.optimizer, factor=0.9, patience=10
-        )
-
         self.tracker = ValueTracker()
 
         self.resume_epoch, self.resume_step = self.get_resume()
@@ -521,9 +515,24 @@ class TrainingManager:
                 else:
                     raise ValueError(f"Unknown curriculum type: {curriculum_type}")
 
+                original_size = len(sorted_indices)
+                cur_size = len(subset_indices)
+                if cur_size < original_size:
+                    remainder = original_size - cur_size
+                    if remainder > 0:
+                        subset_indices.extend(
+                            np.random.choice(
+                                subset_indices, remainder, replace=False
+                            ).tolist()
+                        )
+                    elif remainder < -1:
+                        print("uhh fatal error: subset larger than original")
+                        assert False
+
                 subset = torch.utils.data.Subset(
                     self.dataloader.dataset, subset_indices
                 )
+
                 cur_dataloader = torch.utils.data.DataLoader(
                     subset,
                     batch_size=self.dataloader.batch_size,
