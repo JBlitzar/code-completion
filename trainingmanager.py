@@ -222,12 +222,22 @@ class TrainingManager:
             val_loss if val_loss < float("inf") else self.tracker.average("Loss/epoch")
         )
 
+        val_acc = 0.0
+        val_topk_acc = 0.0
+        try:
+            val_acc = self.tracker.average("Acc/val/epoch")
+            val_topk_acc = self.tracker.average("TopKAcc/val/epoch")
+        except KeyError:
+            pass
+
         log_data(
             {
                 "Loss/Epoch": self.tracker.average("Loss/epoch"),
                 "Loss/Val/Epoch": val_loss,
                 "Perplexity/Val/Epoch": float(np.exp(val_loss)),
                 "TopKAcc/Epoch": self.tracker.average("TopKAcc/epoch"),
+                "Acc/Val/Epoch": val_acc,
+                "TopKAcc/Val/Epoch": val_topk_acc,
             },
             epoch,
         )
@@ -237,6 +247,8 @@ class TrainingManager:
         self.tracker.reset("Loss/val/epoch")
         self.tracker.reset("TopKAcc/epoch")
         self.tracker.reset("Perplexity/val/epoch")
+        self.tracker.reset("Acc/val/epoch")
+        self.tracker.reset("TopKAcc/val/epoch")
 
         self.write_resume(epoch + 1, 0)  # Start next epoch at step 0
 
@@ -325,6 +337,9 @@ class TrainingManager:
         self.tracker.add("Loss/val/epoch", loss.item())
 
         self.tracker.add("Perplexity/val/epoch", float(np.exp(loss.item())))
+
+        self.tracker.add("Acc/valstep", acc.item())
+        self.tracker.add("Acc/val/epoch", acc.item())
 
         self.tracker.add("TopKAcc/valstep", topk_acc)
         self.tracker.add("TopKAcc/val/epoch", topk_acc)
