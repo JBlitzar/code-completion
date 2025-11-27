@@ -108,7 +108,7 @@ if __name__ == "__main__":
             print("Exiting")
             exit()
 
-    parent_directory = "runs/code-decoder-v33-revision-patch1"
+    parent_directory = "runs/code-decoder-v34-revision-patch2"
 
     Curriculum = TrainingManager.get_curriculum_enum()
 
